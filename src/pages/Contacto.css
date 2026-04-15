@@ -1,0 +1,40 @@
+/* ===== CONTACTO PAGE ===== */
+.contacto-page { padding-top: 120px; padding-bottom: var(--s-10); background-color: #F8FAF6; }
+
+.contacto-grid {
+  display: grid; grid-template-columns: 1fr 2fr; gap: var(--s-5); align-items: stretch;
+}
+
+/* Info Card */
+.contacto-info-card {
+  background: var(--c-primary-dark); color: white;
+  padding: var(--s-6); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+}
+.contacto-info-card h3 { color: white; font-size: 1.4rem; }
+.contacto-info-card p { color: rgba(255,255,255,0.8); margin-bottom: 0; }
+.contacto-info-card strong { color: white; display: block; margin-bottom: 4px; }
+.btn-whatsapp-full {
+  background-color: #25D366; color: white; padding: var(--s-3);
+  border-radius: var(--radius-md); font-weight: 600; text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; transition: all 0.3s; border: none; font-size: 1rem;
+}
+.btn-whatsapp-full:hover { background-color: #1EBE55; color: white; transform: translateY(-2px); }
+
+/* Form Card */
+.contacto-form-card {
+  background: white; padding: var(--s-6); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.06);
+}
+.contacto-form-card h3 { color: var(--c-primary-dark); font-size: 1.4rem; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+.text-dark-blue { color: var(--c-primary-dark); font-weight: 600; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .contacto-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .form-grid-2 { grid-template-columns: 1fr; }
+  .contacto-page { padding-top: 100px; }
+}

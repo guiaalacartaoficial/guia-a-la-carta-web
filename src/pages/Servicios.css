@@ -1,0 +1,102 @@
+/* ===== SERVICIOS PAGE ===== */
+.servicios-page { padding-top: 80px; }
+
+/* Header */
+.servicios-header {
+  position: relative; min-height: 50vh; display: flex; align-items: center; justify-content: center;
+  background: url('/fondo-empresas.jpg') center / cover no-repeat;
+  color: white;
+}
+.servicios-header-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(10,59,49,0.9), rgba(14,91,76,0.7));
+  z-index: 1;
+}
+.servicios-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem); margin-bottom: var(--s-3);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.4); text-transform: uppercase; color: white;
+}
+.servicios-header p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; color: rgba(255,255,255,0.9); }
+
+/* Services List */
+.services-list-modern { display: flex; flex-direction: column; gap: var(--s-6); max-width: 1000px; margin: 0 auto; }
+.service-row-modern {
+  display: flex; gap: var(--s-6); align-items: flex-start;
+  background: white; padding: var(--s-6); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm); transition: all 0.3s;
+}
+.service-row-modern:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.service-row-modern.reverse { flex-direction: row-reverse; }
+
+.service-icon-side {
+  width: 80px; height: 80px; flex-shrink: 0;
+  background: rgba(14,91,76,0.08); color: var(--c-primary);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-lg);
+}
+.service-content h2 { color: var(--c-primary-dark); margin-bottom: var(--s-3); font-size: 1.5rem; }
+.service-content p { color: var(--c-text-light); font-size: 1.05rem; line-height: 1.7; margin-bottom: var(--s-3); }
+.service-includes strong { display: block; margin-bottom: 10px; color: var(--c-primary); font-size: 0.95rem; }
+.service-includes ul { list-style: none; padding: 0; }
+.service-includes li {
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+  color: var(--c-text-main); font-size: 0.95rem;
+}
+
+/* Cómo Funciona */
+.comofunciona-services { background-color: white; padding: var(--s-10) 0; }
+.comofunciona-services h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.pasos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-5); margin-top: var(--s-6); }
+.paso-card {
+  background: #F8FAF6; border: 1px solid rgba(0,0,0,0.05);
+  padding: var(--s-5); border-radius: var(--radius-lg);
+  text-align: center; transition: all 0.3s;
+}
+.paso-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--c-accent); }
+.paso-numero {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--c-primary-dark); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 800; margin: 0 auto var(--s-4);
+}
+.paso-card h4 { color: var(--c-primary); margin-bottom: var(--s-2); font-size: 1.05rem; }
+.paso-card p { color: var(--c-text-light); font-size: 0.9rem; margin: 0; line-height: 1.5; }
+
+/* Cobertura en Servicios */
+.cobertura-services {
+  background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dark));
+  color: white; padding: var(--s-10) 0;
+}
+.cobertura-header h2 { color: white; margin-bottom: var(--s-2); }
+.cobertura-header p { font-size: 1.1rem; color: rgba(255,255,255,0.85); }
+.cobertura-tags-large { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; max-width: 900px; margin: 0 auto; }
+.tag-large {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(5px); padding: 12px 24px; border-radius: 30px;
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 600; font-size: 1rem; color: white; transition: all 0.3s;
+}
+.tag-large:hover { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-primary-dark); transform: scale(1.05); }
+.icon-inline { display: inline-flex; align-items: center; margin-right: 6px; }
+
+/* Complementary Services Styles */
+.complementary-services-intro h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.service-icon-side.accent {
+  background: rgba(22, 163, 74, 0.1);
+  color: var(--c-accent);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .service-row-modern, .service-row-modern.reverse { flex-direction: column; text-align: center; align-items: center; }
+  .service-icon-side { margin-bottom: var(--s-3); }
+  .service-includes ul { display: inline-block; text-align: left; }
+  .pasos-grid { grid-template-columns: 1fr; }
+}

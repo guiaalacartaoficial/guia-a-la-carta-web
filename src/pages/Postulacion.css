@@ -1,0 +1,28 @@
+/* ===== POSTULACIÓN PAGES ===== */
+.postulacion-page { padding-top: 80px; }
+
+.postulacion-header {
+  background-color: var(--c-primary); color: white;
+  padding: var(--s-8) 0; text-align: center;
+}
+.postulacion-header h1 { color: var(--c-accent); margin-bottom: var(--s-2); font-size: clamp(1.8rem, 4vw, 2.5rem); }
+.postulacion-header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; }
+
+.max-w-3xl { max-width: 800px; margin: 0 auto; }
+
+.postulacion-form {
+  background: var(--c-surface); padding: var(--s-6) var(--s-8);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  margin-top: calc(var(--s-6) * -1); border: 1px solid rgba(0,0,0,0.05);
+}
+.form-section-title {
+  font-size: 1.4rem; color: var(--c-primary-dark);
+  margin: var(--s-6) 0 var(--s-3) 0;
+  padding-bottom: var(--s-2); border-bottom: 2px solid var(--c-accent);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+
+@media (max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .postulacion-form { padding: var(--s-4); }
+}

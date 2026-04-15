@@ -1,0 +1,149 @@
+/* ===== GUÍAS PAGE ===== */
+.guias-page { padding-top: 80px; }
+
+/* Header */
+.guias-header {
+  background-color: var(--c-primary-dark);
+  color: white; padding: var(--s-8) 0;
+  border-bottom: 4px solid var(--c-accent);
+}
+.guias-header h1 { color: white; margin-bottom: var(--s-3); font-size: clamp(2rem, 4vw, 2.8rem); }
+.guias-header p { color: rgba(255,255,255,0.85); font-size: 1.15rem; max-width: 700px; margin: 0 auto; }
+
+/* Grid de guías */
+.guias-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--s-6); }
+
+/* Colores por Nivel */
+:root {
+  --c-nivel-junior: #99C168; /* Verde claro intenso */
+  --c-nivel-full: #0E5B4C;   /* Verde profundo */
+  --c-nivel-senior: #0A3B31; /* Verde oscuro suavizado */
+  --c-beige-text: #FDF5E6;  /* Tipografía beige premium */
+  --c-gold-senior: #E4C000;  /* Borde y detalle dorado */
+}
+
+.guia-card {
+  background: var(--c-surface); border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s;
+  display: flex; flex-direction: column;
+}
+
+.guia-card.junior { border-bottom: 6px solid var(--c-nivel-junior); }
+.guia-card.full { border-bottom: 6px solid var(--c-nivel-full); }
+.guia-card.senior { border-bottom: 6px solid var(--c-gold-senior); }
+
+.guia-card.junior .guia-badge { 
+  background-color: var(--c-nivel-junior); 
+  color: #052922; /* Texto oscuro para contraste en verde claro */
+}
+.guia-card.full .guia-badge { 
+  background-color: var(--c-nivel-full); 
+  color: var(--c-beige-text); 
+}
+.guia-card.senior .guia-badge { 
+  background-color: var(--c-nivel-senior); 
+  color: var(--c-beige-text); 
+  border: 1px solid var(--c-gold-senior); 
+}
+
+.guia-card.senior .guia-badge svg {
+  color: var(--c-gold-senior); /* Icono dorado para Senior */
+}
+.guia-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.guia-img-container { height: 250px; position: relative; }
+.guia-img { width: 100%; height: 100%; object-fit: cover; }
+.guia-badge {
+  position: absolute; top: 15px; right: 15px;
+  background-color: var(--c-accent); color: var(--c-primary-dark);
+  font-family: var(--font-heading); font-weight: 800; font-size: 0.8rem;
+  padding: 4px 12px; border-radius: var(--radius-full);
+  display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-sm);
+}
+.guia-info { padding: var(--s-4); }
+.guia-info h3 { font-size: 1.5rem; margin-bottom: var(--s-1); }
+.guia-especialidad { color: var(--c-primary); font-weight: 600; margin-bottom: var(--s-3); font-size: 0.95rem; }
+.guia-details { display: flex; flex-direction: column; gap: var(--s-2); color: var(--c-text-light); font-size: 0.9rem; }
+.guia-details span { display: flex; align-items: center; gap: var(--s-2); }
+
+/* Niveles de guía */
+.niveles-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-5); align-items: stretch; }
+.nivel-detail-card {
+  background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; position: relative;
+  border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s;
+}
+.nivel-detail-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.nivel-detail-card.destacado {
+  border: 2px solid var(--c-accent); transform: scale(1.03);
+  box-shadow: var(--shadow-lg); z-index: 2;
+}
+.destacado-ribbon {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--c-accent); color: var(--c-primary-dark);
+  padding: 4px 16px; border-radius: 20px; font-weight: 800; font-size: 0.8rem;
+}
+.nivel-head {
+  background: #F8FAF6; padding: var(--s-4);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.nivel-head h3 { color: var(--c-primary-dark); margin: 0; font-size: 1.5rem; }
+.nivel-body { padding: var(--s-4); display: flex; flex-direction: column; flex-grow: 1; }
+.perfil-desc { color: var(--c-text-main); margin-bottom: var(--s-4); min-height: 40px; font-size: 1rem; }
+.ideal-box { margin-bottom: var(--s-4); flex-grow: 1; }
+.ideal-box strong { color: var(--c-primary); display: block; margin-bottom: 8px; }
+.ideal-box ul { list-style: none; padding: 0; margin: 0; }
+.ideal-box li { color: var(--c-text-light); font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.ideal-box li svg { color: var(--c-accent); flex-shrink: 0; }
+.precio-box { background: #F8FAF6; padding: var(--s-3); border-radius: var(--radius-md); text-align: center; }
+.precio-box span { display: block; font-size: 0.8rem; color: var(--c-text-light); text-transform: uppercase; margin-bottom: 4px; }
+.precio-box strong { display: block; color: var(--c-primary-dark); font-size: 1.4rem; font-weight: 800; }
+
+/* Sello */
+.section-sello {
+  padding: var(--s-10) 0; margin: 0;
+  background-color: var(--c-primary-dark); position: relative;
+  display: flex; align-items: center; justify-content: center;
+  background-image: radial-gradient(circle at center, rgba(30,99,80,0.4), transparent 70%);
+}
+.sello-glass-container {
+  background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-lg); padding: var(--s-8) var(--s-5);
+  max-width: 550px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  transition: transform 0.3s;
+}
+.sello-glass-container:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(0,0,0,0.4); }
+.sello-glass-container h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); color: white; margin-bottom: 0.5rem; }
+.sello-glass-container p { color: rgba(255,255,255,0.9); font-size: 1.1rem; margin-bottom: 2.5rem; }
+.sello-badge-wrapper { margin: 0 auto 2.5rem; width: 180px; height: 180px; }
+.sello-logo-custom {
+  width: 100%; height: 100%; object-fit: contain;
+  border-radius: 50%; border: 6px solid #E4C000;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4), 0 0 15px rgba(228,192,0,0.4);
+  transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.3s;
+}
+.sello-badge-wrapper:hover .sello-logo-custom {
+  transform: scale(1.08); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px rgba(228,192,0,0.7);
+}
+
+/* Sección Junior */
+.junior-section {
+  padding: var(--s-8) 0;
+  background-color: #F8FAF6; /* Fondo claro igual que la sección superior */
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.junior-section h2 {
+  color: var(--c-primary-dark);
+  text-align: center;
+  margin-bottom: var(--s-6);
+  font-size: 2.2rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .niveles-cards-grid { grid-template-columns: 1fr; }
+  .nivel-detail-card.destacado { transform: none; }
+}

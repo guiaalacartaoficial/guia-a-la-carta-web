@@ -1,0 +1,164 @@
+.guide-arc-container {
+  width: 100%;
+  max-width: 1000px;
+  height: 400px;
+  margin: 3rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
+.arc-wrapper {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+}
+
+.guide-circle {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+/* Borde Dorado para TODOS */
+.guide-gold-border {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  background: linear-gradient(135deg, #d4af37 0%, #f9f295 50%, #b8860b 100%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Posiciones del Arco */
+.guide-circle.center {
+  width: 240px;
+  height: 240px;
+  z-index: 10;
+  transform: translateX(0) translateY(20px) scale(1.15);
+  filter: brightness(1.1);
+}
+
+.guide-circle.left-1 {
+  transform: translateX(-180px) translateY(-10px) scale(0.85);
+  z-index: 8;
+  opacity: 0.9;
+}
+
+.guide-circle.right-1 {
+  transform: translateX(180px) translateY(-10px) scale(0.85);
+  z-index: 8;
+  opacity: 0.9;
+}
+
+.guide-circle.left-2 {
+  transform: translateX(-340px) translateY(-50px) scale(0.7);
+  z-index: 6;
+  opacity: 0.7;
+}
+
+.guide-circle.right-2 {
+  transform: translateX(340px) translateY(-50px) scale(0.7);
+  z-index: 6;
+  opacity: 0.7;
+}
+
+.guide-circle.left-3 {
+  transform: translateX(-480px) translateY(-100px) scale(0.55);
+  z-index: 4;
+  opacity: 0.5;
+}
+
+.guide-circle.right-3 {
+  transform: translateX(480px) translateY(-100px) scale(0.55);
+  z-index: 4;
+  opacity: 0.5;
+}
+
+.guide-circle.hidden {
+  opacity: 0;
+  transform: translateY(100px) scale(0.4);
+  pointer-events: none;
+}
+
+/* Información solo en el Centro */
+.guide-info-center {
+  position: absolute;
+  bottom: -110px;
+  width: 220px;
+  text-align: center;
+  color: var(--c-primary-dark);
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.guide-info-center h4 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #FFFFFF; /* Blanco para máximo contraste */
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.guide-info-center p {
+  margin: 0.2rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f9f295; /* Dorado claro para resaltar */
+}
+
+.guide-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividad */
+@media (max-width: 900px) {
+  .guide-circle.left-2, .guide-circle.right-2 { opacity: 0.4; transform: translateX(calc(var(--dir)*220px)) translateY(-40px) scale(0.6); }
+  .guide-circle.left-3, .guide-circle.right-3 { display: none; }
+}
+
+@media (max-width: 600px) {
+  .arc-wrapper { height: 200px; }
+  .guide-circle { width: 120px; height: 120px; }
+  .guide-circle.center { width: 160px; height: 160px; }
+  .guide-circle.left-1 { transform: translateX(-90px) translateY(0) scale(0.8); }
+  .guide-circle.right-1 { transform: translateX(90px) translateY(0) scale(0.8); }
+  .guide-circle.left-2, .guide-circle.right-2 { display: none; }
+}

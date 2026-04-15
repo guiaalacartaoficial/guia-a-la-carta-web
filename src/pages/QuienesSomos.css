@@ -1,0 +1,27 @@
+/* ===== QUIÉNES SOMOS PAGE ===== */
+.nosotros-layouts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--s-5);
+}
+.nosotros-card {
+  background: white; padding: var(--s-6) var(--s-5); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm); text-align: center;
+  border-bottom: 4px solid transparent; transition: all 0.3s;
+}
+.nosotros-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-bottom-color: var(--c-accent); }
+.nosotros-card h3 { color: var(--c-primary-dark); margin-bottom: var(--s-3); font-size: 1.3rem; }
+.nosotros-card p { color: var(--c-text-light); line-height: 1.7; margin: 0; }
+
+.enfoque-section {
+  background: white; padding: var(--s-6); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.enfoque-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); }
+.enfoque-item {
+  background: #F8FAF6; padding: var(--s-3) var(--s-4); border-radius: 50px;
+  font-weight: 600; display: flex; align-items: center; gap: 8px;
+  color: var(--c-primary-dark); font-size: 1.05rem;
+  box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+.enfoque-item:hover { background: var(--c-primary); color: white; transform: translateY(-2px); }
+.enfoque-item:hover svg { color: white !important; }
