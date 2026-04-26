@@ -4,7 +4,7 @@ import { toPng } from 'html-to-image';
 import download from 'downloadjs';
 import './GuideCredential.css';
 
-const GuideCredential = ({ guia, onClose }) => {
+const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const cardRef = useRef(null);
@@ -68,16 +68,17 @@ const GuideCredential = ({ guia, onClose }) => {
     return flags[idioma] || '';
   };
 
-  return (
-    <div className="credential-overlay" onClick={onClose}>
+  const credentialContent = (
       <div 
         ref={cardRef}
-        className="credential-card-v2" 
-        onClick={(e) => e.stopPropagation()}
+        className={`credential-card-v2 ${isExample ? 'is-example' : ''}`} 
+        onClick={(e) => !isExample && e.stopPropagation()}
       >
-        <button className="credential-close-v2 no-print" onClick={onClose}>
-          <X size={20} />
-        </button>
+        {!isExample && (
+          <button className="credential-close-v2 no-print" onClick={onClose}>
+            <X size={20} />
+          </button>
+        )}
 
         {/* TOP ROW */}
         <div className="credential-top-row">
@@ -126,23 +127,25 @@ const GuideCredential = ({ guia, onClose }) => {
               <img src={guia.imagen} alt={guia.nombre} className="v2-profile-img" />
             </div>
             
-            <div className="v2-seals-column">
-              {guia.certificaciones?.sernatur && (
-                <div className="v2-seal-wrapper">
-                  <img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" />
-                </div>
-              )}
-              {guia.certificaciones?.wfr && (
-                <div className="v2-seal-wrapper">
-                  <img src="/wfr.png" alt="WFR" className="v2-seal-img" />
-                </div>
-              )}
-              {guia.certificaciones?.wafa && !guia.certificaciones?.wfr && (
-                <div className="v2-seal-wrapper">
-                  <img src="/wafa.png" alt="WAFA" className="v2-seal-img" />
-                </div>
-              )}
-            </div>
+            {(guia.certificaciones?.sernatur || guia.certificaciones?.wfr || guia.certificaciones?.wafa) && (
+              <div className="v2-seals-column">
+                {guia.certificaciones?.sernatur && (
+                  <div className="v2-seal-wrapper">
+                    <img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" />
+                  </div>
+                )}
+                {guia.certificaciones?.wfr && (
+                  <div className="v2-seal-wrapper">
+                    <img src="/wfr.png" alt="WFR" className="v2-seal-img" />
+                  </div>
+                )}
+                {guia.certificaciones?.wafa && !guia.certificaciones?.wfr && (
+                  <div className="v2-seal-wrapper">
+                    <img src="/wafa.png" alt="WAFA" className="v2-seal-img" />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="v2-right-pane">
@@ -174,40 +177,49 @@ const GuideCredential = ({ guia, onClose }) => {
         </div>
 
         {/* ACTIONS */}
-        <div className="v2-credential-actions no-print">
-          <div className="v2-main-actions">
-            <div className="v2-request-container">
+        {!isExample && (
+          <div className="v2-credential-actions no-print">
+            <div className="v2-main-actions">
+              <div className="v2-request-container">
+                <button 
+                  className={`v2-btn-primary ${showContactOptions ? 'active' : ''}`}
+                  onClick={() => setShowContactOptions(!showContactOptions)}
+                >
+                  <MessageSquare size={18} />
+                  Solicitar Guía
+                </button>
+
+                {showContactOptions && (
+                  <div className="v2-contact-dropdown">
+                    <button className="v2-contact-opt whatsapp" onClick={handleWhatsApp}>
+                      <Phone size={16} /> WhatsApp
+                    </button>
+                    <button className="v2-contact-opt email" onClick={handleEmail}>
+                      <Mail size={16} /> Correo
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <button 
-                className={`v2-btn-primary ${showContactOptions ? 'active' : ''}`}
-                onClick={() => setShowContactOptions(!showContactOptions)}
+                className="v2-btn-secondary" 
+                onClick={handleGenerate}
+                disabled={isGenerating}
               >
-                <MessageSquare size={18} />
-                Solicitar Guía
+                {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
+                {isGenerating ? 'Generando...' : 'Generar Credencial'}
               </button>
-
-              {showContactOptions && (
-                <div className="v2-contact-dropdown">
-                  <button className="v2-contact-opt whatsapp" onClick={handleWhatsApp}>
-                    <Phone size={16} /> WhatsApp
-                  </button>
-                  <button className="v2-contact-opt email" onClick={handleEmail}>
-                    <Mail size={16} /> Correo
-                  </button>
-                </div>
-              )}
             </div>
-
-            <button 
-              className="v2-btn-secondary" 
-              onClick={handleGenerate}
-              disabled={isGenerating}
-            >
-              {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
-              {isGenerating ? 'Generando...' : 'Generar Credencial'}
-            </button>
           </div>
-        </div>
+        )}
       </div>
+  );
+
+  if (isExample) return credentialContent;
+
+  return (
+    <div className="credential-overlay" onClick={onClose}>
+      {credentialContent}
     </div>
   );
 };

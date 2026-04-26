@@ -12,6 +12,8 @@ import QuienesSomos from './pages/QuienesSomos';
 import Contacto from './pages/Contacto';
 import Relatos from './pages/Relatos';
 import RelatoDetalle from './pages/RelatoDetalle';
+import AdminDashboard from './pages/Admin';
+import Reserva from './pages/Reserva';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/relatos" element={<Relatos />} />
             <Route path="/relatos/:id" element={<RelatoDetalle />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/reservar" element={<Reserva />} />
           </Routes>
         </main>
         <Footer />

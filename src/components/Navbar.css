@@ -91,6 +91,19 @@
   50%      { box-shadow: 0 0 14px 3px rgba(159,192,90,0.35); }
 }
 
+.nav-highlight {
+  border: 1px solid var(--c-accent) !important;
+  color: var(--c-accent) !important;
+  padding: 6px 16px !important;
+  border-radius: var(--radius-full);
+  transition: all 0.3s !important;
+}
+.nav-highlight::after { display: none; }
+.nav-highlight:hover {
+  background-color: var(--c-accent) !important;
+  color: var(--c-primary-dark) !important;
+}
+
 /* Chevron animado */
 .chevron { transition: transform 0.3s; }
 .chevron.open { transform: rotate(180deg); }

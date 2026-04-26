@@ -13,7 +13,7 @@ const Home = () => {
         <div className="hero-overlay"></div>
         <div className="container hero-content text-center">
           <img src="/logo.png" alt="Guía a la Carta Logo" className="hero-center-logo mb-4" style={{width: '200px'}} />
-          <h1>tu red confiable de guias en todo chile</h1>
+          <h1>Tu red confiable de guías en todo Chile</h1>
           <p className="hero-subtitle">Soluciones operativas para empresas de turismo en Chile</p>
           <p className="hero-desc">Conectamos empresas turísticas, hoteles y agencias con guías certificados, entregando una operación más confiable, flexible y profesional.</p>
           <div className="hero-actions mt-4">
@@ -39,21 +39,37 @@ const Home = () => {
           </div>
 
           <div className="problema-grid mt-5">
-            <div className="problema-bloque">
-              <Zap className="icon-problema" size={36}/>
-              <h4>Cobertura rápida</h4>
+            <div className="problema-bloque card-cobertura">
+              <div className="bloque-overlay"></div>
+              <div className="bloque-content">
+                <Zap className="icon-problema" size={32}/>
+                <h4>Cobertura rápida</h4>
+                <p>Activamos guías en tiempo récord para cubrir tus servicios y contingencias más urgentes.</p>
+              </div>
             </div>
-            <div className="problema-bloque">
-              <ShieldCheck className="icon-problema" size={36}/>
-              <h4>Guías certificados</h4>
+            <div className="problema-bloque card-certificados">
+              <div className="bloque-overlay"></div>
+              <div className="bloque-content">
+                <ShieldCheck className="icon-problema" size={32}/>
+                <h4>Guías certificados</h4>
+                <p>Red exclusiva de profesionales con registro SERNATUR y validación técnica rigurosa.</p>
+              </div>
             </div>
-            <div className="problema-bloque">
-              <Settings className="icon-problema" size={36}/>
-              <h4>Respaldo operativo</h4>
+            <div className="problema-bloque card-respaldo">
+              <div className="bloque-overlay"></div>
+              <div className="bloque-content">
+                <Settings className="icon-problema" size={32}/>
+                <h4>Respaldo operativo</h4>
+                <p>Coordinación logística centralizada y soporte constante durante toda la ejecución del servicio.</p>
+              </div>
             </div>
-            <div className="problema-bloque">
-              <Users className="icon-problema" size={36}/>
-              <h4>Flexibilidad según cada servicio</h4>
+            <div className="problema-bloque card-flexibilidad">
+              <div className="bloque-overlay"></div>
+              <div className="bloque-content">
+                <Users className="icon-problema" size={32}/>
+                <h4>Flexibilidad total</h4>
+                <p>Soluciones que se adaptan a cada tipo de pasajero, idioma y nivel de exigencia de tu empresa.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -136,15 +152,54 @@ const Home = () => {
           <div className="niveles-resumen mt-5 mb-5">
             <div className="nivel-mini">
               <h4>Guía Junior</h4>
-              <p>Apoyo operativo y servicios simples.</p>
+              <p className="nivel-desc">Apoyo operativo o servicios de menor complejidad.</p>
+              <div className="nivel-ideal">
+                <h5>Ideal para:</h5>
+                <ul>
+                  <li><CheckCircle size={16} /> Servicios simples</li>
+                  <li><CheckCircle size={16} /> Apoyo en terreno</li>
+                  <li><CheckCircle size={16} /> Operaciones menores</li>
+                </ul>
+              </div>
+              <div className="nivel-precio" style={{borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <span style={{fontSize: '0.8rem', color: 'var(--c-text-light)', textTransform: 'uppercase'}}>Referencial:</span>
+                <strong style={{color: 'var(--c-primary)', fontSize: '1.2rem'}}>$40.000 – $50.000</strong>
+              </div>
             </div>
+            
             <div className="nivel-mini destacado">
+              <div className="nivel-ribbon">Más solicitado</div>
               <h4>Guía Full</h4>
-              <p>Tours regulares y atención general.</p>
+              <p className="nivel-desc">Operativo estándar, autónomo y con experiencia comprobable.</p>
+              <div className="nivel-ideal">
+                <h5>Ideal para:</h5>
+                <ul>
+                  <li><CheckCircle size={16} /> Tours regulares</li>
+                  <li><CheckCircle size={16} /> Servicios completos</li>
+                  <li><CheckCircle size={16} /> Atención a pasajeros</li>
+                </ul>
+              </div>
+              <div className="nivel-precio" style={{borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <span style={{fontSize: '0.8rem', color: 'var(--c-text-light)', textTransform: 'uppercase'}}>Referencial:</span>
+                <strong style={{color: 'var(--c-primary)', fontSize: '1.2rem'}}>Desde $60.000</strong>
+              </div>
             </div>
+            
             <div className="nivel-mini">
               <h4>Guía Senior</h4>
-              <p>Servicios exigentes y grupos VIP.</p>
+              <p className="nivel-desc">Máxima resolución y capacidad de representación.</p>
+              <div className="nivel-ideal">
+                <h5>Ideal para:</h5>
+                <ul>
+                  <li><CheckCircle size={16} /> Servicios exigentes</li>
+                  <li><CheckCircle size={16} /> Grupos especiales / VIP</li>
+                  <li><CheckCircle size={16} /> Operaciones delicadas</li>
+                </ul>
+              </div>
+              <div className="nivel-precio" style={{borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <span style={{fontSize: '0.8rem', color: 'var(--c-text-light)', textTransform: 'uppercase'}}>Referencial:</span>
+                <strong style={{color: 'var(--c-primary)', fontSize: '1.2rem'}}>Desde $70.000</strong>
+              </div>
             </div>
           </div>
           

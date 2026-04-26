@@ -8,21 +8,254 @@
 .postulacion-header h1 { color: var(--c-accent); margin-bottom: var(--s-2); font-size: clamp(1.8rem, 4vw, 2.5rem); }
 .postulacion-header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; }
 
-.max-w-3xl { max-width: 800px; margin: 0 auto; }
+.max-w-3xl { max-width: 900px; margin: 0 auto; }
 
-.postulacion-form {
-  background: var(--c-surface); padding: var(--s-6) var(--s-8);
-  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-  margin-top: calc(var(--s-6) * -1); border: 1px solid rgba(0,0,0,0.05);
+/* Contenedor general transparente, ahora usamos Cards internamente */
+.postulacion-form-container {
+  margin-top: calc(var(--s-6) * -1);
 }
-.form-section-title {
-  font-size: 1.4rem; color: var(--c-primary-dark);
-  margin: var(--s-6) 0 var(--s-3) 0;
-  padding-bottom: var(--s-2); border-bottom: 2px solid var(--c-accent);
+
+/* ===== CARDS DIVISORIAS ===== */
+.form-card {
+  background: var(--c-surface);
+  padding: var(--s-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: var(--s-5);
+  border: 1px solid rgba(0,0,0,0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.form-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+}
+
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: var(--s-5);
+  padding-bottom: var(--s-3);
+  border-bottom: 2px solid var(--c-background);
+}
+.form-section-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--c-primary-dark);
+}
+.form-section-icon {
+  color: var(--c-accent);
+  background: rgba(159, 192, 90, 0.15);
+  padding: 0.6rem;
+  border-radius: 12px;
+  display: flex;
+}
+
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+
+/* ===== INPUTS MEJORADOS CON ICONOS ===== */
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-icon {
+  position: absolute;
+  left: 1.2rem;
+  color: #9CA3AF;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.input-icon-wrapper .form-control {
+  padding-left: 3.2rem;
+  background-color: #F9FAFB;
+  border: 1px solid #E5E7EB;
+}
+.input-icon-wrapper .form-control:focus {
+  background-color: #FFFFFF;
+}
+.input-icon-wrapper .form-control:focus + .input-icon, 
+.input-icon-wrapper .form-control:focus ~ .input-icon {
+  color: var(--c-primary);
+}
+
+/* Warnings */
+.form-warning-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--s-5);
+  box-shadow: var(--shadow-sm);
+}
+.form-warning-box svg { color: #f59e0b; flex-shrink: 0; margin-top: 2px; }
+.form-warning-content h4 { color: #92400e; margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+.form-warning-content p { color: #b45309; margin: 0; font-size: 0.95rem; line-height: 1.5; }
+
+/* Subida de Archivos Refinada */
+.file-upload-block {
+  background-color: #F9FAFB;
+  border: 2px dashed #E5E7EB;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.file-upload-block:hover {
+  border-color: var(--c-accent);
+  background-color: rgba(159, 192, 90, 0.03);
+}
+
+.file-upload-info {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--c-text-light);
+  margin-top: 0.5rem;
+}
+
+input[type="file"].form-control-file {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--c-text-main);
+  cursor: pointer;
+}
+input[type="file"].form-control-file::file-selector-button {
+  background-color: var(--c-primary);
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-right: 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+input[type="file"].form-control-file::file-selector-button:hover {
+  background-color: var(--c-primary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn-submit-premium {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  box-shadow: 0 10px 20px -5px rgba(14, 91, 76, 0.4);
+}
+
+/* ===== CREDENCIAL DE MUESTRA (MOCKUP) ===== */
+.example-credential-wrapper {
+  margin: var(--s-6) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(14, 91, 76, 0.03);
+  padding: var(--s-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(14, 91, 76, 0.1);
+}
+.example-credential-wrapper h4 {
+  color: var(--c-primary-dark);
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+.example-credential-wrapper p {
+  color: var(--c-text-light);
+  margin-bottom: var(--s-4);
+  text-align: center;
+}
+
+/* Escalar la credencial si está embebida en web */
+.credential-card-v2.is-example {
+  transform: scale(0.85);
+  transform-origin: top center;
+  margin-bottom: -100px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+  cursor: default;
+}
+
+/* ===== MULTIPLE SELECTOR (IDIOMAS) ===== */
+.idiomas-selector-container {
+  background-color: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.idiomas-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.idiomas-input-row select {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.6rem;
+  border: 1px solid #D1D5DB;
+  border-radius: var(--radius-sm);
+  background-color: white;
+}
+
+.btn-add-idioma {
+  background-color: var(--c-primary);
+  color: white;
+  border: none;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+.btn-add-idioma:hover { opacity: 0.85; }
+
+.idiomas-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.idioma-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: white;
+  border: 1px solid var(--c-accent);
+  color: var(--c-primary-dark);
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+.idioma-chip button {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 50%;
+}
+.idioma-chip button:hover {
+  background-color: #fef2f2;
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 @media (max-width: 768px) {
   .form-grid { grid-template-columns: 1fr; }
-  .postulacion-form { padding: var(--s-4); }
+  .form-card { padding: var(--s-4); }
+  .credential-card-v2.is-example { transform: scale(0.65); margin-bottom: -200px; }
 }

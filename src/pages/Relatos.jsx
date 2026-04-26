@@ -33,7 +33,7 @@ const Relatos = () => {
                   <p>{relato.resumen}</p>
                   <div className="relato-card-footer">
                     <span className="comentarios-count">
-                      <MessageCircle size={16} /> {relato.comentarios.length} comentarios
+                      <MessageCircle size={16} /> {relato.comentarios.length} {relato.comentarios.length === 1 ? 'comentario' : 'comentarios'}
                     </span>
                     <Link to={`/relatos/${relato.id}`} className="read-more-btn">
                       Leer más <ArrowRight size={16} />

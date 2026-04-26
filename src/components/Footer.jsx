@@ -22,7 +22,7 @@ const Footer = () => {
             <a href="https://www.instagram.com/guiaalacarta" target="_blank" rel="noreferrer" aria-label="Instagram">
               <Globe size={18} />
             </a>
-            <a href="#" aria-label="LinkedIn">
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
               <ExternalLink size={18} />
             </a>
           </div>

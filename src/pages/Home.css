@@ -70,16 +70,76 @@
   min-height: 100vh; display: flex; align-items: center;
   padding: var(--s-10) 0; background-color: var(--c-surface);
 }
-.problema-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); }
-.problema-bloque {
-  background: white; border: 1px solid rgba(0,0,0,0.06);
-  padding: var(--s-5); border-radius: var(--radius-lg);
-  text-align: center; box-shadow: var(--shadow-sm); transition: all 0.3s;
-  border-bottom: 3px solid transparent;
+.problema-grid { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: var(--s-3); 
 }
-.problema-bloque:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-bottom-color: var(--c-accent); }
-.icon-problema { color: var(--c-primary); margin-bottom: var(--s-3); }
-.problema-bloque h4 { font-size: 1.05rem; color: var(--c-primary-dark); font-weight: 700; }
+.problema-bloque {
+  position: relative;
+  min-height: 320px;
+  display: flex;
+  align-items: flex-end;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: var(--shadow-md);
+}
+
+.card-cobertura { background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000&auto=format&fit=crop'); }
+.card-certificados { background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1000&auto=format&fit=crop'); }
+.card-respaldo { background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop'); }
+.card-flexibilidad { background-image: url('https://images.unsplash.com/photo-1539635278303-d4002c07dee3?q=80&w=1000&auto=format&fit=crop'); }
+
+.bloque-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 59, 49, 0.92) 25%, rgba(10, 59, 49, 0.3) 70%, transparent 100%);
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.bloque-content {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  text-align: left;
+  width: 100%;
+  color: white;
+}
+
+.icon-problema { 
+  color: var(--c-accent); 
+  margin-bottom: 0.8rem; 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.problema-bloque h4 { 
+  font-size: 1.25rem; 
+  color: white !important; 
+  font-weight: 800; 
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.bloque-content p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.problema-bloque:hover { 
+  transform: translateY(-8px) scale(1.02); 
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.problema-bloque:hover .bloque-overlay {
+  background: linear-gradient(to top, rgba(14, 91, 76, 0.95) 40%, rgba(159, 192, 90, 0.3) 100%);
+}
 
 /* 3. Solución */
 .section-solucion {
@@ -163,21 +223,129 @@
 /* 6. Niveles */
 .section-niveles-home {
   min-height: 100vh; display: flex; align-items: center;
-  padding: var(--s-10) 0; background-color: var(--c-surface);
+  padding: 120px 0; background-color: var(--c-surface);
 }
-.niveles-resumen { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-5); }
+.niveles-resumen { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: var(--s-6); 
+  align-items: stretch;
+}
 .nivel-mini {
-  background: #F8FAF6; padding: var(--s-5); border-radius: var(--radius-lg);
-  border-top: 4px solid var(--c-primary); text-align: center;
-  transition: all 0.3s;
+  background: white; 
+  padding: 2.5rem 2rem; 
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: var(--shadow-sm);
 }
-.nivel-mini:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
+.nivel-mini:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+
+.nivel-mini:first-child { 
+  background-color: white; 
+  border: 2px solid var(--c-primary);
+}
+
 .nivel-mini.destacado {
-  border-top-color: var(--c-accent); background: white;
-  box-shadow: var(--shadow-lg); transform: scale(1.06); z-index: 2;
+  background-color: white;
+  border: 2px solid var(--c-accent);
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: var(--shadow-lg);
 }
-.nivel-mini h4 { font-size: 1.4rem; margin-bottom: 8px; color: var(--c-primary-dark); }
-.nivel-mini p { color: var(--c-text-light); font-size: 0.95rem; }
+
+.nivel-mini:last-child {
+  background-color: white;
+  border: 2px solid #D4AF37; /* Marco Dorado Senior */
+}
+
+.nivel-ribbon {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--c-accent);
+  color: var(--c-primary-dark);
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nivel-mini h4 { 
+  font-size: 1.5rem; 
+  margin-bottom: 0.8rem; 
+  text-align: center;
+  color: var(--c-primary-dark) !important;
+}
+
+.nivel-desc { 
+  color: var(--c-text-main) !important;
+  font-size: 0.95rem; 
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  min-height: 2.8rem;
+  font-weight: 500;
+}
+
+.nivel-ideal {
+  flex-grow: 1;
+  margin-bottom: 1.5rem;
+}
+
+.nivel-ideal h5 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.8rem;
+  font-weight: 800;
+  color: var(--c-primary-dark) !important;
+}
+
+.nivel-ideal ul {
+  padding: 0;
+}
+
+.nivel-ideal li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+  color: var(--c-text-main) !important;
+}
+
+.nivel-mini:first-child .nivel-ideal li svg { color: var(--c-primary); }
+.nivel-mini.destacado .nivel-ideal li svg { color: var(--c-accent); }
+.nivel-mini:last-child .nivel-ideal li svg { color: #D4AF37; }
+
+.nivel-precio {
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nivel-precio span {
+  font-size: 0.8rem;
+  color: var(--c-text-light);
+  text-transform: uppercase;
+}
+
+.nivel-precio strong {
+  color: var(--c-primary-dark);
+  font-size: 1.1rem;
+}
 
 /* 7. Cobertura */
 .section-cobertura {

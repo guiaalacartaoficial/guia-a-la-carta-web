@@ -1,27 +1,837 @@
-/* ===== QUIÉNES SOMOS PAGE ===== */
-.nosotros-layouts {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--s-5);
-}
-.nosotros-card {
-  background: white; padding: var(--s-6) var(--s-5); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm); text-align: center;
-  border-bottom: 4px solid transparent; transition: all 0.3s;
-}
-.nosotros-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-bottom-color: var(--c-accent); }
-.nosotros-card h3 { color: var(--c-primary-dark); margin-bottom: var(--s-3); font-size: 1.3rem; }
-.nosotros-card p { color: var(--c-text-light); line-height: 1.7; margin: 0; }
+/* ===== QUIÉNES SOMOS PAGE — CORPORATE PREMIUM REDESIGN ===== */
 
-.enfoque-section {
-  background: white; padding: var(--s-6); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+.nosotros-page {
+  --ns-bg: #F4F6F3;
+  --ns-border: #E2E5DF;
+  --ns-text-muted: #5A6A63;
+  --ns-gold: #D4AF37;
+  --ns-gold-light: #FDF6E3;
+  --ns-primary-light: rgba(14, 91, 76, 0.06);
+  --ns-gradient: linear-gradient(135deg, #0E5B4C 0%, #0A3B31 100%);
 }
-.enfoque-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); }
-.enfoque-item {
-  background: #F8FAF6; padding: var(--s-3) var(--s-4); border-radius: 50px;
-  font-weight: 600; display: flex; align-items: center; gap: 8px;
-  color: var(--c-primary-dark); font-size: 1.05rem;
-  box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04);
-  transition: all 0.3s;
+
+/* ============================================= */
+/*  1. HERO PRINCIPAL                            */
+/* ============================================= */
+.ns-hero {
+  position: relative;
+  background-color: var(--c-primary-dark);
+  color: var(--c-text-invert);
+  padding: 7.5rem 0 5.5rem;
+  overflow: hidden;
 }
-.enfoque-item:hover { background: var(--c-primary); color: white; transform: translateY(-2px); }
-.enfoque-item:hover svg { color: white !important; }
+
+.ns-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--ns-gradient);
+  z-index: 1;
+}
+
+.ns-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(159, 192, 90, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(255, 255, 255, 0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(159, 192, 90, 0.03) 0%, transparent 70%);
+}
+
+.ns-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.ns-hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(159, 192, 90, 0.15);
+  border: 1px solid rgba(159, 192, 90, 0.3);
+  color: var(--c-accent);
+  padding: 0.4rem 1.2rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 1.75rem;
+}
+
+.ns-hero h1 {
+  color: var(--c-text-invert);
+  font-size: 3.2rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+}
+
+.ns-hero .hero-subtitle {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 2.5rem;
+  line-height: 1.75;
+  font-weight: 400;
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ns-hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.ns-trust-badges {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+}
+
+.ns-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.ns-badge-icon {
+  color: var(--c-accent);
+}
+
+/* ============================================= */
+/*  SECTION SHARED                               */
+/* ============================================= */
+.ns-section {
+  padding: 5.5rem 0;
+}
+
+.ns-section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3.5rem;
+}
+
+.ns-section-header h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+}
+
+.ns-section-header p {
+  font-size: 1.08rem;
+  color: var(--ns-text-muted);
+  line-height: 1.65;
+}
+
+.ns-section-header .ns-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--ns-primary-light);
+  color: var(--c-primary);
+  padding: 0.3rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.bg-ns-light { background-color: var(--ns-bg); }
+.bg-ns-white { background-color: var(--c-surface); }
+
+/* ============================================= */
+/*  2. QUIÉNES SOMOS — SPOTLIGHT                 */
+/* ============================================= */
+.ns-quienes-block {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ns-quienes-visual {
+  flex: 0 0 340px;
+  height: 340px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(14, 91, 76, 0.15);
+}
+
+.ns-quienes-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ns-quienes-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  border: 3px solid var(--c-accent);
+  opacity: 0.4;
+}
+
+.ns-quienes-text {
+  flex: 1;
+}
+
+.ns-quienes-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.3px;
+}
+
+.ns-quienes-text p {
+  font-size: 1.06rem;
+  color: var(--ns-text-muted);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.ns-quienes-text p:last-child {
+  margin-bottom: 0;
+}
+
+.ns-accent-line {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--c-primary), var(--c-accent));
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================= */
+/*  3. CÓMO NACIMOS — ORIGIN STORY               */
+/* ============================================= */
+.ns-origin-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--c-surface);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.ns-origin-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--c-primary), var(--c-accent));
+  border-radius: 2px 0 0 2px;
+}
+
+.ns-origin-content {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+.ns-origin-icon-block {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  background: var(--ns-primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-primary);
+}
+
+.ns-origin-text {
+  flex: 1;
+}
+
+.ns-origin-text h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+  color: var(--c-primary-dark);
+}
+
+.ns-origin-text p {
+  font-size: 1.04rem;
+  color: var(--ns-text-muted);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.ns-origin-text p:last-child {
+  margin-bottom: 0;
+}
+
+.ns-origin-highlight {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ns-border);
+}
+
+.ns-origin-stat {
+  text-align: center;
+  flex: 1;
+}
+
+.ns-origin-stat .stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--c-primary);
+  font-family: var(--font-heading);
+  display: block;
+}
+
+.ns-origin-stat .stat-label {
+  font-size: 0.88rem;
+  color: var(--ns-text-muted);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* ============================================= */
+/*  4. MISIÓN Y VISIÓN                           */
+/* ============================================= */
+.ns-mv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ns-mv-card {
+  background: var(--c-surface);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+.ns-mv-card:hover {
+  box-shadow: 0 12px 40px rgba(14, 91, 76, 0.08);
+  transform: translateY(-4px);
+}
+
+.ns-mv-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.ns-mv-card.mision::before {
+  background: linear-gradient(90deg, var(--c-primary), var(--c-accent));
+}
+
+.ns-mv-card.vision::before {
+  background: linear-gradient(90deg, var(--c-accent), var(--ns-gold));
+}
+
+.ns-mv-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.ns-mv-card.mision .ns-mv-icon {
+  background: var(--ns-primary-light);
+  color: var(--c-primary);
+}
+
+.ns-mv-card.vision .ns-mv-icon {
+  background: var(--ns-gold-light);
+  color: var(--ns-gold);
+}
+
+.ns-mv-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--c-primary-dark);
+}
+
+.ns-mv-card p {
+  font-size: 1.02rem;
+  color: var(--ns-text-muted);
+  line-height: 1.75;
+}
+
+/* ============================================= */
+/*  5. NUESTRO ENFOQUE — PILARES                 */
+/* ============================================= */
+.ns-enfoque-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.ns-enfoque-card {
+  background: var(--c-surface);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.ns-enfoque-card:hover {
+  border-color: var(--c-primary);
+  box-shadow: 0 8px 28px rgba(14, 91, 76, 0.08);
+  transform: translateY(-3px);
+}
+
+.ns-enfoque-icon {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: var(--radius-md);
+  background: var(--c-primary-dark);
+  color: var(--c-text-invert);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ns-enfoque-content h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--c-primary-dark);
+}
+
+.ns-enfoque-content p {
+  font-size: 0.95rem;
+  color: var(--ns-text-muted);
+  line-height: 1.6;
+}
+
+/* Last card spanning full width if 5 items (3 cols) */
+.ns-enfoque-grid > .ns-enfoque-card:last-child:nth-child(odd):nth-child(n+5) {
+  grid-column: 1 / -1;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ============================================= */
+/*  6. NUESTRO EQUIPO                            */
+/* ============================================= */
+.ns-team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ns-team-card {
+  background: var(--c-surface);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ns-team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(14, 91, 76, 0.08);
+  border-color: var(--c-primary);
+}
+
+.ns-team-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--c-primary), var(--c-accent));
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+
+.ns-team-card:hover::after {
+  transform: scaleX(1);
+}
+
+.ns-team-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1.5rem;
+  border: 3px solid var(--ns-border);
+  transition: border-color 0.3s ease;
+  display: block;
+}
+
+.ns-team-card:hover .ns-team-photo {
+  border-color: var(--c-accent);
+}
+
+.ns-team-card h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  color: var(--c-primary-dark);
+}
+
+.ns-team-role {
+  display: inline-block;
+  background: var(--ns-primary-light);
+  color: var(--c-primary);
+  padding: 0.25rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-bottom: 1rem;
+}
+
+.ns-team-card p.ns-team-desc {
+  font-size: 0.93rem;
+  color: var(--ns-text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================= */
+/*  7. RESPALDO Y FORMALIDAD                     */
+/* ============================================= */
+.ns-respaldo-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ns-respaldo-intro {
+  text-align: center;
+  max-width: 740px;
+  margin: 0 auto 3rem;
+  font-size: 1.06rem;
+  color: var(--ns-text-muted);
+  line-height: 1.75;
+}
+
+.ns-respaldo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.ns-respaldo-card {
+  background: var(--c-surface);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.ns-respaldo-card:hover {
+  box-shadow: 0 8px 24px rgba(14, 91, 76, 0.06);
+  border-color: var(--c-primary);
+  transform: translateY(-2px);
+}
+
+.ns-respaldo-seal {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ns-respaldo-card:nth-child(1) .ns-respaldo-seal {
+  background: rgba(14, 91, 76, 0.1);
+  color: var(--c-primary);
+}
+.ns-respaldo-card:nth-child(2) .ns-respaldo-seal {
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--ns-gold);
+}
+.ns-respaldo-card:nth-child(3) .ns-respaldo-seal {
+  background: rgba(159, 192, 90, 0.15);
+  color: #6B8E23;
+}
+.ns-respaldo-card:nth-child(4) .ns-respaldo-seal {
+  background: rgba(14, 91, 76, 0.1);
+  color: var(--c-primary);
+}
+
+.ns-respaldo-text h4 {
+  font-size: 1.08rem;
+  margin-bottom: 0.4rem;
+  color: var(--c-primary-dark);
+}
+
+.ns-respaldo-text p {
+  font-size: 0.93rem;
+  color: var(--ns-text-muted);
+  line-height: 1.55;
+}
+
+/* ============================================= */
+/*  8. CTA FINAL                                 */
+/* ============================================= */
+.ns-cta-final {
+  background: var(--ns-gradient);
+  padding: 5rem 3rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.ns-cta-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 75%, rgba(159, 192, 90, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 25%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+}
+
+.ns-cta-final h2 {
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.ns-cta-final p {
+  font-size: 1.12rem;
+  max-width: 580px;
+  margin: 0 auto 2.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  position: relative;
+  line-height: 1.65;
+}
+
+.ns-cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* ============================================= */
+/*  SCROLL ANIMATIONS                            */
+/* ============================================= */
+.ns-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.ns-animate.ns-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ns-animate-delay-1 { transition-delay: 0.1s; }
+.ns-animate-delay-2 { transition-delay: 0.2s; }
+.ns-animate-delay-3 { transition-delay: 0.3s; }
+.ns-animate-delay-4 { transition-delay: 0.4s; }
+.ns-animate-delay-5 { transition-delay: 0.5s; }
+
+/* ============================================= */
+/*  RESPONSIVE                                   */
+/* ============================================= */
+@media (max-width: 1024px) {
+  .ns-quienes-block {
+    flex-direction: column;
+    text-align: center;
+    gap: 2.5rem;
+  }
+
+  .ns-quienes-visual {
+    flex: 0 0 auto;
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+  }
+
+  .ns-accent-line {
+    margin: 0 auto 1.5rem;
+  }
+
+  .ns-origin-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .ns-mv-grid {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+
+  .ns-enfoque-grid {
+    grid-template-columns: 1fr;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .ns-team-grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+  }
+
+  .ns-respaldo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ns-hero {
+    padding: 5.5rem 0 4rem;
+  }
+
+  .ns-hero h1 {
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+  }
+
+  .ns-hero .hero-subtitle {
+    font-size: 1.02rem;
+  }
+
+  .ns-hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ns-hero-actions .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .ns-trust-badges {
+    gap: 1rem;
+  }
+
+  .ns-badge {
+    font-size: 0.82rem;
+  }
+
+  .ns-section {
+    padding: 3.5rem 0;
+  }
+
+  .ns-section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .ns-section-header h2 {
+    font-size: 1.85rem;
+  }
+
+  .ns-quienes-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .ns-origin-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .ns-origin-text h3 {
+    font-size: 1.5rem;
+  }
+
+  .ns-origin-highlight {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .ns-mv-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .ns-cta-final {
+    padding: 3.5rem 1.5rem;
+    border-radius: var(--radius-md);
+  }
+
+  .ns-cta-final h2 {
+    font-size: 1.85rem;
+  }
+
+  .ns-cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ns-cta-actions .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .ns-hero-label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ns-hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .ns-quienes-visual {
+    width: 220px;
+    height: 220px;
+  }
+
+  .ns-team-grid {
+    max-width: 300px;
+  }
+
+  .ns-team-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .ns-origin-card {
+    padding: 2rem 1.5rem;
+  }
+}

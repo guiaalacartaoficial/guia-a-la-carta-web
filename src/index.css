@@ -7,8 +7,8 @@
   --c-accent: #9FC05A;
   --c-background: #F8F7F2;
   --c-surface: #FFFFFF;
-  --c-text-main: #2A332F;
-  --c-text-light: #5A6A63;
+  --c-text-main: #1F2937;
+  --c-text-light: #4B5563;
   --c-text-invert: #FFFFFF;
 
   --font-heading: 'Outfit', sans-serif;
@@ -125,6 +125,6 @@ ul, ol { list-style: none; }
 
 /* ===== SHARED SECTION CLASSES ===== */
 .section-head { margin-bottom: var(--s-5); }
-.bajada { font-size: 1.15rem; color: var(--c-text-light); max-width: 750px; margin: 0 auto; line-height: 1.6; }
+.bajada { font-size: 1.15rem; color: var(--c-text-light); max-width: 750px; margin: 0 auto; line-height: 1.6; font-weight: 500; }
 .bajada-resalte { font-size: 1.1rem; color: var(--c-primary-dark); }
 .bg-light { background-color: #F8FAF6; }

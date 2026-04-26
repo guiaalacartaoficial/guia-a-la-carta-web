@@ -1,0 +1,20 @@
+/* Admin Styles */
+.admin-login-container {
+  background-color: var(--c-surface-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-dashboard h1 {
+  color: var(--c-primary-dark);
+}
+
+.admin-card {
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
