@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
 import './Footer.css';
 
