@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Mail, Phone, Globe, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { MapPin, Mail, Phone, ArrowUpRight, Instagram, Linkedin, Facebook } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
@@ -19,11 +19,14 @@ const Footer = () => {
             Tu red confiable de guías turísticos en Chile. Conectamos empresas con profesionales certificados para una operación más confiable y flexible.
           </p>
           <div className="footer-socials">
-            <a href="https://www.instagram.com/guiaalacarta" target="_blank" rel="noreferrer" aria-label="Instagram">
-              <Globe size={18} />
+            <a href="https://www.instagram.com/guiaalacartaoficial/" target="_blank" rel="noreferrer" aria-label="Instagram">
+              <Instagram size={18} />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-              <ExternalLink size={18} />
+            <a href="https://www.linkedin.com/in/gu%C3%ADa-a-la-carta-7645382a8/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              <Linkedin size={18} />
+            </a>
+            <a href="https://www.facebook.com/guiaalacartaoficial/" target="_blank" rel="noreferrer" aria-label="Facebook">
+              <Facebook size={18} />
             </a>
           </div>
         </div>

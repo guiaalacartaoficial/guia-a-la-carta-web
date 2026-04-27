@@ -267,7 +267,7 @@ const Home = () => {
             
             <div className="hero-actions mt-4">
               <Link to="/contacto" className="btn btn-hero">Agendar reunión</Link>
-              <a href="https://wa.me/56900000000" target="_blank" rel="noreferrer" className="btn btn-whatsapp border-white">Escribir por WhatsApp</a>
+              <a href="https://wa.me/56956048293?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noreferrer" className="btn btn-whatsapp border-white">Escribir por WhatsApp</a>
             </div>
           </div>
         </div>
