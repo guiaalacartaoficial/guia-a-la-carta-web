@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Users, MapPin, Languages, Clock, Send, CheckCircle, ArrowRight } from 'lucide-react';
 import { supabase } from '../services/supabase';
+import emailjs from '@emailjs/browser';
 import './Postulacion.css'; // Reusing some styles for consistency
 
 const Reserva = () => {
@@ -33,6 +34,24 @@ const Reserva = () => {
         .insert([formData]);
 
       if (error) throw error;
+      
+      // Notificar al admin vía EmailJS
+      try {
+        await emailjs.send(
+          'service_ihvjiza',
+          'template_u6p28e4',
+          {
+            tipo_solicitud: 'Nueva Reserva B2B',
+            nombre: formData.empresa,
+            email: formData.email,
+            mensaje: `Has recibido una nueva solicitud de reserva de la empresa ${formData.empresa} para el destino ${formData.destino}. Revisa el panel de administración.`
+          },
+          '_nmx76wxhMLgNa1ic'
+        );
+      } catch (err) {
+        console.error("Error al notificar por email:", err);
+      }
+
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {

@@ -3,6 +3,7 @@ import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileT
 import GuideCredential from '../components/GuideCredential';
 import './Postulacion.css';
 import { supabase } from '../services/supabase';
+import emailjs from '@emailjs/browser';
 
 const PostulacionGuias = () => {
   const [loading, setLoading] = useState(false);
@@ -100,6 +101,24 @@ const PostulacionGuias = () => {
         }]);
 
       if (error) throw error;
+
+      // Notificar al admin
+      try {
+        await emailjs.send(
+          'service_ihvjiza',
+          'template_u6p28e4',
+          {
+            tipo_solicitud: 'Postulación de Guía Profesional',
+            nombre: `${formData.nombres} ${formData.apellidos}`,
+            email: formData.email,
+            mensaje: `El guía ${formData.nombres} ${formData.apellidos} ha enviado una postulación. Revisa el panel de administración.`
+          },
+          '_nmx76wxhMLgNa1ic'
+        );
+      } catch (err) {
+        console.error("Error al notificar:", err);
+      }
+
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {

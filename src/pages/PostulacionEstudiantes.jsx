@@ -3,6 +3,7 @@ import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileT
 import GuideCredential from '../components/GuideCredential';
 import './Postulacion.css';
 import { supabase } from '../services/supabase';
+import emailjs from '@emailjs/browser';
 
 const PostulacionEstudiantes = () => {
   const [loading, setLoading] = useState(false);
@@ -91,8 +92,26 @@ const PostulacionEstudiantes = () => {
         }]);
 
       if (error) throw error;
+
+      // Notificar al admin vía EmailJS
+      try {
+        await emailjs.send(
+          'service_ihvjiza',
+          'template_u6p28e4',
+          {
+            tipo_solicitud: 'Postulación de Estudiante',
+            nombre: `${formData.nombres} ${formData.apellidos}`,
+            email: formData.email,
+            mensaje: `El estudiante ${formData.nombres} ${formData.apellidos} (${formData.educacion}) ha enviado su postulación. Revisa el panel de administración.`
+          },
+          '_nmx76wxhMLgNa1ic'
+        );
+      } catch (err) {
+        console.error('Error al notificar por email:', err);
+      }
+
       setSubmitted(true);
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error detallado al postular estudiante:', error);
       alert(`Error al enviar postulación: ${error.message || 'Error desconocido'}. Revisa que el bucket "documentos" exista en Supabase Storage.`);
