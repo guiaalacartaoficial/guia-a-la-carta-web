@@ -143,6 +143,23 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDelete = async (table, id) => {
+    if (!window.confirm("¿Estás súper seguro de que quieres eliminar esto permanentemente? Se borrará de la base de datos.")) {
+      return;
+    }
+    try {
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      if (error) throw error;
+      
+      alert("Registro eliminado exitosamente.");
+      fetchData();
+      setSelectedItem(null);
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      alert("Hubo un error al eliminar. Revisa los permisos RLS en Supabase.");
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="admin-login-container" style={{ padding: '4rem', textAlign: 'center', height: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -355,7 +372,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              <div className="admin-actions-box" style={{ padding: '1.5rem', background: '#F8FAF6', borderRadius: '12px', border: '1px solid #E2E8F0', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+              <div className="admin-actions-box" style={{ padding: '1.5rem', background: '#F8FAF6', borderRadius: '12px', border: '1px solid #E2E8F0', display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                 <button 
                   onClick={() => handleApprove(type === 'guia' ? 'postulaciones_guias' : 'postulaciones_estudiantes', item)}
                   className="btn btn-primary" 
@@ -369,6 +386,15 @@ const AdminDashboard = () => {
                   style={{ color: '#EF4444', borderColor: '#EF4444', padding: '0.8rem 2rem', fontSize: '1.1rem' }}
                 >
                   <XCircle size={18} /> Rechazar y Explicar
+                </button>
+                <div style={{ flexBasis: '100%', height: '0' }}></div>
+                <button 
+                  onClick={() => handleDelete(type === 'guia' ? 'postulaciones_guias' : 'postulaciones_estudiantes', item.id)}
+                  className="btn btn-outline" 
+                  style={{ color: '#64748b', borderColor: '#cbd5e1', padding: '0.6rem 1.5rem', fontSize: '1rem', background: 'transparent' }}
+                  title="Dar de baja / Eliminar de la base de datos permanentemente"
+                >
+                  <Trash2 size={16} /> Eliminar Perfil
                 </button>
               </div>
             </div>
@@ -535,7 +561,10 @@ const AdminDashboard = () => {
                       </span>
                     </td>
                     <td style={{ padding: '1.2rem 1.5rem', textAlign: 'right' }}>
-                      <button onClick={() => setSelectedItem({ type: 'guia', data: guia })} className="btn btn-outline btn-sm" style={{ padding: '0.4rem 1rem' }}>Revisar Perfil</button>
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setSelectedItem({ type: 'guia', data: guia })} className="btn btn-outline btn-sm" style={{ padding: '0.4rem 1rem', color: 'var(--c-primary)', borderColor: 'var(--c-primary)' }}>Revisar Perfil</button>
+                        <button onClick={() => handleDelete('postulaciones_guias', guia.id)} className="btn btn-outline btn-sm" style={{ padding: '0.4rem', color: '#EF4444', borderColor: '#EF4444' }} title="Eliminar Perfil"><Trash2 size={16} /></button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -570,7 +599,10 @@ const AdminDashboard = () => {
                       </span>
                     </td>
                     <td style={{ padding: '1.2rem 1.5rem', textAlign: 'right' }}>
-                      <button onClick={() => setSelectedItem({ type: 'estudiante', data: est })} className="btn btn-outline btn-sm" style={{ padding: '0.4rem 1rem' }}>Revisar Perfil</button>
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setSelectedItem({ type: 'estudiante', data: est })} className="btn btn-outline btn-sm" style={{ padding: '0.4rem 1rem', color: 'var(--c-primary)', borderColor: 'var(--c-primary)' }}>Revisar Perfil</button>
+                        <button onClick={() => handleDelete('postulaciones_estudiantes', est.id)} className="btn btn-outline btn-sm" style={{ padding: '0.4rem', color: '#EF4444', borderColor: '#EF4444' }} title="Eliminar Perfil"><Trash2 size={16} /></button>
+                      </div>
                     </td>
                   </tr>
                 ))}
