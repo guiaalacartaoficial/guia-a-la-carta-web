@@ -12,7 +12,14 @@
 
 /* Contenedor general transparente, ahora usamos Cards internamente */
 .postulacion-form-container {
-  margin-top: calc(var(--s-6) * -1);
+  margin-top: calc(var(--s-10) * -1); /* Pull up to overlap header */
+  position: relative;
+  z-index: 10;
+}
+
+.postulacion-page .section {
+  padding-top: 0;
+  background-color: var(--c-background);
 }
 
 /* ===== CARDS DIVISORIAS ===== */

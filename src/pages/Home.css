@@ -63,7 +63,7 @@
   text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
 }
 .hero-center-logo { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
-.hero-actions { display: flex; gap: var(--s-4); justify-content: center; flex-wrap: wrap; }
+.hero-actions { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
 
 /* 2. Problema */
 .section-problema {
