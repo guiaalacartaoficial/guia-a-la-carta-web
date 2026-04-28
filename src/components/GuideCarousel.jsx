@@ -1,43 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import './GuideCarousel.css';
-
-import { guiasData } from '../data/guiasData';
-
-const guias = guiasData.map(g => {
-  let certName = 'Guía Certificado';
-  if (g.certificaciones?.wfr) certName = 'WFR Certified';
-  else if (g.nivel === 'senior') certName = 'Guía Senior';
-  else if (g.certificaciones?.sernatur) certName = 'Registro Sernatur';
-  else if (g.nivel === 'junior') certName = 'Guía Junior';
-  
-  return {
-    id: g.id,
-    nombre: g.nombre,
-    especialidad: g.especialidad,
-    cert: certName,
-    img: g.imagen
-  };
-});
+import { supabase } from '../services/supabase';
 
 const GuideCarousel = () => {
   const [index, setIndex] = useState(0);
+  const [guias, setGuias] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchApprovedGuides = async () => {
+      setLoading(true);
+      try {
+        const { data: pros, error: errPros } = await supabase
+          .from('postulaciones_guias')
+          .select('*')
+          .eq('estado', 'aprobado');
+        
+        const { data: ests, error: errEsts } = await supabase
+          .from('postulaciones_estudiantes')
+          .select('*')
+          .eq('estado', 'aprobado');
+
+        if (errPros) console.error("Error fetching pros:", errPros);
+        if (errEsts) console.error("Error fetching ests:", errEsts);
+
+        const formatForCarousel = (item, type) => {
+          let certName = 'Guía Verificado';
+          if (item.url_sernatur) certName = 'Registro SERNATUR';
+          if (type === 'estudiante') certName = 'Guía Junior (Est)';
+
+          return {
+            id: item.id,
+            nombre: `${item.nombres || ''} ${item.apellidos || ''}`.trim(),
+            especialidad: type === 'guia' ? 'Guía Profesional' : 'Guía Junior',
+            cert: certName,
+            img: item.url_foto || '/placeholder-user.png'
+          };
+        };
+
+        const allGuias = [
+          ...(pros || []).map(p => formatForCarousel(p, 'guia')),
+          ...(ests || []).map(e => formatForCarousel(e, 'estudiante'))
+        ];
+
+        setGuias(allGuias);
+      } catch (error) {
+        console.error("Error in GuideCarousel fetch:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApprovedGuides();
+  }, []);
+
+  useEffect(() => {
+    if (guias.length === 0) return;
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % guias.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [guias.length]);
 
   // Función para determinar la posición relativa
   const getPositionClass = (i) => {
+    if (guias.length === 0) return 'hidden';
     const diff = (i - index + guias.length) % guias.length;
+    
+    // Si hay pocos guías, ajustamos la lógica del arco
+    if (guias.length === 1) return diff === 0 ? 'center' : 'hidden';
+    
     if (diff === 0) return 'center';
     if (diff === 1 || diff === guias.length - 1) return diff === 1 ? 'right-1' : 'left-1';
     if (diff === 2 || diff === guias.length - 2) return diff === 2 ? 'right-2' : 'left-2';
-    if (diff === 3 || diff === guias.length - 3) return diff === 3 ? 'right-3' : 'left-3';
+    
     return 'hidden';
   };
+
+  if (loading) {
+    return (
+      <div className="guide-arc-container">
+        <div className="loading-carousel">Cargando guías...</div>
+      </div>
+    );
+  }
+
+  if (guias.length === 0) {
+    return (
+      <div className="guide-arc-container">
+        <div className="empty-carousel">
+          <p>Directorio en actualización profesional</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="guide-arc-container">

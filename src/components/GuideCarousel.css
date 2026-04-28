@@ -6,8 +6,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   position: relative;
   overflow: visible;
+}
+
+.loading-carousel, .empty-carousel {
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem 4rem;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.empty-carousel p {
+  margin: 0;
+  opacity: 0.8;
 }
 
 .arc-wrapper {
