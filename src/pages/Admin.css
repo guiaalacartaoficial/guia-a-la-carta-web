@@ -4,6 +4,7 @@
   min-height: 100vh;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #1e293b;
+  padding-top: 85px; /* Evita que el Navbar tape el título */
 }
 
 .container-pro {
@@ -14,12 +15,13 @@
 
 /* TOP BAR */
 .admin-top-bar {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid #e2e8f0;
-  padding: 15px 0;
+  padding: 18px 0;
   position: sticky;
-  top: 0;
-  z-index: 100;
+  top: 80px; /* Se queda pegado justo debajo del Navbar si este es fijo */
+  z-index: 90;
 }
 
 .admin-top-bar .container-pro {
