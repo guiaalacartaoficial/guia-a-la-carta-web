@@ -282,12 +282,43 @@
   cursor: pointer;
   transition: all 0.2s;
   background: white;
+  text-decoration: none;
 }
 
-.btn-action.approve:hover { background: #dcfce7; color: #166534; border-color: #166534; }
-.btn-action.reject:hover { background: #fee2e2; color: #991b1b; border-color: #991b1b; }
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.btn-action.approve { color: #166534; }
+.btn-action.approve:hover { background: #dcfce7; border-color: #166534; }
+.btn-action.reject { color: #991b1b; }
+.btn-action.reject:hover { background: #fee2e2; border-color: #991b1b; }
 .btn-action.delete:hover { background: #0f172a; color: white; border-color: #0f172a; }
 .btn-action.view:hover { background: #f1f5f9; color: #0f172a; border-color: #0f172a; }
+.btn-action.email { color: #dc2626; }
+.btn-action.email:hover { background: #fee2e2; border-color: #dc2626; }
+.btn-action.whatsapp { color: #16a34a; }
+.btn-action.whatsapp:hover { background: #dcfce7; border-color: #16a34a; }
+
+.status-selector-mini {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: white;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+  height: 34px;
+  color: #475569;
+}
+
+.status-selector-mini:hover {
+  border-color: #0f172a;
+  color: #0f172a;
+}
 
 /* EXPANDED DETAILS */
 .row-expanded {

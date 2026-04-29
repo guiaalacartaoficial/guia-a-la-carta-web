@@ -80,14 +80,20 @@ const PostulacionEstudiantes = () => {
     try {
       const url_cv = await uploadFile(files.cv, 'documentos', 'estudiantes/cvs');
       const url_foto = await uploadFile(files.foto, 'documentos', 'estudiantes/fotos');
+      const url_certificaciones = await uploadFile(files.certificaciones, 'documentos', 'estudiantes/certificados');
+
+      // Generar Código Automático
+      const autoCode = `EST-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
       const { error } = await supabase
         .from('postulaciones_estudiantes')
         .insert([{
           ...formData,
           idiomas: idiomasList,
+          codigo: autoCode,
           url_cv,
           url_foto,
+          url_certificaciones,
           estado: 'pendiente'
         }]);
 

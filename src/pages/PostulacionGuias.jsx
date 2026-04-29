@@ -88,12 +88,16 @@ const PostulacionGuias = () => {
       const url_primeros_auxilios = await uploadFile(files.primeros_auxilios, 'documentos', 'certificados');
       const url_otras_certificaciones = await uploadFile(files.otras_certificaciones, 'documentos', 'certificados');
 
+      // Generar Código Automático
+      const autoCode = `PRO-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
       // 2. Guardar en DB
       const { error } = await supabase
         .from('postulaciones_guias')
         .insert([{
           ...formData,
           idiomas: idiomasList,
+          codigo: autoCode,
           url_cv,
           url_foto,
           url_sernatur,

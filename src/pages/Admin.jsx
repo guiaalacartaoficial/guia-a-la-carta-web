@@ -80,7 +80,36 @@ const AdminDashboard = () => {
   const handleUpdateRecord = async (table, id) => {
     setLoading(true);
     try {
-      const { error } = await supabase.from(table).update(editData).eq('id', id);
+      let finalData = { ...editData };
+
+      // Si hay archivos nuevos, subirlos
+      if (editData.file_cv instanceof File) {
+        finalData.url_cv = await uploadFile(editData.file_cv, 'documentos', 'cvs');
+        delete finalData.file_cv;
+      }
+      if (editData.file_foto instanceof File) {
+        finalData.url_foto = await uploadFile(editData.file_foto, 'documentos', 'fotos');
+        delete finalData.file_foto;
+      }
+      if (editData.file_sernatur instanceof File) {
+        finalData.url_sernatur = await uploadFile(editData.file_sernatur, 'documentos', 'certificados');
+        delete finalData.file_sernatur;
+      }
+      if (editData.file_wfr instanceof File) {
+        finalData.url_primeros_auxilios = await uploadFile(editData.file_wfr, 'documentos', 'certificados');
+        delete finalData.file_wfr;
+      }
+      if (editData.file_otras instanceof File) {
+        finalData.url_otras_certificaciones = await uploadFile(editData.file_otras, 'documentos', 'certificados');
+        delete finalData.file_otras;
+      }
+
+      // Limpiar campos que no deben ir a la DB si son objetos File que no manejamos arriba
+      Object.keys(finalData).forEach(key => {
+        if (finalData[key] instanceof File) delete finalData[key];
+      });
+
+      const { error } = await supabase.from(table).update(finalData).eq('id', id);
       if (error) throw error;
       alert("Registro actualizado correctamente");
       setEditingId(null);
@@ -90,6 +119,22 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const uploadFile = async (file, bucket, path) => {
+    if (!file) return null;
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `${path}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
   const handleDelete = async (table, id) => {
@@ -119,26 +164,52 @@ const AdminDashboard = () => {
   };
 
   const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditData({ ...editData, [name]: value });
+    const { name, value, type, files } = e.target;
+    if (type === 'file') {
+      setEditData({ ...editData, [name]: files[0] });
+    } else {
+      setEditData({ ...editData, [name]: value });
+    }
   };
 
-  const ActionButtons = ({ table, id, currentStatus, record }) => (
-    <div className="admin-actions">
-      <button onClick={() => toggleExpand(id)} className="btn-action view" title="Ver Detalles"><Eye size={16}/></button>
-      <button onClick={() => startEditing(record)} className="btn-action edit" title="Editar Datos"><Edit size={16}/></button>
-      {(currentStatus === 'pendiente' || currentStatus === 'nueva') && (
-        <>
-          <button onClick={() => updateStatus(table, id, 'aprobado')} className="btn-action approve" title="Aprobar"><Check size={16}/></button>
-          <button onClick={() => updateStatus(table, id, 'rechazado')} className="btn-action reject" title="Rechazar"><XCircle size={16}/></button>
-        </>
-      )}
-      <button onClick={() => handleDelete(table, id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>
-    </div>
-  );
+  const ActionButtons = ({ table, id, currentStatus, record }) => {
+    const isReserva = table === 'reservas';
+
+    return (
+      <div className="admin-actions">
+        <button onClick={() => toggleExpand(id)} className="btn-action view" title="Ver Detalles"><Eye size={16}/></button>
+        <button onClick={() => startEditing(record)} className="btn-action edit" title="Editar Datos"><Edit size={16}/></button>
+        
+        {isReserva ? (
+          <>
+            <a href={`mailto:${record.email}?subject=Respuesta Solicitud Guía a la Carta - ${record.empresa}`} className="btn-action email" title="Responder por Email"><Mail size={16}/></a>
+            <a href={`https://wa.me/${record.telefono?.replace(/\s+/g, '')}`} target="_blank" rel="noreferrer" className="btn-action whatsapp" title="Contactar por WhatsApp"><MessageCircle size={16}/></a>
+            <select 
+              className="status-selector-mini" 
+              value={currentStatus} 
+              onChange={(e) => updateStatus(table, id, e.target.value)}
+            >
+              <option value="nueva">Nueva</option>
+              <option value="atendido">Atendido</option>
+              <option value="realizado">Realizado</option>
+            </select>
+          </>
+        ) : (
+          (currentStatus === 'pendiente' || currentStatus === 'nueva') && (
+            <>
+              <button onClick={() => updateStatus(table, id, 'aprobado')} className="btn-action approve" title="Aprobar"><Check size={16}/></button>
+              <button onClick={() => updateStatus(table, id, 'rechazado')} className="btn-action reject" title="Rechazar"><XCircle size={16}/></button>
+            </>
+          )
+        )}
+        
+        <button onClick={() => handleDelete(table, id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>
+      </div>
+    );
+  };
 
   const mapToCredential = (g) => ({
-    nombre: `${g.nombres} ${g.apellidos}`,
+    nombre: g.nombres ? g.nombres.split(' ')[0] : 'Guía',
     edad: g.edad || 0,
     codigo: g.codigo || 'S/N',
     idiomas: Array.isArray(g.idiomas) ? g.idiomas.map(i => i.idioma) : ['Español'],
@@ -327,7 +398,16 @@ const AdminDashboard = () => {
                                       <option value="junior">Guía Junior</option>
                                     </select>
                                   </div>
-                                  <div className="full-width"><label>Biografía</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'100px'}}></textarea></div>
+                                  <div className="full-width"><label>Biografía</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Educación</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Rutas y Experiencia</label><textarea name="rutas_experiencia" value={editData.rutas_experiencia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  
+                                  <div className="form-group"><label>Actualizar CV (PDF)</label><input type="file" name="file_cv" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
+                                  <div className="form-group"><label>Actualizar Foto</label><input type="file" name="file_foto" onChange={handleEditChange} className="form-control" accept="image/*" /></div>
+                                  <div className="form-group"><label>Actualizar SERNATUR</label><input type="file" name="file_sernatur" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
+                                  <div className="form-group"><label>Actualizar WFR</label><input type="file" name="file_wfr" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
+                                  <div className="form-group"><label>Otras Certificaciones</label><input type="file" name="file_otras" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
+
                                   <div className="edit-actions">
                                     <button onClick={() => handleUpdateRecord('postulaciones_guias', guia.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
                                     <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
@@ -351,6 +431,7 @@ const AdminDashboard = () => {
                                       {guia.url_foto && <a href={guia.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
                                       {guia.url_sernatur && <a href={guia.url_sernatur} target="_blank" rel="noreferrer" className="btn-doc"><Award size={16}/> SERNATUR</a>}
                                       {guia.url_primeros_auxilios && <a href={guia.url_primeros_auxilios} target="_blank" rel="noreferrer" className="btn-doc"><ShieldCheck size={16}/> P. Auxilios</a>}
+                                      {guia.url_otras_certificaciones && <a href={guia.url_otras_certificaciones} target="_blank" rel="noreferrer" className="btn-doc"><BookOpen size={16}/> Otras Cert.</a>}
                                     </div>
                                     <div className="full-width">
                                       <strong>Otras Certificaciones:</strong>
@@ -415,6 +496,7 @@ const AdminDashboard = () => {
                                     <strong>Documentos:</strong>
                                     {est.url_cv && <a href={est.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
                                     {est.url_foto && <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
+                                    {est.url_certificaciones && <a href={est.url_certificaciones} target="_blank" rel="noreferrer" className="btn-doc"><BookOpen size={16}/> Certificados</a>}
                                   </div>
                                 </div>
                               )}
