@@ -110,7 +110,12 @@ const AdminDashboard = () => {
       });
 
       const { error } = await supabase.from(table).update(finalData).eq('id', id);
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42703') {
+          alert("Error: Una de las columnas no existe en la base de datos. Por favor, verifica el SQL en Supabase.");
+        }
+        throw error;
+      }
       alert("Registro actualizado correctamente");
       setEditingId(null);
       fetchData();
