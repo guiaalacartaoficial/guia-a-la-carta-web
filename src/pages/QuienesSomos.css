@@ -392,31 +392,42 @@
 /* ============================================= */
 .ns-enfoque-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* First row: 3 cards, each spanning 2 of 6 columns */
-.ns-enfoque-grid > .ns-enfoque-card:nth-child(1) { grid-column: 1 / 3; }
-.ns-enfoque-grid > .ns-enfoque-card:nth-child(2) { grid-column: 3 / 5; }
-.ns-enfoque-grid > .ns-enfoque-card:nth-child(3) { grid-column: 5 / 7; }
-
-/* Second row: 2 cards centered — span columns 2-3 and 4-5 */
-.ns-enfoque-grid > .ns-enfoque-card:nth-child(4) { grid-column: 2 / 4; }
-.ns-enfoque-grid > .ns-enfoque-card:nth-child(5) { grid-column: 4 / 6; }
-
 .ns-enfoque-card {
   background: var(--c-surface);
   border: 1px solid var(--ns-border);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   display: flex;
-  gap: 1.25rem;
-  align-items: flex-start;
+  flex-direction: column; /* Alineación vertical para más orden */
+  gap: 1.5rem;
+  align-items: center; /* Centrar icono */
+  text-align: center; /* Centrar texto */
   transition: all 0.3s ease;
-  width: 100%;
+  height: 100%; /* Misma altura para todas */
+}
+
+/* Centrar tarjetas en la última fila si hay huecos */
+@media (min-width: 1025px) {
+  .ns-enfoque-grid {
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+  }
+  
+  /* Centrar los últimos 2 elementos si son 5 en total */
+  .ns-enfoque-card:nth-child(4) {
+    grid-column: 1 / 2;
+    margin-left: 50%;
+  }
+  .ns-enfoque-card:nth-child(5) {
+    grid-column: 2 / 3;
+    margin-left: 50%;
+  }
 }
 
 .ns-enfoque-card:hover {

@@ -1,12 +1,29 @@
 /* ===== POSTULACIÓN PAGES ===== */
-.postulacion-page { padding-top: 80px; }
+.postulacion-page {
+  /* No padding-top here to allow header background to reach the top */
+}
 
 .postulacion-header {
-  background-color: var(--c-primary); color: white;
-  padding: var(--s-8) 0; text-align: center;
+  background-color: var(--c-primary);
+  color: white;
+  padding: 100px 0 var(--s-10); /* 100px top to clear Navbar (68px approx) */
+  text-align: center;
 }
-.postulacion-header h1 { color: var(--c-accent); margin-bottom: var(--s-2); font-size: clamp(1.8rem, 4vw, 2.5rem); }
-.postulacion-header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; }
+
+.postulacion-header h1 {
+  color: var(--c-accent);
+  margin-bottom: var(--s-2);
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -1px;
+}
+
+.postulacion-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
 
 .max-w-3xl { max-width: 900px; margin: 0 auto; }
 
@@ -15,11 +32,13 @@
   margin-top: calc(var(--s-10) * -1); /* Pull up to overlap header */
   position: relative;
   z-index: 10;
+  padding: 0 var(--s-4);
 }
 
 .postulacion-page .section {
-  padding-top: 0;
+  padding-top: 2rem;
   background-color: var(--c-background);
+  padding-bottom: var(--s-10);
 }
 
 /* ===== CARDS DIVISORIAS ===== */
@@ -85,21 +104,22 @@
   color: var(--c-primary);
 }
 
-/* Warnings */
+/* Warnings / Info Boxes */
 .form-warning-box {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.5rem;
   background-color: #fffbeb;
-  border-left: 4px solid #f59e0b;
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  margin-bottom: var(--s-5);
+  border: 1px solid #fde68a;
+  border-left: 6px solid #f59e0b;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--s-6);
   box-shadow: var(--shadow-sm);
 }
-.form-warning-box svg { color: #f59e0b; flex-shrink: 0; margin-top: 2px; }
-.form-warning-content h4 { color: #92400e; margin: 0 0 0.5rem 0; font-size: 1.1rem; }
-.form-warning-content p { color: #b45309; margin: 0; font-size: 0.95rem; line-height: 1.5; }
+.form-warning-box svg { color: #f59e0b; flex-shrink: 0; margin-top: 4px; }
+.form-warning-content h4 { color: #92400e; margin: 0 0 0.5rem 0; font-size: 1.2rem; font-weight: 800; }
+.form-warning-content p { color: #b45309; margin: 0; font-size: 1rem; line-height: 1.6; }
 
 /* Subida de Archivos Refinada */
 .file-upload-block {
@@ -160,10 +180,11 @@ input[type="file"].form-control-file::file-selector-button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(14, 91, 76, 0.03);
-  padding: var(--s-5);
+  background-color: #f0f7f4;
+  padding: var(--s-6);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(14, 91, 76, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 .example-credential-wrapper h4 {
   color: var(--c-primary-dark);

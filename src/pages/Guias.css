@@ -1,13 +1,13 @@
 /* ===== GUÍAS PAGE ===== */
 .guias-page {
-  padding-top: 80px;
+  padding-top: 0;
 }
 
 /* Header */
 .guias-header {
   background-color: var(--c-primary-dark);
   color: white;
-  padding: var(--s-8) 0;
+  padding: 120px 0 5.5rem;
   border-bottom: 4px solid var(--c-accent);
 }
 
