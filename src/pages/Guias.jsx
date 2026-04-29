@@ -35,8 +35,12 @@ const Guias = () => {
               biografia: item.biografia || '',
               formacion: item.educacion ? item.educacion.split('\n') : [],
               experiencia: item.rutas_experiencia ? item.rutas_experiencia.split('\n') : (item.experiencia_terreno ? item.experiencia_terreno.split('\n') : []),
-              certificaciones: item.url_sernatur ? ['SERNATUR'] : [],
-              nivel: type === 'guia' ? 'full' : 'junior',
+              certificaciones: [
+                item.url_sernatur ? 'SERNATUR' : null,
+                item.url_primeros_auxilios ? 'Primeros Auxilios' : null,
+                item.url_otras_certificaciones ? 'Otras Certificaciones' : null
+              ].filter(Boolean),
+              nivel: item.nivel || (type === 'guia' ? 'full' : 'junior'),
               especialidad: 'Guía de Turismo',
               ubicacion: item.ciudad_residencia || 'No especificada'
             };
@@ -60,7 +64,6 @@ const Guias = () => {
     fetchApprovedGuides();
   }, []);
 
-  // Helper para mostrar el label del nivel
   const getNivelLabel = (nivel) => {
     switch(nivel) {
       case 'senior': return 'Guía Senior';
@@ -79,7 +82,6 @@ const Guias = () => {
         </div>
       </section>
 
-      {/* PÁGINA 4: NIVELES DE GUÍA */}
       <section className="section bg-light text-center" style={{paddingBottom: '3rem', paddingTop: '4rem'}}>
         <div className="container">
           <h2 style={{color: 'var(--c-primary-dark)', marginBottom: '1rem'}}>Niveles de guía disponibles</h2>

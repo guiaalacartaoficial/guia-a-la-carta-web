@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { Calendar, User, ArrowLeft, Send, Clock, ShieldCheck } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import './Relatos.css'; 
 
 const RelatoDetalle = () => {
@@ -63,6 +64,23 @@ const RelatoDetalle = () => {
 
       if (error) throw error;
       
+      // Notificar al admin via EmailJS
+      try {
+        await emailjs.send(
+          'service_ihvjiza',
+          'template_u6p28e4',
+          {
+            tipo_solicitud: 'Nuevo Comentario en Relato',
+            nombre: nuevoComentario.usuario,
+            email: 'admin@guiaalacarta.cl',
+            mensaje: `El usuario ${nuevoComentario.usuario} ha comentado en el relato "${relato.titulo}": "${nuevoComentario.texto}". Moderación requerida.`
+          },
+          '_nmx76wxhMLgNa1ic'
+        );
+      } catch (err) {
+        console.error("Error al notificar comentario:", err);
+      }
+
       alert("¡Gracias! Tu comentario ha sido enviado y aparecerá una vez sea aprobado.");
       setNuevoComentario({ usuario: '', texto: '' });
     } catch (error) {

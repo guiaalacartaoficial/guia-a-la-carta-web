@@ -86,6 +86,7 @@ const PostulacionGuias = () => {
       const url_foto = await uploadFile(files.foto, 'documentos', 'fotos');
       const url_sernatur = await uploadFile(files.sernatur, 'documentos', 'certificados');
       const url_primeros_auxilios = await uploadFile(files.primeros_auxilios, 'documentos', 'certificados');
+      const url_otras_certificaciones = await uploadFile(files.otras_certificaciones, 'documentos', 'certificados');
 
       // 2. Guardar en DB
       const { error } = await supabase
@@ -97,6 +98,7 @@ const PostulacionGuias = () => {
           url_foto,
           url_sernatur,
           url_primeros_auxilios,
+          url_otras_certificaciones,
           estado: 'pendiente'
         }]);
 
@@ -406,8 +408,8 @@ const PostulacionGuias = () => {
               <div className="form-group">
                 <label className="form-label">Otras Certificaciones (Opcional)</label>
                 <div className="file-upload-block">
-                  <input type="file" className="form-control-file" accept=".pdf, image/*" multiple />
-                  <span className="file-upload-info"><GraduationCap size={14} style={{display:'inline', marginBottom:'-2px'}}/> Leave No Trace, Rescate Acuático, Avalanchas, Licencia Clase A. Permite subir múltiples.</span>
+                  <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => handleFileChange(e, 'otras_certificaciones')} />
+                  <span className="file-upload-info"><GraduationCap size={14} style={{display:'inline', marginBottom:'-2px'}}/> Leave No Trace, Rescate Acuático, Avalanchas, Licencia Clase A.</span>
                 </div>
               </div>
 

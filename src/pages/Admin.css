@@ -384,6 +384,117 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* EDIT FORMS */
+.edit-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #0f172a;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.edit-form-grid .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-form-grid label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.edit-form-grid .form-control {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+
+.edit-form-grid .form-control:focus {
+  outline: none;
+  border-color: #0f172a;
+}
+
+.edit-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-save {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* CREDENTIAL PREVIEW IN ADMIN */
+.guide-detail-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.credential-preview-admin {
+  background: #f1f5f9;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px dashed #cbd5e1;
+}
+
+.credential-preview-admin h4 {
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: #475569;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.credential-mini-container {
+  display: flex;
+  justify-content: center;
+  transform: scale(0.85);
+  transform-origin: top center;
+  margin-bottom: -40px; /* Offset scale */
+}
+
+@media (max-width: 768px) {
+  .credential-mini-container {
+    transform: scale(0.6);
+  }
+}
+
 .doc-links {
   display: flex;
   gap: 12px;

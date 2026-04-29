@@ -4,8 +4,9 @@ import {
   Users, FileText, Calendar, CheckCircle, XCircle, 
   Clock, ExternalLink, Eye, Trash2, Check, ArrowLeft,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
-  ShieldCheck, Briefcase, RefreshCw
+  ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon
 } from 'lucide-react';
+import GuideCredential from '../components/GuideCredential';
 import './Admin.css';
 
 const AdminDashboard = () => {
@@ -20,9 +21,13 @@ const AdminDashboard = () => {
   const [relatos, setRelatos] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({});
 
   const fetchData = async () => {
     setLoading(true);
+    console.log("Fetching admin data...");
     try {
       const { data: resData } = await supabase.from('reservas').select('*').order('created_at', { ascending: false });
       const { data: guiasData } = await supabase.from('postulaciones_guias').select('*').order('created_at', { ascending: false });
@@ -35,6 +40,7 @@ const AdminDashboard = () => {
       setPostulacionesEstudiantes(estData || []);
       setRelatos(relatoData || []);
       setComentarios(comData || []);
+      console.log("Data fetched successfully.");
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
@@ -60,12 +66,29 @@ const AdminDashboard = () => {
   };
 
   const updateStatus = async (table, id, newStatus) => {
+    console.log(`Updating ${table} ID: ${id} to Status: ${newStatus}`);
     try {
       const { error } = await supabase.from(table).update({ estado: newStatus }).eq('id', id);
       if (error) throw error;
       fetchData();
     } catch (error) {
+      console.error("Error updateStatus:", error);
       alert('Error al actualizar: ' + error.message);
+    }
+  };
+
+  const handleUpdateRecord = async (table, id) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.from(table).update(editData).eq('id', id);
+      if (error) throw error;
+      alert("Registro actualizado correctamente");
+      setEditingId(null);
+      fetchData();
+    } catch (error) {
+      alert("Error al actualizar: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,15 +102,31 @@ const AdminDashboard = () => {
       alert('Error al eliminar');
     }
   };
-  const [expandedId, setExpandedId] = useState(null);
 
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
+    setEditingId(null);
   };
 
-  const ActionButtons = ({ table, id, currentStatus }) => (
+  const startEditing = (record) => {
+    setEditingId(record.id);
+    setEditData(record);
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditData({});
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditData({ ...editData, [name]: value });
+  };
+
+  const ActionButtons = ({ table, id, currentStatus, record }) => (
     <div className="admin-actions">
       <button onClick={() => toggleExpand(id)} className="btn-action view" title="Ver Detalles"><Eye size={16}/></button>
+      <button onClick={() => startEditing(record)} className="btn-action edit" title="Editar Datos"><Edit size={16}/></button>
       {(currentStatus === 'pendiente' || currentStatus === 'nueva') && (
         <>
           <button onClick={() => updateStatus(table, id, 'aprobado')} className="btn-action approve" title="Aprobar"><Check size={16}/></button>
@@ -97,6 +136,21 @@ const AdminDashboard = () => {
       <button onClick={() => handleDelete(table, id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>
     </div>
   );
+
+  const mapToCredential = (g) => ({
+    nombre: `${g.nombres} ${g.apellidos}`,
+    edad: g.edad || 0,
+    codigo: g.codigo || 'S/N',
+    idiomas: Array.isArray(g.idiomas) ? g.idiomas.map(i => i.idioma) : ['Español'],
+    imagen: g.url_foto || '/guias/placeholder.png',
+    biografia: g.biografia || 'Sin biografía',
+    formacion: g.educacion ? g.educacion.split('\n') : [],
+    experiencia: g.rutas_experiencia ? g.rutas_experiencia.split('\n') : [],
+    certificaciones: { 
+      sernatur: !!g.url_sernatur, 
+      wfr: !!g.url_primeros_auxilios 
+    }
+  });
 
   if (!isAuthenticated) {
     return (
@@ -205,19 +259,34 @@ const AdminDashboard = () => {
                         <td><div className="main-text">{new Date(res.fecha_servicio).toLocaleDateString()}</div><div className="sub-text">{res.nivel_guia}</div></td>
                         <td>{res.destino}</td>
                         <td><span className={`status-badge ${res.estado}`}>{res.estado}</span></td>
-                        <td><ActionButtons table="reservas" id={res.id} currentStatus={res.estado} /></td>
+                        <td><ActionButtons table="reservas" id={res.id} currentStatus={res.estado} record={res} /></td>
                       </tr>
                       {expandedId === res.id && (
                         <tr className="detail-row">
                           <td colSpan="5">
                             <div className="detail-content">
-                              <div className="detail-grid">
-                                <div><strong>Email:</strong> {res.email}</div>
-                                <div><strong>Teléfono:</strong> {res.telefono}</div>
-                                <div><strong>Pax:</strong> {res.pax}</div>
-                                <div><strong>Idioma:</strong> {res.idioma}</div>
-                                <div className="full-width"><strong>Comentarios:</strong> {res.comentarios || 'Sin comentarios'}</div>
-                              </div>
+                              {editingId === res.id ? (
+                                <div className="edit-form-grid">
+                                  <div className="form-group"><label>Empresa</label><input name="empresa" value={editData.empresa} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Email</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Destino</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width"><label>Comentarios</label><textarea name="comentarios" value={editData.comentarios} onChange={handleEditChange} className="form-control" style={{height:'100px'}}></textarea></div>
+                                  <div className="edit-actions">
+                                    <button onClick={() => handleUpdateRecord('reservas', res.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
+                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="detail-grid">
+                                  <div><strong>Email:</strong> {res.email}</div>
+                                  <div><strong>Teléfono:</strong> {res.telefono}</div>
+                                  <div><strong>Pax:</strong> {res.pax}</div>
+                                  <div><strong>Idioma:</strong> {res.idioma}</div>
+                                  <div className="full-width"><strong>Comentarios:</strong> {res.comentarios || 'Sin comentarios'}</div>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -239,29 +308,64 @@ const AdminDashboard = () => {
                         <td>{guia.ciudad_residencia}</td>
                         <td>{Array.isArray(guia.idiomas) ? guia.idiomas.map(i => i.idioma).join(', ') : 'Español'}</td>
                         <td><span className={`status-badge ${guia.estado}`}>{guia.estado}</span></td>
-                        <td><ActionButtons table="postulaciones_guias" id={guia.id} currentStatus={guia.estado} /></td>
+                        <td><ActionButtons table="postulaciones_guias" id={guia.id} currentStatus={guia.estado} record={guia} /></td>
                       </tr>
                       {expandedId === guia.id && (
                         <tr className="detail-row">
                           <td colSpan="5">
                             <div className="detail-content">
-                              <div className="detail-grid">
-                                <div><strong>Teléfono:</strong> {guia.telefono}</div>
-                                <div><strong>Edad:</strong> {guia.edad} años</div>
-                                <div><strong>Nacionalidad:</strong> {guia.nacionalidad}</div>
-                                <div><strong>Zonas de Trabajo:</strong> {guia.ciudad_trabajo}</div>
-                                <div className="full-width"><strong>Localidades Extra:</strong> {guia.localidades_extra}</div>
-                                <div className="full-width"><strong>Biografía:</strong> {guia.biografia}</div>
-                                <div className="full-width"><strong>Educación:</strong> {guia.educacion}</div>
-                                <div className="full-width"><strong>Rutas/Exp:</strong> {guia.rutas_experiencia}</div>
-                                <div><strong>SII Habilitado:</strong> {guia.habilitado_sii}</div>
-                                <div className="doc-links-large">
-                                  <strong>Documentos:</strong>
-                                  {guia.url_cv && <a href={guia.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
-                                  {guia.url_foto && <a href={guia.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
-                                  {guia.url_sernatur && <a href={guia.url_sernatur} target="_blank" rel="noreferrer" className="btn-doc"><Award size={16}/> SERNATUR</a>}
+                              {editingId === guia.id ? (
+                                <div className="edit-form-grid">
+                                  <div className="form-group"><label>Nombres</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Apellidos</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Edad</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group">
+                                    <label>Distintivo de Nivel</label>
+                                    <select name="nivel" value={editData.nivel || 'senior'} onChange={handleEditChange} className="form-control">
+                                      <option value="full">Guía Full</option>
+                                      <option value="senior">Guía Senior</option>
+                                      <option value="junior">Guía Junior</option>
+                                    </select>
+                                  </div>
+                                  <div className="full-width"><label>Biografía</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'100px'}}></textarea></div>
+                                  <div className="edit-actions">
+                                    <button onClick={() => handleUpdateRecord('postulaciones_guias', guia.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
+                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                <div className="guide-detail-wrapper">
+                                  <div className="detail-grid">
+                                    <div><strong>Teléfono:</strong> {guia.telefono}</div>
+                                    <div><strong>Edad:</strong> {guia.edad} años</div>
+                                    <div><strong>Nacionalidad:</strong> {guia.nacionalidad}</div>
+                                    <div><strong>Zonas de Trabajo:</strong> {guia.ciudad_trabajo}</div>
+                                    <div className="full-width"><strong>Localidades Extra:</strong> {guia.localidades_extra}</div>
+                                    <div className="full-width"><strong>Biografía:</strong> {guia.biografia}</div>
+                                    <div className="full-width"><strong>Educación:</strong> {guia.educacion}</div>
+                                    <div className="full-width"><strong>Rutas/Exp:</strong> {guia.rutas_experiencia}</div>
+                                    <div><strong>SII Habilitado:</strong> {guia.habilitado_sii}</div>
+                                    <div className="doc-links-large">
+                                      <strong>Documentos:</strong>
+                                      {guia.url_cv && <a href={guia.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
+                                      {guia.url_foto && <a href={guia.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
+                                      {guia.url_sernatur && <a href={guia.url_sernatur} target="_blank" rel="noreferrer" className="btn-doc"><Award size={16}/> SERNATUR</a>}
+                                      {guia.url_primeros_auxilios && <a href={guia.url_primeros_auxilios} target="_blank" rel="noreferrer" className="btn-doc"><ShieldCheck size={16}/> P. Auxilios</a>}
+                                    </div>
+                                    <div className="full-width">
+                                      <strong>Otras Certificaciones:</strong>
+                                      <p style={{fontSize:'0.9rem', color:'#64748b'}}>Archivos adjuntos adicionales cargados por el postulante.</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="credential-preview-admin">
+                                    <h4>Previsualización de Credencial</h4>
+                                    <div className="credential-mini-container">
+                                      <GuideCredential guia={mapToCredential(guia)} isExample={true} />
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -283,26 +387,37 @@ const AdminDashboard = () => {
                         <td>{est.email}</td>
                         <td>{est.ciudad_residencia}</td>
                         <td><span className={`status-badge ${est.estado}`}>{est.estado}</span></td>
-                        <td><ActionButtons table="postulaciones_estudiantes" id={est.id} currentStatus={est.estado} /></td>
+                        <td><ActionButtons table="postulaciones_estudiantes" id={est.id} currentStatus={est.estado} record={est} /></td>
                       </tr>
                       {expandedId === est.id && (
                         <tr className="detail-row">
                           <td colSpan="5">
                             <div className="detail-content">
-                              <div className="detail-grid">
-                                <div><strong>Teléfono:</strong> {est.telefono}</div>
-                                <div><strong>Edad:</strong> {est.edad} años</div>
-                                <div><strong>Nacionalidad:</strong> {est.nacionalidad}</div>
-                                <div className="full-width"><strong>Educación:</strong> {est.educacion}</div>
-                                <div className="full-width"><strong>Exp. Terreno:</strong> {est.experiencia_terreno}</div>
-                                <div className="full-width"><strong>Biografía:</strong> {est.biografia}</div>
-                                <div><strong>SII Habilitado:</strong> {est.habilitado_sii}</div>
-                                <div className="doc-links-large">
-                                  <strong>Documentos:</strong>
-                                  {est.url_cv && <a href={est.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
-                                  {est.url_foto && <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
+                              {editingId === est.id ? (
+                                <div className="edit-form-grid">
+                                  <div className="form-group"><label>Nombres</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Apellidos</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="edit-actions">
+                                    <button onClick={() => handleUpdateRecord('postulaciones_estudiantes', est.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
+                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                <div className="detail-grid">
+                                  <div><strong>Teléfono:</strong> {est.telefono}</div>
+                                  <div><strong>Edad:</strong> {est.edad} años</div>
+                                  <div><strong>Nacionalidad:</strong> {est.nacionalidad}</div>
+                                  <div className="full-width"><strong>Educación:</strong> {est.educacion}</div>
+                                  <div className="full-width"><strong>Exp. Terreno:</strong> {est.experiencia_terreno}</div>
+                                  <div className="full-width"><strong>Biografía:</strong> {est.biografia}</div>
+                                  <div><strong>SII Habilitado:</strong> {est.habilitado_sii}</div>
+                                  <div className="doc-links-large">
+                                    <strong>Documentos:</strong>
+                                    {est.url_cv && <a href={est.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
+                                    {est.url_foto && <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -323,19 +438,33 @@ const AdminDashboard = () => {
                         <td><div className="main-text">{rel.titulo}</div><div className="sub-text">Por: {rel.autor}</div></td>
                         <td><div className="main-text">{rel.ubicacion}</div><div className="sub-text">{new Date(rel.fecha).toLocaleDateString()}</div></td>
                         <td><span className={`status-badge ${rel.estado}`}>{rel.estado}</span></td>
-                        <td><ActionButtons table="relatos" id={rel.id} currentStatus={rel.estado} /></td>
+                        <td><ActionButtons table="relatos" id={rel.id} currentStatus={rel.estado} record={rel} /></td>
                       </tr>
                       {expandedId === rel.id && (
                         <tr className="detail-row">
                           <td colSpan="5">
                             <div className="detail-content">
-                              <div className="relato-preview">
-                                {rel.url_imagen && <img src={rel.url_imagen} alt="Vista previa" className="detail-preview-img" />}
-                                <div className="relato-text">
-                                  <strong>Contenido:</strong>
-                                  <p>{rel.contenido}</p>
+                              {editingId === rel.id ? (
+                                <div className="edit-form-grid">
+                                  <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Resumen</label><input name="resumen" value={editData.resumen} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width"><label>Contenido</label><textarea name="contenido" value={editData.contenido} onChange={handleEditChange} className="form-control" style={{height:'200px'}}></textarea></div>
+                                  <div className="edit-actions">
+                                    <button onClick={() => handleUpdateRecord('relatos', rel.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
+                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                <div className="relato-preview">
+                                  {rel.imagen_url && <img src={rel.imagen_url} alt="Vista previa" className="detail-preview-img" />}
+                                  <div className="relato-text">
+                                    <strong>Resumen:</strong>
+                                    <p style={{marginBottom: '1rem', fontWeight: 'bold'}}>{rel.resumen}</p>
+                                    <strong>Contenido Completo:</strong>
+                                    <p>{rel.contenido}</p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -355,7 +484,7 @@ const AdminDashboard = () => {
                       <td><div className="main-text">{com.usuario_nombre}</div><div className="sub-text italic">"{com.texto}"</div></td>
                       <td>{com.relatos?.titulo || 'Desconocido'}</td>
                       <td><span className={`status-badge ${com.estado}`}>{com.estado}</span></td>
-                      <td><ActionButtons table="comentarios_relatos" id={com.id} currentStatus={com.estado} /></td>
+                      <td><ActionButtons table="comentarios_relatos" id={com.id} currentStatus={com.estado} record={com} /></td>
                     </tr>
                   ))}
                 </tbody>

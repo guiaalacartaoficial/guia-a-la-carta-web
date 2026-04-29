@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { MessageCircle, Calendar, User, ArrowRight, BookOpen, Send, Clock, X } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import './Relatos.css';
 
 const Relatos = () => {
@@ -67,6 +68,24 @@ const Relatos = () => {
         fecha: new Date().toISOString()
       }]);
       if (error) throw error;
+
+      // Notificar al admin via EmailJS
+      try {
+        await emailjs.send(
+          'service_ihvjiza',
+          'template_u6p28e4',
+          {
+            tipo_solicitud: 'Nuevo Relato para Moderación',
+            nombre: newRelato.autor,
+            email: 'admin@guiaalacarta.cl',
+            mensaje: `El usuario ${newRelato.autor} ha enviado un nuevo relato titulado "${newRelato.titulo}". Revisa el panel administrativo para aprobarlo.`
+          },
+          '_nmx76wxhMLgNa1ic'
+        );
+      } catch (err) {
+        console.error("Error al notificar relato:", err);
+      }
+
       alert("¡Gracias! Tu relato ha sido enviado y está pendiente de moderación.");
       setIsFormOpen(false);
       setNewRelato({ titulo: '', autor: '', resumen: '', contenido: '' });
