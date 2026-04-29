@@ -454,6 +454,19 @@
   border-color: #0f172a;
 }
 
+.full-width-divider {
+  grid-column: 1 / -1;
+  background: #f8fafc;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+  border-left: 4px solid #0f172a;
+  margin-top: 10px;
+}
+
 .edit-actions {
   grid-column: 1 / -1;
   display: flex;

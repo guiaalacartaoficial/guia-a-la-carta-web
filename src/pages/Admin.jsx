@@ -138,13 +138,21 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (table, id) => {
-    if (!window.confirm('¿Eliminar permanentemente?')) return;
+    if (!window.confirm('¿Eliminar permanentemente este registro?')) return;
+    setLoading(true);
     try {
       const { error } = await supabase.from(table).delete().eq('id', id);
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase Delete Error:", error);
+        throw error;
+      }
+      alert('Registro eliminado correctamente');
       fetchData();
     } catch (error) {
-      alert('Error al eliminar');
+      console.error('Error al eliminar:', error);
+      alert('Error al eliminar: ' + (error.message || 'Error desconocido'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -182,8 +190,8 @@ const AdminDashboard = () => {
         
         {isReserva ? (
           <>
-            <a href={`mailto:${record.email}?subject=Respuesta Solicitud Guía a la Carta - ${record.empresa}`} className="btn-action email" title="Responder por Email"><Mail size={16}/></a>
-            <a href={`https://wa.me/${record.telefono?.replace(/\s+/g, '')}`} target="_blank" rel="noreferrer" className="btn-action whatsapp" title="Contactar por WhatsApp"><MessageCircle size={16}/></a>
+            <a href={`mailto:${record.email}?subject=Respuesta Solicitud Guía a la Carta&body=Hola ${record.contacto_nombre},`} className="btn-action email" title="Responder por Email" onClick={(e) => { if(!record.email) { e.preventDefault(); alert("No hay email registrado"); } }}><Mail size={16}/></a>
+            <a href={`https://wa.me/${record.telefono?.replace(/\s+/g, '').replace('+', '')}`} target="_blank" rel="noreferrer" className="btn-action whatsapp" title="Contactar por WhatsApp"><MessageCircle size={16}/></a>
             <select 
               className="status-selector-mini" 
               value={currentStatus} 
@@ -387,21 +395,32 @@ const AdminDashboard = () => {
                             <div className="detail-content">
                               {editingId === guia.id ? (
                                 <div className="edit-form-grid">
-                                  <div className="form-group"><label>Nombres</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Apellidos</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Edad</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Email</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Ciudad Residencia</label><input name="ciudad_residencia" value={editData.ciudad_residencia} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Ciudad Trabajo</label><input name="ciudad_trabajo" value={editData.ciudad_trabajo} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group">
-                                    <label>Distintivo de Nivel</label>
-                                    <select name="nivel" value={editData.nivel || 'senior'} onChange={handleEditChange} className="form-control">
-                                      <option value="full">Guía Full</option>
-                                      <option value="senior">Guía Senior</option>
-                                      <option value="junior">Guía Junior</option>
+                                    <label>Estado del Perfil</label>
+                                    <select name="estado" value={editData.estado} onChange={handleEditChange} className="form-control">
+                                      <option value="pendiente">Pendiente</option>
+                                      <option value="aprobado">Aprobado</option>
+                                      <option value="rechazado">Rechazado</option>
                                     </select>
                                   </div>
-                                  <div className="full-width"><label>Biografía</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                  <div className="full-width"><label>Educación</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                  <div className="full-width"><label>Rutas y Experiencia</label><textarea name="rutas_experiencia" value={editData.rutas_experiencia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="form-group">
+                                    <label>Fecha Caducidad de Perfil</label>
+                                    <input type="date" name="fecha_caducidad" value={editData.fecha_caducidad || ''} onChange={handleEditChange} className="form-control" />
+                                  </div>
                                   
+                                  <div className="full-width-divider">Visual Credential Content</div>
+                                  <div className="form-group"><label>Nombre en Credencial</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Apellidos en Credencial</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width"><label>Biografía (Credential)</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Educación (Credential)</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Rutas y Experiencia (Credential)</label><textarea name="rutas_experiencia" value={editData.rutas_experiencia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  
+                                  <div className="full-width-divider">Document Management</div>
                                   <div className="form-group"><label>Actualizar CV (PDF)</label><input type="file" name="file_cv" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
                                   <div className="form-group"><label>Actualizar Foto</label><input type="file" name="file_foto" onChange={handleEditChange} className="form-control" accept="image/*" /></div>
                                   <div className="form-group"><label>Actualizar SERNATUR</label><input type="file" name="file_sernatur" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
