@@ -219,6 +219,7 @@ const AdminDashboard = () => {
   const mapToCredential = (g) => ({
     nombre: g.nombres ? g.nombres.split(' ')[0] : 'Guía',
     edad: g.edad || 0,
+    nivel: g.nivel || 'senior',
     codigo: g.codigo || 'S/N',
     idiomas: Array.isArray(g.idiomas) ? g.idiomas.map(i => i.idioma) : ['Español'],
     imagen: g.url_foto || '/guias/placeholder.png',
@@ -414,8 +415,19 @@ const AdminDashboard = () => {
                                   </div>
                                   
                                   <div className="full-width-divider">Visual Credential Content</div>
+                                  <div className="form-group">
+                                    <label>Distintivo de Nivel (Badge)</label>
+                                    <select name="nivel" value={editData.nivel || 'senior'} onChange={handleEditChange} className="form-control">
+                                      <option value="full">Guía Full</option>
+                                      <option value="senior">Guía Senior</option>
+                                      <option value="junior">Guía Junior</option>
+                                    </select>
+                                  </div>
                                   <div className="form-group"><label>Nombre en Credencial</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Apellidos en Credencial</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Edad en Credencial</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Código Profesional</label><input name="codigo" value={editData.codigo} onChange={handleEditChange} className="form-control" /></div>
+                                  
                                   <div className="full-width"><label>Biografía (Credential)</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
                                   <div className="full-width"><label>Educación (Credential)</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
                                   <div className="full-width"><label>Rutas y Experiencia (Credential)</label><textarea name="rutas_experiencia" value={editData.rutas_experiencia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
@@ -461,7 +473,10 @@ const AdminDashboard = () => {
                                   <div className="credential-preview-admin">
                                     <h4>Previsualización de Credencial</h4>
                                     <div className="credential-mini-container">
-                                      <GuideCredential guia={mapToCredential(guia)} isExample={true} />
+                                      <GuideCredential 
+                                        guia={mapToCredential(editingId === guia.id ? editData : guia)} 
+                                        isExample={true} 
+                                      />
                                     </div>
                                   </div>
                                 </div>
