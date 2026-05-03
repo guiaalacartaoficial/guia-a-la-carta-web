@@ -9,8 +9,9 @@ const Relatos = () => {
   const [relatos, setRelatos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [newRelato, setNewRelato] = useState({ titulo: '', autor: '', resumen: '', contenido: '' });
+  const [newRelato, setNewRelato] = useState({ titulo: '', autor: '', hook: '', contenido: '', datos_clave: '', como_se_cuenta: '' });
   const [selectedFile, setSelectedFile] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -61,9 +62,23 @@ const Relatos = () => {
         imageUrl = await uploadFile(selectedFile, 'documentos', 'relatos');
       }
 
+      let galleryUrls = [];
+      if (galleryFiles && galleryFiles.length > 0) {
+        for (let i = 0; i < galleryFiles.length; i++) {
+          const url = await uploadFile(galleryFiles[i], 'documentos', 'relatos_galeria');
+          if (url) galleryUrls.push(url);
+        }
+      }
+
       const { error } = await supabase.from('relatos').insert([{
-        ...newRelato,
+        titulo: newRelato.titulo,
+        autor: newRelato.autor,
+        hook: newRelato.hook,
+        contenido: newRelato.contenido,
+        datos_clave: newRelato.datos_clave,
+        como_se_cuenta: newRelato.como_se_cuenta,
         imagen_url: imageUrl,
+        galeria_urls: galleryUrls,
         estado: 'pendiente',
         fecha: new Date().toISOString()
       }]);
@@ -88,8 +103,9 @@ const Relatos = () => {
 
       alert("¡Gracias! Tu relato ha sido enviado y está pendiente de moderación.");
       setIsFormOpen(false);
-      setNewRelato({ titulo: '', autor: '', resumen: '', contenido: '' });
+      setNewRelato({ titulo: '', autor: '', hook: '', contenido: '', datos_clave: '', como_se_cuenta: '' });
       setSelectedFile(null);
+      setGalleryFiles([]);
     } catch (error) {
       console.error("Error submitting relato:", error);
       alert("Hubo un error al enviar tu relato. Por favor intenta de nuevo. Revisa que el bucket 'documentos' sea público en Supabase.");
@@ -130,7 +146,7 @@ const Relatos = () => {
                       <span><User size={14} /> {relato.autor}</span>
                     </div>
                     <h3>{relato.titulo}</h3>
-                    <p>{relato.resumen}</p>
+                    <p>{relato.hook || relato.resumen}</p>
                     <div className="relato-card-footer">
                       <span className="comentarios-count">
                         <MessageCircle size={16} /> {relato.comentarios_relatos?.[0]?.count || 0}
@@ -187,10 +203,10 @@ const Relatos = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Nombre del Autor</label>
+                  <label>Nombre del Autor o Actores Múltiples</label>
                   <input 
                     type="text" 
-                    placeholder="Tu nombre completo" 
+                    placeholder="Ej: Juan Pérez y María Gómez" 
                     className="form-control"
                     value={newRelato.autor}
                     onChange={e => setNewRelato({...newRelato, autor: e.target.value})}
@@ -199,13 +215,13 @@ const Relatos = () => {
                 </div>
               </div>
               <div className="form-group">
-                <label>Resumen Corto (Max 150 caracteres)</label>
+                <label>Hook (Gancho del relato)</label>
                 <textarea 
-                  placeholder="Una breve descripción para atraer lectores..." 
+                  placeholder="Una frase cautivadora para atrapar al lector..." 
                   className="form-control"
                   style={{ height: '80px' }}
-                  value={newRelato.resumen}
-                  onChange={e => setNewRelato({...newRelato, resumen: e.target.value})}
+                  value={newRelato.hook}
+                  onChange={e => setNewRelato({...newRelato, hook: e.target.value})}
                   required
                 ></textarea>
               </div>
@@ -221,7 +237,29 @@ const Relatos = () => {
                 ></textarea>
               </div>
               <div className="form-group">
-                <label>Foto de Portada (Documento/Imagen)</label>
+                <label>Datos Clave del Relato</label>
+                <textarea 
+                  placeholder="Ej: Altitud, dificultad, mejor época para ir, flora/fauna importante..." 
+                  className="form-control"
+                  style={{ height: '100px' }}
+                  value={newRelato.datos_clave}
+                  onChange={e => setNewRelato({...newRelato, datos_clave: e.target.value})}
+                  required
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label>¿Cómo se cuenta este relato en terreno?</label>
+                <textarea 
+                  placeholder="Explica en qué momento del tour lo cuentas, en qué lugar específico, de qué manera..." 
+                  className="form-control"
+                  style={{ height: '100px' }}
+                  value={newRelato.como_se_cuenta}
+                  onChange={e => setNewRelato({...newRelato, como_se_cuenta: e.target.value})}
+                  required
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label>Foto de Portada (Principal)</label>
                 <div className="file-upload-wrapper">
                   <input 
                     type="file" 
@@ -230,7 +268,20 @@ const Relatos = () => {
                     onChange={e => setSelectedFile(e.target.files[0])}
                     required
                   />
-                  <p className="file-help">Sube una imagen representativa de tu historia (JPG, PNG).</p>
+                  <p className="file-help">Sube una imagen representativa principal de tu historia (JPG, PNG).</p>
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Galería de Fotos Adicionales</label>
+                <div className="file-upload-wrapper">
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    multiple
+                    className="form-control"
+                    onChange={e => setGalleryFiles(Array.from(e.target.files))}
+                  />
+                  <p className="file-help">Sube otras imágenes para acompañar tu relato en una galería.</p>
                 </div>
               </div>
               <button type="submit" className="btn btn-primary w-full" disabled={submitting}>

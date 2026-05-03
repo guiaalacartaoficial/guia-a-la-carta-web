@@ -129,7 +129,32 @@ const RelatoDetalle = () => {
       <section className="relato-body-section">
         <div className="container">
           <div className="relato-main-content">
+            {relato.datos_clave && (
+              <div className="relato-datos-clave">
+                <h4>Datos Clave</h4>
+                <p style={{ whiteSpace: 'pre-wrap' }}>{relato.datos_clave}</p>
+              </div>
+            )}
+            
             <p className="relato-full-text" style={{ whiteSpace: 'pre-wrap' }}>{relato.contenido}</p>
+            
+            {relato.como_se_cuenta && (
+              <div className="relato-como-se-cuenta">
+                <h4>¿Cómo se cuenta en terreno?</h4>
+                <p style={{ whiteSpace: 'pre-wrap' }}>{relato.como_se_cuenta}</p>
+              </div>
+            )}
+
+            {relato.galeria_urls && relato.galeria_urls.length > 0 && (
+              <div className="relato-galeria">
+                <h4>Galería del Relato</h4>
+                <div className="galeria-grid">
+                  {relato.galeria_urls.map((url, i) => (
+                    <img key={i} src={url} alt={`Galería ${i}`} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="comentarios-section">

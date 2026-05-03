@@ -239,7 +239,44 @@
   font-size: 1.2rem;
   line-height: 1.8;
   color: #333;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+}
+
+.relato-datos-clave, .relato-como-se-cuenta {
+  background: #f8fafc;
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--c-primary);
+  margin-bottom: 40px;
+}
+
+.relato-datos-clave h4, .relato-como-se-cuenta h4, .relato-galeria h4 {
+  color: var(--c-primary-dark);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.relato-galeria {
+  margin-bottom: 40px;
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.galeria-grid img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-md, 12px);
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.galeria-grid img:hover {
+  transform: scale(1.02);
 }
 
 /* === COMENTARIOS === */

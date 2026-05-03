@@ -68,8 +68,11 @@ const AdminDashboard = () => {
   const updateStatus = async (table, id, newStatus) => {
     console.log(`Updating ${table} ID: ${id} to Status: ${newStatus}`);
     try {
-      const { error } = await supabase.from(table).update({ estado: newStatus }).eq('id', id);
+      const { data, error } = await supabase.from(table).update({ estado: newStatus }).eq('id', id).select();
       if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error("El registro no se actualizó. Revisa las políticas de seguridad (RLS) en Supabase.");
+      }
       fetchData();
     } catch (error) {
       console.error("Error updateStatus:", error);
@@ -567,9 +570,11 @@ const AdminDashboard = () => {
                             <div className="detail-content">
                               {editingId === rel.id ? (
                                 <div className="edit-form-grid">
-                                  <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Resumen</label><input name="resumen" value={editData.resumen} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="full-width"><label>Contenido</label><textarea name="contenido" value={editData.contenido} onChange={handleEditChange} className="form-control" style={{height:'200px'}}></textarea></div>
+                                  <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo || ''} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Hook / Resumen</label><input name="hook" value={editData.hook || editData.resumen || ''} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width"><label>Contenido</label><textarea name="contenido" value={editData.contenido || ''} onChange={handleEditChange} className="form-control" style={{height:'150px'}}></textarea></div>
+                                  <div className="full-width"><label>Datos Clave</label><textarea name="datos_clave" value={editData.datos_clave || ''} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>¿Cómo se cuenta?</label><textarea name="como_se_cuenta" value={editData.como_se_cuenta || ''} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
                                   <div className="edit-actions">
                                     <button onClick={() => handleUpdateRecord('relatos', rel.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
                                     <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
@@ -579,10 +584,32 @@ const AdminDashboard = () => {
                                 <div className="relato-preview">
                                   {rel.imagen_url && <img src={rel.imagen_url} alt="Vista previa" className="detail-preview-img" />}
                                   <div className="relato-text">
-                                    <strong>Resumen:</strong>
-                                    <p style={{marginBottom: '1rem', fontWeight: 'bold'}}>{rel.resumen}</p>
+                                    <strong>Hook / Resumen:</strong>
+                                    <p style={{marginBottom: '1rem', fontWeight: 'bold'}}>{rel.hook || rel.resumen}</p>
                                     <strong>Contenido Completo:</strong>
-                                    <p>{rel.contenido}</p>
+                                    <p style={{marginBottom: '1rem'}}>{rel.contenido}</p>
+                                    {rel.datos_clave && (
+                                      <>
+                                        <strong>Datos Clave:</strong>
+                                        <p style={{marginBottom: '1rem'}}>{rel.datos_clave}</p>
+                                      </>
+                                    )}
+                                    {rel.como_se_cuenta && (
+                                      <>
+                                        <strong>¿Cómo se cuenta en terreno?:</strong>
+                                        <p style={{marginBottom: '1rem'}}>{rel.como_se_cuenta}</p>
+                                      </>
+                                    )}
+                                    {rel.galeria_urls && rel.galeria_urls.length > 0 && (
+                                      <div className="relato-gallery-preview">
+                                        <strong>Galería adjunta:</strong>
+                                        <div style={{display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
+                                          {rel.galeria_urls.map((url, i) => (
+                                            <img key={i} src={url} alt={`Galería ${i}`} style={{width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px'}} />
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               )}
