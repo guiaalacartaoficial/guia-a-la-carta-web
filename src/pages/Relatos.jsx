@@ -119,8 +119,8 @@ const Relatos = () => {
       <section className="relatos-header">
         <div className="container text-center">
           <span className="pre-title">Bitácora de Experiencias</span>
-          <h1>Relatos de Nuestra Tierra</h1>
-          <p className="bajada">Historias, cultura y vivencias compartidas por nuestros guías expertos desde los rincones más profundos de Chile.</p>
+          <h1>Relatos de Chile</h1>
+          <p className="bajada">Historias que transforman un recorrido en una experiencia real</p>
         </div>
       </section>
 
