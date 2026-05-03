@@ -149,10 +149,13 @@ const AdminDashboard = () => {
     if (!window.confirm('¿Eliminar permanentemente este registro?')) return;
     setLoading(true);
     try {
-      const { error } = await supabase.from(table).delete().eq('id', id);
+      const { data, error } = await supabase.from(table).delete().eq('id', id).select();
       if (error) {
         console.error("Supabase Delete Error:", error);
         throw error;
+      }
+      if (!data || data.length === 0) {
+        throw new Error("El registro no se eliminó. Revisa las políticas de seguridad (RLS) para la acción DELETE en Supabase.");
       }
       alert('Registro eliminado correctamente');
       fetchData();
