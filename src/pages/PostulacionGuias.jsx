@@ -92,9 +92,7 @@ const PostulacionGuias = () => {
       const autoCode = `PRO-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
       // 2. Guardar en DB
-      const { error } = await supabase
-        .from('postulaciones_guias')
-        .insert([{
+      const insertData = {
           ...formData,
           idiomas: idiomasList,
           codigo: autoCode,
@@ -102,9 +100,17 @@ const PostulacionGuias = () => {
           url_foto,
           url_sernatur,
           url_primeros_auxilios,
-          url_otras_certificaciones,
           estado: 'pendiente'
-        }]);
+      };
+      
+      // Solo agregamos url_otras_certificaciones si existe para no perder la variable,
+      // PERO como la base de datos lanza error al no encontrar la columna, se deja comentado.
+      // Cuando agregues la columna 'url_otras_certificaciones' (tipo text) en Supabase, descomenta la siguiente línea:
+      // insertData.url_otras_certificaciones = url_otras_certificaciones;
+
+      const { error } = await supabase
+        .from('postulaciones_guias')
+        .insert([insertData]);
 
       if (error) throw error;
 

@@ -103,7 +103,8 @@ const AdminDashboard = () => {
         delete finalData.file_wfr;
       }
       if (editData.file_otras instanceof File) {
-        finalData.url_otras_certificaciones = await uploadFile(editData.file_otras, 'documentos', 'certificados');
+        // Descomentar cuando la columna 'url_otras_certificaciones' exista en Supabase
+        // finalData.url_otras_certificaciones = await uploadFile(editData.file_otras, 'documentos', 'certificados');
         delete finalData.file_otras;
       }
 
