@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShieldCheck, MapPin, Users, Zap, CheckCircle, Clock, Settings, Briefcase, Star, Compass } from 'lucide-react';
+import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
 import './Home.css';
 import ChileMap from '../components/ChileMap';
@@ -40,7 +40,7 @@ const Home = () => {
             <div className="problema-bloque card-cobertura">
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
-                <Zap className="icon-problema" size={32} />
+                <BadgeCheck className="icon-problema" size={32} />
                 <h4>GUÍAS VERIFICADOS</h4>
                 <p>Cada guía es validado en certificaciones, experiencia y habilidades en terreno, asegurando un estándar real de servicio.
                   Menos riesgo, mejor experiencia para tus pasajeros.</p>
@@ -49,7 +49,7 @@ const Home = () => {
             <div className="problema-bloque card-certificados">
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
-                <ShieldCheck className="icon-problema" size={32} />
+                <CalendarCog className="icon-problema" size={32} />
                 <h4>FLEXIBILIDAD OPERATIVA REAL</h4>
                 <p>Nos adaptamos a cada tipo de servicio.
                   Asignamos guías según idioma, perfil de pasajero, nivel de exigencia y tipo de operación.
@@ -60,7 +60,7 @@ const Home = () => {
             <div className="problema-bloque card-respaldo">
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
-                <Settings className="icon-problema" size={32} />
+                <DatabaseBackup className="icon-problema" size={32} />
                 <h4>RESPALDO OPERATIVO</h4>
                 <p>No estás solo durante la ejecución.
                   Acompañamos cada servicio con coordinación activa y capacidad de respuesta ante cambios o imprevistos.
@@ -71,7 +71,7 @@ const Home = () => {
             <div className="problema-bloque card-flexibilidad">
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
-                <Users className="icon-problema" size={32} />
+                <TimerReset className="icon-problema" size={32} />
                 <h4>REDUCCIÓN DE CARGA OPERATIVA</h4>
                 <p>Deja de coordinar, enfócate en crecer.
                   Centralizamos la búsqueda, asignación y comunicación con guías para simplificar tu operación diaria.
