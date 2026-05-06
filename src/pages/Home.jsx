@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck } from 'lucide-react';
+import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
 import './Home.css';
 import ChileMap from '../components/ChileMap';
@@ -96,22 +96,28 @@ const Home = () => {
           <div className="solucion-content">
             <div className="solucion-pilares">
               <div className="pilar-item">
-                <CheckCircle size={24} className="text-accent" />
-                <span>PRIMEROS AUXILIOS</span>
+                <HeartPulse size={32} className="text-accent mb-3" />
+                <h4>PRIMEROS AUXILIOS</h4>
                 <p>Guías con formación en primeros auxilios, preparados para responder ante situaciones de riesgo en terreno.
                   Mayor seguridad para tus pasajeros.</p>
               </div>
               <div className="pilar-item">
-                <CheckCircle size={24} className="text-accent" />
-                <span>Cobertura confiable</span>
+                <Mountain size={32} className="text-accent mb-3" />
+                <h4>EXPERIENCIA EN TERRENO</h4>
+                <p>Profesionales con experiencia real operando tours y enfrentando distintos escenarios.
+                  Menos improvisación, mejor ejecución.</p>
               </div>
               <div className="pilar-item">
-                <CheckCircle size={24} className="text-accent" />
-                <span>Perfiles alineados al servicio</span>
+                <Languages size={32} className="text-accent mb-3" />
+                <h4>MANEJO DE IDIOMAS</h4>
+                <p>Guías capacitados para comunicarse con pasajeros internacionales.
+                  Mejor conexión y experiencia del cliente.</p>
               </div>
               <div className="pilar-item">
-                <CheckCircle size={24} className="text-accent" />
-                <span>Coordinación centralizada</span>
+                <Users size={32} className="text-accent mb-3" />
+                <h4>MANEJO DE GRUPOS</h4>
+                <p>Capacidad para liderar, organizar y mantener el control de grupos en todo momento.
+                  Servicios más fluidos y ordenados.</p>
               </div>
             </div>
 

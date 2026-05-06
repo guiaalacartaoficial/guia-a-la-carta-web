@@ -190,18 +190,39 @@
   width: 100%;
 }
 .pilar-item {
-  display: flex; align-items: center; gap: 16px;
-  font-size: 1.1rem; font-weight: 600; color: white;
-  background: rgba(255, 255, 255, 0.1); 
-  backdrop-filter: blur(10px);
-  padding: 18px 24px; border-radius: var(--radius-md);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); 
-  transition: all 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-left: 4px solid var(--c-accent);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.08); 
+  backdrop-filter: blur(12px);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); 
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 4px solid var(--c-accent);
 }
-.pilar-item:hover { background: rgba(255, 255, 255, 0.2); box-shadow: var(--shadow-md); transform: translateX(4px); }
-.pilar-item span { color: white; }
+.pilar-item:hover { 
+  background: rgba(255, 255, 255, 0.15); 
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  border-color: var(--c-accent);
+}
+.pilar-item h4 {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+.pilar-item p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
 
 /* 4. Servicios */
 .section-servicios {
