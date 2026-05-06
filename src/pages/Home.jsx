@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck } from 'lucide-react';
+import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
 import './Home.css';
 import ChileMap from '../components/ChileMap';
@@ -12,7 +12,7 @@ const Home = () => {
     {
       id: 1,
       title: "PROVISIÓN DE GUÍAS Y COORDINADORES CERTIFICADOS",
-      icon: <Briefcase size={40} />,
+      icon: <UserStar size={40} />,
       desc: "Asignamos guías y coordinadores validados según el tipo de servicio, perfil de pasajero e idioma requerido.",
       highlight: "Cobertura confiable con profesionales listos para operar desde el primer servicio."
     },
@@ -33,7 +33,7 @@ const Home = () => {
     {
       id: 4,
       title: "DRIVEPLUS+",
-      icon: <Truck size={40} />,
+      icon: <Van size={40} />,
       desc: "Red de conductores profesionales y transporte turístico, conectados con tu operación. DrivePlus+ integra conductores especializados y servicios de transporte turístico, coordinados para operar junto a guías o de forma independiente según el servicio.",
       highlight: "Accedes a conductores confiables y transporte listo para operar, sin gestionar múltiples proveedores."
     },
