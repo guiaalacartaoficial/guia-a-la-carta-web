@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages } from 'lucide-react';
+import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
 import './Home.css';
 import ChileMap from '../components/ChileMap';
