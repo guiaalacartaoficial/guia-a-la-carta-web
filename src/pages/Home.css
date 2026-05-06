@@ -218,10 +218,27 @@
   letter-spacing: 0.5px;
 }
 .pilar-item p {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.4;
   margin: 0;
+  margin-bottom: 0.5rem;
+}
+.pilar-highlight {
+  color: var(--c-accent);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pilar-highlight::before {
+  content: '→';
+  font-size: 1.2rem;
 }
 
 /* 4. Servicios */

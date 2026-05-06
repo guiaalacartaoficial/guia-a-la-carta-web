@@ -98,26 +98,26 @@ const Home = () => {
               <div className="pilar-item">
                 <HeartPulse size={32} className="text-accent mb-3" />
                 <h4>PRIMEROS AUXILIOS</h4>
-                <p>Guías con formación en primeros auxilios, preparados para responder ante situaciones de riesgo en terreno.
-                  *Mayor seguridad para tus pasajeros.</p>
+                <p>Guías con formación en primeros auxilios, preparados para responder ante situaciones de riesgo en terreno.</p>
+                <div className="pilar-highlight">Mayor seguridad para tus pasajeros</div>
               </div>
               <div className="pilar-item">
                 <Mountain size={32} className="text-accent mb-3" />
                 <h4>EXPERIENCIA EN TERRENO</h4>
-                <p>Profesionales con experiencia real operando tours y enfrentando distintos escenarios.
-                  *Menos improvisación, mejor ejecución.</p>
+                <p>Profesionales con experiencia real operando tours y enfrentando distintos escenarios.</p>
+                <div className="pilar-highlight">Menos improvisación, mejor ejecución</div>
               </div>
               <div className="pilar-item">
                 <Languages size={32} className="text-accent mb-3" />
                 <h4>MANEJO DE IDIOMAS</h4>
-                <p>Guías capacitados para comunicarse con pasajeros internacionales.
-                  *Mejor conexión y experiencia del cliente.</p>
+                <p>Guías capacitados para comunicarse con pasajeros internacionales.</p>
+                <div className="pilar-highlight">Mejor conexión y experiencia del cliente</div>
               </div>
               <div className="pilar-item">
                 <Users size={32} className="text-accent mb-3" />
                 <h4>MANEJO DE GRUPOS</h4>
-                <p>Capacidad para liderar, organizar y mantener el control de grupos en todo momento.
-                  *Servicios más fluidos y ordenados.</p>
+                <p>Capacidad para liderar, organizar y mantener el control de grupos en todo momento.</p>
+                <div className="pilar-highlight">Servicios más fluidos y ordenados</div>
               </div>
             </div>
 
