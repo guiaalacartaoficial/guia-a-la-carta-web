@@ -341,9 +341,9 @@
 .service-modal-content {
   background: linear-gradient(145deg, #0a3b31, #072b25);
   color: white;
-  max-width: 500px;
-  width: 95%;
-  padding: 3.5rem 2.5rem;
+  max-width: 460px;
+  width: 90%;
+  padding: 2.5rem 2rem;
   border-radius: var(--radius-lg);
   position: relative;
   box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.8);

@@ -194,14 +194,12 @@ const Home = () => {
           {activeService && (
             <div className="service-modal-overlay" onClick={() => setActiveService(null)}>
               <div className="service-modal-content" onClick={e => e.stopPropagation()}>
-                <button className="modal-close" onClick={() => setActiveService(null)}>&times;</button>
                 <div className="modal-icon">{activeService.icon}</div>
                 <h3>{activeService.title}</h3>
                 <p className="modal-desc">{activeService.desc}</p>
                 <div className="modal-highlight">{activeService.highlight}</div>
                 <div className="modal-actions">
                   <Link to="/servicios" className="btn btn-primary" onClick={() => setActiveService(null)}>Saber más</Link>
-                  <button className="btn btn-outline" onClick={() => setActiveService(null)}>Cerrar</button>
                 </div>
               </div>
             </div>
