@@ -372,11 +372,11 @@
 .service-modal-content h3 { font-size: 1.6rem; color: white !important; margin-bottom: 1.5rem; line-height: 1.2; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 .modal-desc { font-size: 1.05rem; line-height: 1.6; color: rgba(255,255,255,0.85) !important; margin-bottom: 2rem; }
 .modal-highlight { 
-  background: rgba(159, 192, 90, 0.1); 
+  background: rgba(255, 255, 255, 0.05); 
   padding: 1.5rem; 
   border-radius: var(--radius-md); 
-  font-weight: 700; 
-  color: var(--c-accent); 
+  font-weight: 600; 
+  color: white; 
   margin-bottom: 2.5rem;
   line-height: 1.5;
   border-left: 4px solid var(--c-accent);
