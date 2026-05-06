@@ -14,35 +14,35 @@ const Home = () => {
       title: "PROVISIÓN DE GUÍAS Y COORDINADORES CERTIFICADOS",
       icon: <Briefcase size={40} />,
       desc: "Asignamos guías y coordinadores validados según el tipo de servicio, perfil de pasajero e idioma requerido.",
-      highlight: "👉 Cobertura confiable con profesionales listos para operar desde el primer servicio."
+      highlight: "Cobertura confiable con profesionales listos para operar desde el primer servicio."
     },
     {
       id: 2,
       title: "GUÍA SOS",
       icon: <Zap size={40} />,
       desc: "Servicio de respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos operativos.",
-      highlight: "👉 Solución rápida cuando más lo necesitas, sin comprometer la calidad del servicio."
+      highlight: "Solución rápida cuando más lo necesitas, sin comprometer la calidad del servicio."
     },
     {
       id: 3,
       title: "SOPORTE Y ASISTENCIA LOGÍSTICA",
       icon: <Settings size={40} />,
       desc: "Coordinamos la planificación y ejecución de servicios: asignación de guías, comunicación operativa y seguimiento en terreno.",
-      highlight: "👉 Menos carga para tu equipo, mayor control en cada operación."
+      highlight: "Menos carga para tu equipo, mayor control en cada operación."
     },
     {
       id: 4,
       title: "DRIVEPLUS+",
       icon: <Truck size={40} />,
       desc: "Red de conductores profesionales y transporte turístico, conectados con tu operación. DrivePlus+ integra conductores especializados y servicios de transporte turístico, coordinados para operar junto a guías o de forma independiente según el servicio.",
-      highlight: "👉 Accedes a conductores confiables y transporte listo para operar, sin gestionar múltiples proveedores."
+      highlight: "Accedes a conductores confiables y transporte listo para operar, sin gestionar múltiples proveedores."
     },
     {
       id: 5,
       title: "LEVANTAMIENTO Y OPTIMIZACIÓN DE EXPERIENCIAS TURÍSTICAS",
       icon: <TrendingUp size={40} />,
       desc: "Analizamos, diseñamos y mejoramos tus servicios turísticos para aumentar calidad, eficiencia operativa y valor percibido.",
-      highlight: "👉 Transformas tus tours en productos más competitivos y rentables."
+      highlight: "Transformas tus tours en productos más competitivos y rentables."
     }
   ];
   return (
