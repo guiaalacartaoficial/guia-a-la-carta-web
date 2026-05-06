@@ -251,12 +251,12 @@
   display: flex; 
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.5rem; 
-  max-width: 1200px;
+  gap: 1.2rem; 
+  max-width: 1400px;
   margin: 0 auto;
 }
 .servicio-card.interactive {
-  flex: 0 1 220px; /* Ancho ideal de 220px */
+  flex: 0 1 230px; /* Tamaño ideal para que entren 5 en pantallas grandes */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -265,15 +265,22 @@
   gap: 15px;
   background: rgba(255, 255, 255, 0.08); 
   backdrop-filter: blur(12px);
-  padding: 2.5rem 1.5rem;
+  padding: 2rem 1.2rem;
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); 
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-top: 4px solid var(--c-accent);
   cursor: pointer;
-  min-height: 300px;
+  min-height: 280px;
 }
+@media (min-width: 1250px) {
+  .servicio-card.interactive {
+    flex: 1; /* Se estiran para ocupar el ancho total de la fila de 5 */
+    max-width: calc(20% - 1.2rem);
+  }
+}
+
 .servicio-card.interactive:hover {
   background: rgba(255, 255, 255, 0.15); 
   transform: translateY(-10px);
@@ -282,7 +289,7 @@
 }
 .servicio-card.interactive h3 {
   color: white;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   margin: 0;
   line-height: 1.3;
@@ -290,12 +297,12 @@
   letter-spacing: 0.5px;
 }
 .btn-ver-mas {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--c-accent);
   text-transform: uppercase;
   font-weight: 800;
   margin-top: auto;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border: 1px solid var(--c-accent);
   border-radius: 20px;
   transition: all 0.3s;
@@ -347,7 +354,9 @@
   color: white;
   max-width: 460px;
   width: 90%;
-  padding: 2.5rem 2rem;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 3rem 2.5rem;
   border-radius: var(--radius-lg);
   position: relative;
   box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.8);
