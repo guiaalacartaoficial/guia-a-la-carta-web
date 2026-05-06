@@ -354,6 +354,10 @@
   color: white;
   max-width: 460px;
   width: 90%;
+  height: 50vh; /* Altura fija al 50% del viewport */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 3rem 2.5rem;
   border-radius: var(--radius-lg);
   position: relative;
