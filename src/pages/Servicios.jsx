@@ -129,12 +129,13 @@ const Servicios = () => {
             <p>Desde la asignación puntual de un guía hasta la articulación operativa completa de tu negocio.</p>
           </div>
 
-          {/* Servicios destacados (layout grande) */}
-          <div className="services-b2b-grid">
+          {/* Lista de Servicios unificada */}
+          <div className="services-b2b-list">
             
             {/* 1. Provisión de Guías */}
             <div className="service-b2b-card">
               <div className="service-b2b-content">
+                <div className="service-number">01</div>
                 <h3>Provisión de Guías y Coordinadores Certificados</h3>
                 <p className="service-desc">
                   Asignamos profesionales validados según el tipo de servicio, perfil de pasajero e idioma requerido. 
@@ -146,8 +147,8 @@ const Servicios = () => {
                   <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Manejo de idiomas específicos</div>
                   <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Briefing técnico previo al servicio</div>
                 </div>
-                <div>
-                  <Link to="/reservar" className="btn btn-primary" style={{padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.95rem'}}>Solicitar guía</Link>
+                <div className="service-cta-wrapper">
+                  <Link to="/reservar" className="btn btn-primary">Solicitar guía</Link>
                 </div>
               </div>
               <div className="service-b2b-visual">
@@ -155,9 +156,34 @@ const Servicios = () => {
               </div>
             </div>
 
-            {/* 2. Soporte y Asistencia Logística */}
+            {/* 2. Guía SOS */}
             <div className="service-b2b-card reverse">
               <div className="service-b2b-content">
+                <div className="service-number">02</div>
+                <h3>Guía SOS</h3>
+                <p className="service-desc">
+                  Servicio de respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos operativos. 
+                  Solución rápida cuando más lo necesitas, sin comprometer la calidad del servicio.
+                </p>
+                <div className="service-b2b-features">
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Respuesta prioritaria</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Gestión de reemplazos urgentes</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Red activa de disponibilidad</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Soporte 24/7 para emergencias</div>
+                </div>
+                <div className="service-cta-wrapper">
+                  <a href={WHATSAPP_URL} className="btn btn-secondary">Activar SOS ahora</a>
+                </div>
+              </div>
+              <div className="service-b2b-visual">
+                <img src="/card-v- flex-operativa.png" alt="Guía SOS" />
+              </div>
+            </div>
+
+            {/* 3. Soporte y Asistencia Logística */}
+            <div className="service-b2b-card">
+              <div className="service-b2b-content">
+                <div className="service-number">03</div>
                 <h3>Soporte y Asistencia Logística</h3>
                 <p className="service-desc">
                   Absorbemos la carga operativa de tu equipo. Coordinamos la planificación, comunicación operativa 
@@ -169,38 +195,61 @@ const Servicios = () => {
                   <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Resolución de imprevistos</div>
                   <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Gestión de flujos comunicativos</div>
                 </div>
-                <div>
-                  <Link to="/reservar" className="btn btn-secondary" style={{padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.95rem'}}>Cotizar soporte</Link>
+                <div className="service-cta-wrapper">
+                  <Link to="/reservar" className="btn btn-primary">Cotizar soporte</Link>
                 </div>
               </div>
               <div className="service-b2b-visual">
                 <img src="/card-v-soporte-operativo.png" alt="Soporte Logístico" />
               </div>
             </div>
-          </div>
 
-          {/* Servicios complementarios (cards compactas) */}
-          <div className="services-compact-grid">
-            
-            <div className="service-compact-card">
-              <div className="compact-icon"><Zap size={28}/></div>
-              <h4>Guía SOS</h4>
-              <p>Respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos imprevistos sin comprometer la calidad.</p>
-              <span className="compact-badge"><Clock size={14}/> Respuesta rápida</span>
+            {/* 4. DrivePlus+ */}
+            <div className="service-b2b-card reverse">
+              <div className="service-b2b-content">
+                <div className="service-number">04</div>
+                <h3>DrivePlus+</h3>
+                <p className="service-desc">
+                  Red de conductores profesionales y transporte turístico integrado directamente con tu operación. 
+                  DrivePlus+ conecta conductores especializados para operar junto a guías o de forma independiente.
+                </p>
+                <div className="service-b2b-features">
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Conductores profesionales</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Vehículos registrados y autorizados</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Coordinación guía + driver</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Servicios privados y grupales</div>
+                </div>
+                <div className="service-cta-wrapper">
+                  <Link to="/contacto" className="btn btn-secondary">Consultar flota</Link>
+                </div>
+              </div>
+              <div className="service-b2b-visual">
+                <img src="/card-v-carga-operativa.png" alt="DrivePlus+" />
+              </div>
             </div>
 
-            <div className="service-compact-card">
-              <div className="compact-icon"><Truck size={28}/></div>
-              <h4>DrivePlus+</h4>
-              <p>Red de conductores profesionales y transporte turístico integrado directamente con tu operación de guiado.</p>
-              <span className="compact-badge"><Truck size={14}/> Transporte + Guía</span>
-            </div>
-
-            <div className="service-compact-card">
-              <div className="compact-icon"><TrendingUp size={28}/></div>
-              <h4>Optimización de Experiencias</h4>
-              <p>Analizamos y rediseñamos tus tours para aumentar la eficiencia operativa y el valor percibido por el cliente.</p>
-              <span className="compact-badge"><Target size={14}/> Consultoría B2B</span>
+            {/* 5. Levantamiento y Optimización */}
+            <div className="service-b2b-card">
+              <div className="service-b2b-content">
+                <div className="service-number">05</div>
+                <h3>Levantamiento y Optimización de Experiencias Turísticas</h3>
+                <p className="service-desc">
+                  Analizamos, diseñamos y mejoramos tus servicios turísticos para aumentar calidad, eficiencia operativa y valor percibido. 
+                  Transformas tus tours en productos más competitivos y rentables.
+                </p>
+                <div className="service-b2b-features">
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Auditoría de experiencias</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Diseño de nuevos itinerarios</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Optimización de costos operativos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Mejora en el valor percibido</div>
+                </div>
+                <div className="service-cta-wrapper">
+                  <Link to="/contacto" className="btn btn-primary">Agendar consultoría</Link>
+                </div>
+              </div>
+              <div className="service-b2b-visual">
+                <img src="/fondo-mapa.jpg" alt="Optimización de Experiencias" />
+              </div>
             </div>
 
           </div>
