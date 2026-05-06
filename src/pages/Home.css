@@ -352,16 +352,17 @@
 .service-modal-content {
   background: linear-gradient(145deg, #0a3b31, #072b25);
   color: white;
-  max-width: 460px;
+  max-width: 480px;
   width: 90%;
-  height: 50vh; /* Altura fija al 50% del viewport */
+  height: 80vh; /* Altura aumentada al 80% del viewport */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 3rem 2.5rem;
+  align-items: center;
+  padding: 4rem 3rem;
   border-radius: var(--radius-lg);
   position: relative;
-  box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
   animation: slideUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.15);
