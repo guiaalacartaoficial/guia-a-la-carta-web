@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
@@ -5,6 +6,45 @@ import './Home.css';
 import ChileMap from '../components/ChileMap';
 
 const Home = () => {
+  const [activeService, setActiveService] = useState(null);
+
+  const servicesData = [
+    {
+      id: 1,
+      title: "PROVISIÓN DE GUÍAS Y COORDINADORES CERTIFICADOS",
+      icon: <Briefcase size={40} />,
+      desc: "Asignamos guías y coordinadores validados según el tipo de servicio, perfil de pasajero e idioma requerido.",
+      highlight: "👉 Cobertura confiable con profesionales listos para operar desde el primer servicio."
+    },
+    {
+      id: 2,
+      title: "GUÍA SOS",
+      icon: <Zap size={40} />,
+      desc: "Servicio de respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos operativos.",
+      highlight: "👉 Solución rápida cuando más lo necesitas, sin comprometer la calidad del servicio."
+    },
+    {
+      id: 3,
+      title: "SOPORTE Y ASISTENCIA LOGÍSTICA",
+      icon: <Settings size={40} />,
+      desc: "Coordinamos la planificación y ejecución de servicios: asignación de guías, comunicación operativa y seguimiento en terreno.",
+      highlight: "👉 Menos carga para tu equipo, mayor control en cada operación."
+    },
+    {
+      id: 4,
+      title: "DRIVEPLUS+",
+      icon: <Truck size={40} />,
+      desc: "Red de conductores profesionales y transporte turístico, conectados con tu operación. DrivePlus+ integra conductores especializados y servicios de transporte turístico, coordinados para operar junto a guías o de forma independiente según el servicio.",
+      highlight: "👉 Accedes a conductores confiables y transporte listo para operar, sin gestionar múltiples proveedores."
+    },
+    {
+      id: 5,
+      title: "LEVANTAMIENTO Y OPTIMIZACIÓN DE EXPERIENCIAS TURÍSTICAS",
+      icon: <TrendingUp size={40} />,
+      desc: "Analizamos, diseñamos y mejoramos tus servicios turísticos para aumentar calidad, eficiencia operativa y valor percibido.",
+      highlight: "👉 Transformas tus tours en productos más competitivos y rentables."
+    }
+  ];
   return (
     <div className="home-page">
 
@@ -132,31 +172,40 @@ const Home = () => {
         <div className="container text-center">
           <h2 className="mb-5">Servicios que ofrecemos</h2>
 
-          <div className="servicios-grid">
-            <div className="servicio-card">
-              <Briefcase className="servicio-icon" size={40} />
-              <h3>Provisión de guías por tour</h3>
-              <Link to="/servicios" className="btn btn-outline border-white">Ver más</Link>
-            </div>
-
-            <div className="servicio-card">
-              <MapPin className="servicio-icon" size={40} />
-              <h3>Cobertura en temporada alta</h3>
-              <Link to="/servicios" className="btn btn-outline border-white">Ver más</Link>
-            </div>
-
-            <div className="servicio-card">
-              <Clock className="servicio-icon" size={40} />
-              <h3>Guías para servicios de último minuto</h3>
-              <Link to="/servicios" className="btn btn-outline border-white">Ver más</Link>
-            </div>
-
-            <div className="servicio-card">
-              <Settings className="servicio-icon" size={40} />
-              <h3>Servicio operativo completo</h3>
-              <Link to="/servicios" className="btn btn-outline border-white">Ver más</Link>
-            </div>
+          <div className="servicios-grid mt-5">
+            {servicesData.map((service) => (
+              <div 
+                key={service.id} 
+                className="servicio-card interactive" 
+                onClick={() => setActiveService(service)}
+              >
+                <div className="servicio-icon">{service.icon}</div>
+                <h3>{service.title}</h3>
+                <span className="btn-ver-mas">Ver detalle</span>
+              </div>
+            ))}
           </div>
+
+          <div className="servicios-slogan mt-5">
+            <p>"Ustedes se enfocan en los pasajeros; nosotros nos encargamos de que siempre tengan al guía o coordinador correcto."</p>
+          </div>
+
+          {/* Modal Emergente de Servicio */}
+          {activeService && (
+            <div className="service-modal-overlay" onClick={() => setActiveService(null)}>
+              <div className="service-modal-content" onClick={e => e.stopPropagation()}>
+                <button className="modal-close" onClick={() => setActiveService(null)}>&times;</button>
+                <div className="modal-icon">{activeService.icon}</div>
+                <h3>{activeService.title}</h3>
+                <p className="modal-desc">{activeService.desc}</p>
+                <div className="modal-highlight">{activeService.highlight}</div>
+                <div className="modal-actions">
+                  <Link to="/servicios" className="btn btn-primary" onClick={() => setActiveService(null)}>Saber más</Link>
+                  <button className="btn btn-outline" onClick={() => setActiveService(null)}>Cerrar</button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

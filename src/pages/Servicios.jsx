@@ -132,49 +132,49 @@ const Servicios = () => {
           {/* Servicios destacados (layout grande) */}
           <div className="services-b2b-grid">
             
-            {/* Servicio por Tour */}
+            {/* 1. Provisión de Guías */}
             <div className="service-b2b-card">
               <div className="service-b2b-content">
-                <h3>Servicio por Tour</h3>
+                <h3>Provisión de Guías y Coordinadores Certificados</h3>
                 <p className="service-desc">
-                  Para empresas con logística propia que solo necesitan la asignación del profesional. 
-                  Proveemos guías turísticos para jornadas específicas, alineados a tu estándar de servicio.
+                  Asignamos profesionales validados según el tipo de servicio, perfil de pasajero e idioma requerido. 
+                  Garantizamos cobertura confiable con expertos listos para operar desde el primer momento.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Validación de perfil</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Confirmación operativa</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Briefing al guía</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Reemplazo garantizado</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Validación de perfiles y certificaciones</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Registro SERNATUR vigente</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Manejo de idiomas específicos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Briefing técnico previo al servicio</div>
                 </div>
                 <div>
-                  <Link to="/reservar" className="btn btn-primary" style={{padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.95rem'}}>Reservar guía ahora</Link>
+                  <Link to="/reservar" className="btn btn-primary" style={{padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.95rem'}}>Solicitar guía</Link>
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1000&auto=format&fit=crop" alt="Servicio por Tour" />
+                <img src="/card-v-guías-verificados.png" alt="Provisión de Guías" />
               </div>
             </div>
 
-            {/* Servicio Operativo Completo */}
+            {/* 2. Soporte y Asistencia Logística */}
             <div className="service-b2b-card reverse">
               <div className="service-b2b-content">
-                <h3>Servicio Operativo Completo</h3>
+                <h3>Soporte y Asistencia Logística</h3>
                 <p className="service-desc">
-                  Externalización integral. Coordinamos la reserva, articulamos el transporte, asignamos el guía 
-                  y monitoreamos toda la ejecución del servicio en terreno.
+                  Absorbemos la carga operativa de tu equipo. Coordinamos la planificación, comunicación operativa 
+                  y el seguimiento en terreno para asegurar que cada detalle se cumpla según lo previsto.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Gestión de reservas</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Coordinación guía + driver</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Comunicación centralizada</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Apoyo logístico general</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Coordinación centralizada</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Seguimiento en tiempo real</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Resolución de imprevistos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Gestión de flujos comunicativos</div>
                 </div>
                 <div>
-                  <Link to="/reservar" className="btn btn-secondary" style={{padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.95rem'}}>Solicitar operación</Link>
+                  <Link to="/reservar" className="btn btn-secondary" style={{padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.95rem'}}>Cotizar soporte</Link>
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop" alt="Servicio Operativo Completo" />
+                <img src="/card-v-soporte-operativo.png" alt="Soporte Logístico" />
               </div>
             </div>
           </div>
@@ -183,38 +183,24 @@ const Servicios = () => {
           <div className="services-compact-grid">
             
             <div className="service-compact-card">
-              <div className="compact-icon"><CalendarClock size={28}/></div>
-              <h4>Cobertura de Temporada Alta</h4>
-              <p>Escalamos tu equipo de guías sin costos fijos. Activamos perfiles según la demanda estacional de tu operación.</p>
-              <span className="compact-badge"><Users size={14}/> Tour operadores</span>
-            </div>
-
-            <div className="service-compact-card">
               <div className="compact-icon"><Zap size={28}/></div>
-              <h4>Requerimientos de Último Minuto</h4>
-              <p>Respuesta ágil ante contingencias, reemplazos urgentes y necesidades imprevistas, sujeto a disponibilidad.</p>
-              <span className="compact-badge"><Clock size={14}/> Respuesta &lt;12h</span>
-            </div>
-
-            <div className="service-compact-card">
-              <div className="compact-icon"><Target size={28}/></div>
-              <h4>Coordinación Logística</h4>
-              <p>Articulamos los eslabones operativos: confirmaciones, puntos de encuentro, horarios y comunicación con local providers.</p>
-              <span className="compact-badge"><Settings size={14}/> Empresas DMC</span>
+              <h4>Guía SOS</h4>
+              <p>Respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos imprevistos sin comprometer la calidad.</p>
+              <span className="compact-badge"><Clock size={14}/> Respuesta rápida</span>
             </div>
 
             <div className="service-compact-card">
               <div className="compact-icon"><Truck size={28}/></div>
-              <h4>Articulación con Transporte</h4>
-              <p>Coordinamos directamente con flotas de buses y vans registradas para integrar guía y transporte en un solo servicio.</p>
-              <span className="compact-badge"><Truck size={14}/> Servicio integral</span>
+              <h4>DrivePlus+</h4>
+              <p>Red de conductores profesionales y transporte turístico integrado directamente con tu operación de guiado.</p>
+              <span className="compact-badge"><Truck size={14}/> Transporte + Guía</span>
             </div>
 
             <div className="service-compact-card">
-              <div className="compact-icon"><Lightbulb size={28}/></div>
-              <h4>Soporte en Nuevas Experiencias</h4>
-              <p>Acompañamos a tu empresa en el diseño y testeo operativo de nuevas rutas, excursiones o productos turísticos.</p>
-              <span className="compact-badge"><TrendingUp size={14}/> Innovación</span>
+              <div className="compact-icon"><TrendingUp size={28}/></div>
+              <h4>Optimización de Experiencias</h4>
+              <p>Analizamos y rediseñamos tus tours para aumentar la eficiencia operativa y el valor percibido por el cliente.</p>
+              <span className="compact-badge"><Target size={14}/> Consultoría B2B</span>
             </div>
 
           </div>
