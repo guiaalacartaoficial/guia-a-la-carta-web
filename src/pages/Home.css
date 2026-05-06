@@ -287,6 +287,14 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
   border-color: var(--c-accent);
 }
+.servicio-card.interactive svg {
+  color: var(--c-accent);
+  transition: all 0.3s ease;
+}
+.servicio-card.interactive:hover svg {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(159, 192, 90, 0.4));
+}
 .servicio-card.interactive h3 {
   color: white;
   font-size: 0.95rem;
