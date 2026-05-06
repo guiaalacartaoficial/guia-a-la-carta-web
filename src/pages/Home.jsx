@@ -97,7 +97,9 @@ const Home = () => {
             <div className="solucion-pilares">
               <div className="pilar-item">
                 <CheckCircle size={24} className="text-accent" />
-                <span>Optimización operativa</span>
+                <span>PRIMEROS AUXILIOS</span>
+                <p>Guías con formación en primeros auxilios, preparados para responder ante situaciones de riesgo en terreno.
+                  Mayor seguridad para tus pasajeros.</p>
               </div>
               <div className="pilar-item">
                 <CheckCircle size={24} className="text-accent" />
