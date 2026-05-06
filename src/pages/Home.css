@@ -89,10 +89,10 @@
   box-shadow: var(--shadow-md);
 }
 
-.card-cobertura { background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1000&auto=format&fit=crop'); }
-.card-certificados { background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1000&auto=format&fit=crop'); }
-.card-respaldo { background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop'); }
-.card-flexibilidad { background-image: url('https://images.unsplash.com/photo-1539635278303-d4002c07dee3?q=80&w=1000&auto=format&fit=crop'); }
+.card-cobertura { background-image: url('/card-v-guías-verificados.png'); }
+.card-certificados { background-image: url('/card-v- flex-operativa.png'); }
+.card-respaldo { background-image: url('/card-v-soporte-operativo.png'); }
+.card-flexibilidad { background-image: url('/card-v-carga-operativa.png'); }
 
 .bloque-overlay {
   position: absolute;
