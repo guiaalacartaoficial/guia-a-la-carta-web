@@ -41,23 +41,30 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     
     setIsGenerating(true);
     try {
-      // Pequeña espera para asegurar que el DOM de exportación está completamente procesado por el navegador
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // 1. Asegurar que las imágenes en el nodo de exportación estén cargadas
+      const images = exportRef.current.querySelectorAll('img');
+      const imagePromises = Array.from(images).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+      
+      await Promise.all(imagePromises);
+
+      // 2. Pequeña espera adicional para que el navegador procese el layout final
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
-        pixelRatio: 3, // 2550px de ancho (Calidad Ultra HD perfecta)
+        pixelRatio: 3, 
         useCORS: true,
-        backgroundColor: null, // Mantener transparencia en las esquinas redondeadas
+        backgroundColor: null,
         style: {
           visibility: 'visible',
-          opacity: '1'
-        },
-        filter: (node) => {
-          if (node.classList && node.classList.contains('no-export')) {
-            return false;
-          }
-          return true;
+          opacity: '1',
+          transform: 'none'
         }
       });
       
@@ -263,19 +270,19 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         </div>
       )}
 
-      {/* 2. NODO DE EXPORTACIÓN (Oculto, siempre en formato desktop 850px) */}
       <div 
-        className="export-container-hidden"
+        className="export-container-hidden no-export"
         style={{ 
           position: 'fixed', 
           left: '0', 
-          top: '-10000px', 
+          top: '0', 
           width: '850px',
           height: 'auto',
           overflow: 'hidden',
-          zIndex: -100,
+          zIndex: -5000,
           pointerEvents: 'none',
-          visibility: 'visible', // Debe ser visible para que html-to-image lo capture
+          visibility: 'visible',
+          opacity: '0.01', // Casi invisible pero "presente" para el navegador
           background: 'transparent'
         }}
       >
