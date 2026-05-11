@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { X, Check, MessageSquare, Mail, Download, Phone, Loader2, Star, Award, ShieldCheck } from 'lucide-react';
-import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import download from 'downloadjs';
 import './GuideCredential.css';
 
@@ -42,63 +42,35 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     if (!captureNode) return;
     
     setIsGenerating(true);
-    setIsExportMode(true); // Activa el layout de escritorio en el nodo visible
+    setIsExportMode(true); // Activa el layout de escritorio
     
     try {
-      // 1. Dar tiempo a React para aplicar la clase is-export y al navegador para recalcular el layout
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // 2. SOLUCIÓN DEFINITIVA PARA SAFARI/iOS: Convertir imágenes a Base64 en el nodo activo
-      const images = captureNode.querySelectorAll('img');
-      const imagePromises = Array.from(images).map(async (img) => {
-        if (img.src.startsWith('data:')) return Promise.resolve();
-        try {
-          const url = new URL(img.src, window.location.href);
-          url.searchParams.append('cb', new Date().getTime());
-          const response = await fetch(url.toString(), { mode: 'cors', cache: 'no-cache' });
-          if (!response.ok) throw new Error('Network error');
-          const blob = await response.blob();
-          return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              img.src = reader.result;
-              resolve();
-            };
-            reader.onerror = resolve;
-            reader.readAsDataURL(blob);
-          });
-        } catch (err) {
-          console.warn('Fallo al convertir a Base64 (Safari fallback):', img.src);
-          return Promise.resolve();
-        }
-      });
-      await Promise.all(imagePromises);
-
-      // 3. Espera para que Safari pinte los Base64
+      // 1. Pequeña pausa para que React aplique las clases y el navegador dibuje
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       
-      // 4. Capturar el nodo que AHORA es 100% visible y renderizado
-      const dataUrl = await toPng(captureNode, {
-        cacheBust: true,
-        pixelRatio: isMobile ? 2 : 3,
-        useCORS: true,
+      // 2. SOLUCIÓN FINAL: html2canvas dibuja el DOM directamente sin usar SVG (el problema de Safari)
+      const canvas = await html2canvas(captureNode, {
+        scale: isMobile ? 2 : 3, // Alta calidad sin saturar memoria en móvil
+        useCORS: true,           // Fundamental para cargar las fotos de Supabase
+        allowTaint: false,
         backgroundColor: levelInfo.color,
-        style: { transform: 'none' },
-        filter: (node) => {
-          if (node.classList && node.classList.contains('no-export')) return false;
-          return true;
+        logging: false,
+        ignoreElements: (node) => {
+          return node.classList && node.classList.contains('no-export');
         }
       });
       
+      const dataUrl = canvas.toDataURL('image/png', 1.0);
       download(dataUrl, `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`);
+      
     } catch (err) {
       console.error('Error generating image:', err);
       alert('Hubo un error al generar la imagen. Por favor intenta de nuevo.');
     } finally {
       setIsGenerating(false);
-      setIsExportMode(false); // Restaura el layout móvil
+      setIsExportMode(false); // Restaura el tamaño móvil
     }
   };
 
