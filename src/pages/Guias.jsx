@@ -35,11 +35,11 @@ const Guias = () => {
               biografia: item.biografia || '',
               formacion: item.educacion ? item.educacion.split('\n') : [],
               experiencia: item.rutas_experiencia ? item.rutas_experiencia.split('\n') : (item.experiencia_terreno ? item.experiencia_terreno.split('\n') : []),
-              certificaciones: [
-                item.url_sernatur ? 'SERNATUR' : null,
-                item.url_primeros_auxilios ? 'Primeros Auxilios' : null,
-                item.url_otras_certificaciones ? 'Otras Certificaciones' : null
-              ].filter(Boolean),
+              certificaciones: {
+                sernatur: !!item.url_sernatur,
+                wfr: !!item.url_primeros_auxilios,
+                otras: !!item.url_otras_certificaciones
+              },
               nivel: item.nivel || (type === 'guia' ? 'full' : 'junior'),
               especialidad: 'Guía de Turismo',
               ubicacion: item.ciudad_residencia || 'No especificada'

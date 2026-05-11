@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Check, MessageSquare, Mail, Download, Phone, Loader2 } from 'lucide-react';
+import { X, Check, MessageSquare, Mail, Download, Phone, Loader2, Star, Award, ShieldCheck } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
 import './GuideCredential.css';
@@ -7,7 +7,9 @@ import './GuideCredential.css';
 const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const cardRef = useRef(null);
+  
+  // Referencia para la exportación perfecta en alta resolución
+  const exportRef = useRef(null);
 
   if (!guia) return null;
 
@@ -28,25 +30,29 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
   };
 
   const handleGenerate = async () => {
-    if (!cardRef.current) return;
+    if (!exportRef.current) return;
     
     setIsGenerating(true);
     try {
-      // Configuraciones para máxima calidad y limpieza
-      const dataUrl = await toPng(cardRef.current, {
+      // Capturamos el contenedor oculto con dimensiones estrictas
+      const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
-        // Eliminamos backgroundColor fijo para permitir que las esquinas sean transparentes (redondeadas)
+        pixelRatio: 3, // Ultra HD
+        width: 1080,
+        height: 1520,
+        style: {
+          transform: 'none',
+          visibility: 'visible'
+        },
         filter: (node) => {
-          // Excluimos elementos con la clase 'no-print'
-          if (node.classList && node.classList.contains('no-print')) {
+          if (node.classList && node.classList.contains('no-export')) {
             return false;
           }
           return true;
         }
       });
       
-      download(dataUrl, `Credencial_${guia.nombre.replace(/ /g, '_')}.png`);
+      download(dataUrl, `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`);
     } catch (err) {
       console.error('Error generating image:', err);
       alert('Hubo un error al generar la imagen. Por favor intenta de nuevo.');
@@ -68,15 +74,27 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     return flags[idioma] || '';
   };
 
-  const credentialContent = (
+  const getLevelInfo = (nivel) => {
+    switch(nivel?.toLowerCase()) {
+      case 'senior': return { label: 'Guía Senior', icon: <Star size={16} fill="currentColor" />, colorClass: 'level-senior' };
+      case 'full': return { label: 'Guía Full', icon: <Award size={16} fill="currentColor" />, colorClass: 'level-full' };
+      default: return { label: 'Guía Junior', icon: <ShieldCheck size={16} fill="currentColor" />, colorClass: 'level-junior' };
+    }
+  };
+
+  const levelInfo = getLevelInfo(guia.nivel);
+
+  // Subcomponente de la tarjeta para reutilizar visualización y exportación
+  const CredentialCard = ({ isExportMode = false, innerRef = null }) => {
+    return (
       <div 
-        ref={cardRef}
-        className={`credential-card-v2 ${isExample ? 'is-example' : ''}`} 
-        onClick={(e) => !isExample && e.stopPropagation()}
+        ref={innerRef}
+        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${isExportMode ? 'is-export' : ''} ${levelInfo.colorClass}`} 
+        onClick={(e) => (!isExample && !isExportMode) && e.stopPropagation()}
       >
-        {!isExample && (
-          <button className="credential-close-v2 no-print" onClick={onClose}>
-            <X size={20} />
+        {(!isExample && !isExportMode) && (
+          <button className="credential-close-v2 no-export" onClick={onClose}>
+            <X size={24} />
           </button>
         )}
 
@@ -101,6 +119,9 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
             
             <div className="v2-status-bar">
               <div className="v2-pill-code">{guia.codigo}</div>
+              <div className="v2-pill-level">
+                {levelInfo.icon} <span style={{marginLeft: '5px'}}>{levelInfo.label}</span>
+              </div>
               <div className="v2-pill-available">
                 <div className="v2-check-circle"><Check size={14} strokeWidth={4} /></div>
                 <span>DISPONIBLE</span>
@@ -127,22 +148,27 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
               <img src={guia.imagen} alt={guia.nombre} className="v2-profile-img" />
             </div>
             
-            {(guia.certificaciones?.sernatur || guia.certificaciones?.wfr || guia.certificaciones?.wafa) && (
+            {/* COMPATIBILIDAD CON AMBOS FORMATOS DE CERTIFICACIONES */}
+            {(
+              (Array.isArray(guia.certificaciones) && guia.certificaciones.length > 0) || 
+              (guia.certificaciones?.sernatur || guia.certificaciones?.wfr || guia.certificaciones?.wafa)
+            ) && (
               <div className="v2-seals-column">
                 {guia.certificaciones?.sernatur && (
-                  <div className="v2-seal-wrapper">
-                    <img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" />
-                  </div>
+                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" /></div>
                 )}
                 {guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper">
-                    <img src="/wfr.png" alt="WFR" className="v2-seal-img" />
-                  </div>
+                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" /></div>
                 )}
                 {guia.certificaciones?.wafa && !guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper">
-                    <img src="/wafa.png" alt="WAFA" className="v2-seal-img" />
-                  </div>
+                  <div className="v2-seal-wrapper"><img src="/wafa.png" alt="WAFA" className="v2-seal-img" /></div>
+                )}
+                
+                {Array.isArray(guia.certificaciones) && guia.certificaciones.includes('SERNATUR') && (
+                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" /></div>
+                )}
+                {Array.isArray(guia.certificaciones) && guia.certificaciones.includes('Primeros Auxilios') && !guia.certificaciones?.wfr && (
+                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" /></div>
                 )}
               </div>
             )}
@@ -154,7 +180,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
             </div>
 
             <div className="v2-formation-container">
-              <h3>Formación</h3>
+              <h3>Formación Profesional</h3>
               <ul>
                 {guia.formacion.map((item, idx) => (
                   <li key={idx}>{item}</li>
@@ -166,7 +192,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
         {/* EXPERIENCE */}
         <div className="credential-bottom-experience">
-          <h3 className="v2-exp-title">Experiencia</h3>
+          <h3 className="v2-exp-title">Experiencia en Terreno</h3>
           <div className="v2-experience-grid">
             {guia.experiencia.map((item, idx) => (
               <div key={idx} className="v2-exp-item">
@@ -176,21 +202,21 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
           </div>
         </div>
 
-        {/* ACTIONS */}
-        {!isExample && (
-          <div className="v2-credential-actions no-print">
+        {/* ACTIONS (solo en visualización real) */}
+        {(!isExample && !isExportMode) && (
+          <div className="v2-credential-actions no-export">
             <div className="v2-main-actions">
               <div className="v2-request-container">
                 <button 
                   className={`v2-btn-primary ${showContactOptions ? 'active' : ''}`}
-                  onClick={() => setShowContactOptions(!showContactOptions)}
+                  onClick={(e) => { e.stopPropagation(); setShowContactOptions(!showContactOptions); }}
                 >
                   <MessageSquare size={18} />
                   Solicitar Guía
                 </button>
 
                 {showContactOptions && (
-                  <div className="v2-contact-dropdown">
+                  <div className="v2-contact-dropdown" onClick={(e) => e.stopPropagation()}>
                     <button className="v2-contact-opt whatsapp" onClick={handleWhatsApp}>
                       <Phone size={16} /> WhatsApp
                     </button>
@@ -203,24 +229,35 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
               <button 
                 className="v2-btn-secondary" 
-                onClick={handleGenerate}
+                onClick={(e) => { e.stopPropagation(); handleGenerate(); }}
                 disabled={isGenerating}
               >
                 {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
-                {isGenerating ? 'Generando...' : 'Generar Credencial'}
+                {isGenerating ? 'Generando Calidad HD...' : 'Descargar Credencial HD'}
               </button>
             </div>
           </div>
         )}
       </div>
-  );
-
-  if (isExample) return credentialContent;
+    );
+  };
 
   return (
-    <div className="credential-overlay" onClick={onClose}>
-      {credentialContent}
-    </div>
+    <>
+      {/* Contenedor Oculto para Exportación: Dimensiones exactas, fuera de la vista */}
+      <div style={{ position: 'fixed', top: '-9999px', left: '-9999px', width: '1080px', height: '1520px', zIndex: -1 }}>
+        <CredentialCard isExportMode={true} innerRef={exportRef} />
+      </div>
+
+      {/* Vista interactiva normal */}
+      {isExample ? (
+        <CredentialCard />
+      ) : (
+        <div className="credential-overlay" onClick={onClose}>
+          <CredentialCard />
+        </div>
+      )}
+    </>
   );
 };
 

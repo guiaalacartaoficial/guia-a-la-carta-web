@@ -240,7 +240,8 @@ const AdminDashboard = () => {
     experiencia: g.rutas_experiencia ? g.rutas_experiencia.split('\n') : [],
     certificaciones: { 
       sernatur: !!g.url_sernatur, 
-      wfr: !!g.url_primeros_auxilios 
+      wfr: !!g.url_primeros_auxilios,
+      otras: !!g.url_otras_certificaciones
     }
   });
 
