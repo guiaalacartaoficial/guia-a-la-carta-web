@@ -53,14 +53,20 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
       
       await Promise.all(imagePromises);
 
-      // 2. Pequeña espera adicional para que el navegador procese el layout final
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // 2. Hack para iOS/Safari: primera llamada para "calentar" el renderizado de recursos
+      // Esto suele solucionar el problema de imágenes faltantes en el primer intento en móviles
+      await toPng(exportRef.current, { cacheBust: true, useCORS: true }).catch(() => {});
 
+      // 3. Pequeña espera adicional para que el motor de renderizado móvil se estabilice
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
       const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
-        pixelRatio: 3, 
+        pixelRatio: isMobile ? 2 : 3, // 2x en móvil para evitar límites de memoria, 3x en desktop
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: levelInfo.color, // Forzar el color de fondo del nivel
         style: {
           visibility: 'visible',
           opacity: '1',
@@ -279,10 +285,10 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
           width: '850px',
           height: 'auto',
           overflow: 'hidden',
-          zIndex: -5000,
+          zIndex: 9990, // Justo debajo de la modal (9999) para que sea "visible" al navegador pero oculta al usuario
           pointerEvents: 'none',
           visibility: 'visible',
-          opacity: '0.01', // Casi invisible pero "presente" para el navegador
+          opacity: '0.02', // Mínima opacidad para forzar el pintado en iOS Safari
           background: 'transparent'
         }}
       >
