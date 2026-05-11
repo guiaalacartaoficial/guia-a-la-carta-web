@@ -41,24 +41,58 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     
     setIsGenerating(true);
     try {
-      // Capturamos el contenedor oculto con dimensiones estrictas
+      // Usamos el contenedor visible pero forzamos el formato de escritorio en memoria
       const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
-        pixelRatio: 3, // Ultra HD
-        width: 1080,
-        height: 1520,
-        style: {
-          transform: 'none',
-          visibility: 'visible'
-        },
+        pixelRatio: 3, // Ultra HD (2550px de ancho final)
+        useCORS: true, // Crucial para las fotos de perfil y banderas
         filter: (node) => {
           if (node.classList && node.classList.contains('no-export')) {
             return false;
           }
           return true;
+        },
+        onclone: (document) => {
+          const element = document.getElementById('credential-to-download');
+          if (element) {
+            // Forzamos estilos de escritorio ignorando cualquier media query móvil
+            const style = document.createElement('style');
+            style.innerHTML = `
+              * {
+                animation: none !important;
+                transition: none !important;
+              }
+              #credential-to-download {
+                width: 850px !important;
+                max-width: 850px !important;
+                min-width: 850px !important;
+                padding: 50px !important;
+                margin: 0 !important;
+                transform: none !important;
+                border-radius: 45px !important;
+              }
+              .credential-middle-content { grid-template-columns: 280px 1fr !important; }
+              .v2-profile-img-container { max-width: 280px !important; }
+              .v2-seals-column { flex-direction: column !important; width: auto !important; justify-content: flex-start !important; flex-wrap: nowrap !important; }
+              .v2-title-row { flex-direction: row !important; text-align: left !important; }
+              .v2-guide-name { font-size: 2.8rem !important; }
+              .v2-status-bar { flex-direction: row !important; align-items: center !important; }
+              .v2-languages-bar { flex-direction: row !important; }
+              .v2-flags-row { flex-wrap: nowrap !important; justify-content: flex-start !important; }
+              .v2-header-info-block { padding: 30px 40px !important; border-radius: 40px !important; }
+              .credential-top-row { flex-direction: row !important; align-items: stretch !important; gap: 30px !important; }
+              .credential-top-left-logos { flex-direction: column !important; justify-content: center !important; }
+              .v2-bio-container, .v2-formation-container { padding: 40px !important; }
+              .credential-bottom-experience { padding: 50px !important; margin-top: 50px !important; }
+              .v2-formation-container h3, .v2-exp-title { font-size: 2.2rem !important; margin-bottom: 25px !important; }
+              .v2-formation-container li { font-size: 1.1rem !important; }
+            `;
+            document.head.appendChild(style);
+          }
         }
       });
       
+      // Descargamos el PNG generado en memoria
       download(dataUrl, `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`);
     } catch (err) {
       console.error('Error generating image:', err);
@@ -92,14 +126,15 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const levelInfo = getLevelInfo(guia.nivel);
 
   // Subcomponente de la tarjeta para reutilizar visualización y exportación
-  const CredentialCard = ({ isExportMode = false, innerRef = null }) => {
+  const CredentialCard = ({ innerRef = null }) => {
     return (
       <div 
+        id="credential-to-download"
         ref={innerRef}
-        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${isExportMode ? 'is-export' : ''} ${levelInfo.colorClass}`} 
-        onClick={(e) => (!isExample && !isExportMode) && e.stopPropagation()}
+        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${levelInfo.colorClass}`} 
+        onClick={(e) => (!isExample) && e.stopPropagation()}
       >
-        {(!isExample && !isExportMode) && (
+        {(!isExample) && (
           <button className="credential-close-v2 no-export" onClick={onClose}>
             <X size={24} />
           </button>
@@ -210,7 +245,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         </div>
 
         {/* ACTIONS (solo en visualización real) */}
-        {(!isExample && !isExportMode) && (
+        {(!isExample) && (
           <div className="v2-credential-actions no-export">
             <div className="v2-main-actions">
               <div className="v2-request-container">
@@ -251,17 +286,12 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   return (
     <>
-      {/* Contenedor Oculto para Exportación: Permanece en el DOM pero invisible para garantizar captura */}
-      <div style={{ position: 'absolute', top: 0, left: 0, opacity: 0, pointerEvents: 'none', zIndex: -100 }}>
-        <CredentialCard isExportMode={true} innerRef={exportRef} />
-      </div>
-
-      {/* Vista interactiva normal */}
+      {/* Vista interactiva normal que ahora también sirve como origen para la exportación perfecta */}
       {isExample ? (
-        <CredentialCard />
+        <CredentialCard innerRef={exportRef} />
       ) : (
         <div className="credential-overlay" onClick={onClose}>
-          <CredentialCard />
+          <CredentialCard innerRef={exportRef} />
         </div>
       )}
     </>
