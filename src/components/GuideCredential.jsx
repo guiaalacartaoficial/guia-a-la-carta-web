@@ -41,14 +41,18 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     
     setIsGenerating(true);
     try {
-      // Pequeña espera para asegurar que los estilos y recursos estén listos en el DOM de exportación
-      await new Promise(resolve => setTimeout(resolve, 150));
+      // Pequeña espera para asegurar que el DOM de exportación está completamente procesado por el navegador
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
-        pixelRatio: 4, // Incrementamos a 4 para asegurar Ultra HD real (3400px de ancho)
+        pixelRatio: 3, // 2550px de ancho (Calidad Ultra HD perfecta)
         useCORS: true,
-        backgroundColor: 'transparent',
+        backgroundColor: null, // Mantener transparencia en las esquinas redondeadas
+        style: {
+          visibility: 'visible',
+          opacity: '1'
+        },
         filter: (node) => {
           if (node.classList && node.classList.contains('no-export')) {
             return false;
@@ -81,9 +85,9 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   const getLevelInfo = (nivel) => {
     switch(nivel?.toLowerCase()) {
-      case 'senior': return { label: 'Guía Senior', icon: <Star size={16} fill="currentColor" />, colorClass: 'level-senior' };
-      case 'full': return { label: 'Guía Full', icon: <Award size={16} fill="currentColor" />, colorClass: 'level-full' };
-      default: return { label: 'Guía Junior', icon: <ShieldCheck size={16} fill="currentColor" />, colorClass: 'level-junior' };
+      case 'senior': return { label: 'Guía Senior', icon: <Star size={16} fill="currentColor" />, colorClass: 'level-senior', color: '#1c4c44' };
+      case 'full': return { label: 'Guía Full', icon: <Award size={16} fill="currentColor" />, colorClass: 'level-full', color: '#0E5B4C' };
+      default: return { label: 'Guía Junior', icon: <ShieldCheck size={16} fill="currentColor" />, colorClass: 'level-junior', color: '#2A6B5A' };
     }
   };
 
@@ -260,18 +264,19 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
       )}
 
       {/* 2. NODO DE EXPORTACIÓN (Oculto, siempre en formato desktop 850px) */}
-      {/* Se renderiza fuera del viewport para no afectar la UX pero permitir captura perfecta */}
       <div 
         className="export-container-hidden"
         style={{ 
-          position: 'absolute', 
-          left: '-9999px', 
-          top: '0', 
+          position: 'fixed', 
+          left: '0', 
+          top: '-10000px', 
           width: '850px',
           height: 'auto',
           overflow: 'hidden',
           zIndex: -100,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          visibility: 'visible', // Debe ser visible para que html-to-image lo capture
+          background: 'transparent'
         }}
       >
         <CredentialCard innerRef={exportRef} isExport={true} />
