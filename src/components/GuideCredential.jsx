@@ -26,7 +26,14 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const handleEmail = () => {
     const subject = encodeURIComponent(`Solicitud de Guía: ${guia.nombre}`);
     const body = encodeURIComponent(`Hola Guía a la Carta,\n\nMe gustaría solicitar el servicio del guía ${guia.nombre} con código ${guia.codigo}.\n\nSaludos.`);
-    window.location.href = `mailto:${contactInfo.email}?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:${contactInfo.email}?subject=${subject}&body=${body}`;
+    
+    // Método más robusto para abrir clientes de correo en todos los navegadores
+    const link = document.createElement('a');
+    link.href = mailtoLink;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleGenerate = async () => {
@@ -233,7 +240,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
                 disabled={isGenerating}
               >
                 {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
-                {isGenerating ? 'Generando Calidad HD...' : 'Descargar Credencial HD'}
+                {isGenerating ? 'Generando...' : 'Descargar Credencial'}
               </button>
             </div>
           </div>
@@ -244,8 +251,8 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   return (
     <>
-      {/* Contenedor Oculto para Exportación: Dimensiones exactas, fuera de la vista */}
-      <div style={{ position: 'fixed', top: '-9999px', left: '-9999px', width: '1080px', height: '1520px', zIndex: -1 }}>
+      {/* Contenedor Oculto para Exportación: Permanece en el DOM pero invisible para garantizar captura */}
+      <div style={{ position: 'absolute', top: 0, left: 0, opacity: 0, pointerEvents: 'none', zIndex: -100 }}>
         <CredentialCard isExportMode={true} innerRef={exportRef} />
       </div>
 
