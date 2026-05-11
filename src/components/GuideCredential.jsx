@@ -7,6 +7,7 @@ import './GuideCredential.css';
 const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isExportMode, setIsExportMode] = useState(false);
   
   // Referencia para la exportación perfecta en alta resolución
   const exportRef = useRef(null);
@@ -37,34 +38,30 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
   };
 
   const handleGenerate = async () => {
-    if (!exportRef.current) return;
+    const captureNode = document.getElementById('credential-to-view');
+    if (!captureNode) return;
     
     setIsGenerating(true);
+    setIsExportMode(true); // Activa el layout de escritorio en el nodo visible
+    
     try {
-      // 1. SOLUCIÓN DEFINITIVA PARA SAFARI/iOS: Convertir todas las imágenes a Base64 manualmente.
-      // Safari bloquea imágenes externas dentro de SVG foreignObject (lo que usa html-to-image),
-      // incluso con useCORS: true. Al inyectar Base64 directamente, esquivamos la restricción de red.
-      const images = exportRef.current.querySelectorAll('img');
+      // 1. Dar tiempo a React para aplicar la clase is-export y al navegador para recalcular el layout
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // 2. SOLUCIÓN DEFINITIVA PARA SAFARI/iOS: Convertir imágenes a Base64 en el nodo activo
+      const images = captureNode.querySelectorAll('img');
       const imagePromises = Array.from(images).map(async (img) => {
         if (img.src.startsWith('data:')) return Promise.resolve();
-        
         try {
-          // Crear URL absoluta y añadir cache-busting para evitar que Safari use una versión cacheada sin CORS
           const url = new URL(img.src, window.location.href);
           url.searchParams.append('cb', new Date().getTime());
-          
-          const response = await fetch(url.toString(), { 
-            mode: 'cors', 
-            cache: 'no-cache' 
-          });
-          
+          const response = await fetch(url.toString(), { mode: 'cors', cache: 'no-cache' });
           if (!response.ok) throw new Error('Network error');
-          
           const blob = await response.blob();
           return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onloadend = () => {
-              img.src = reader.result; // Reemplazar con Base64
+              img.src = reader.result;
               resolve();
             };
             reader.onerror = resolve;
@@ -75,26 +72,23 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
           return Promise.resolve();
         }
       });
-      
       await Promise.all(imagePromises);
 
-      // 2. Hack para iOS/Safari: primera llamada para "calentar" el renderizado de recursos
-      await toPng(exportRef.current, { cacheBust: true, useCORS: true }).catch(() => {});
-
-      // 3. Espera para asegurar que los Base64 estén renderizados en el DOM
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // 3. Espera para que Safari pinte los Base64
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       
-      const dataUrl = await toPng(exportRef.current, {
+      // 4. Capturar el nodo que AHORA es 100% visible y renderizado
+      const dataUrl = await toPng(captureNode, {
         cacheBust: true,
-        pixelRatio: isMobile ? 2 : 3, // 2x en móvil para evitar límites de memoria, 3x en desktop
+        pixelRatio: isMobile ? 2 : 3,
         useCORS: true,
-        backgroundColor: levelInfo.color, // Forzar el color de fondo del nivel
-        style: {
-          visibility: 'visible',
-          opacity: '1',
-          transform: 'none'
+        backgroundColor: levelInfo.color,
+        style: { transform: 'none' },
+        filter: (node) => {
+          if (node.classList && node.classList.contains('no-export')) return false;
+          return true;
         }
       });
       
@@ -104,6 +98,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
       alert('Hubo un error al generar la imagen. Por favor intenta de nuevo.');
     } finally {
       setIsGenerating(false);
+      setIsExportMode(false); // Restaura el layout móvil
     }
   };
 
@@ -130,12 +125,11 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   const levelInfo = getLevelInfo(guia.nivel);
 
-  // Subcomponente de la tarjeta para reutilizar visualización y exportación
-  const CredentialCard = ({ innerRef = null, isExport = false }) => {
+  // Subcomponente de la tarjeta
+  const CredentialCard = ({ isExport = false }) => {
     return (
       <div 
-        id={isExport ? "credential-export-node" : "credential-to-view"}
-        ref={innerRef}
+        id="credential-to-view"
         className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${isExport ? 'is-export' : ''} ${levelInfo.colorClass}`} 
         onClick={(e) => (!isExample && !isExport) && e.stopPropagation()}
       >
@@ -291,33 +285,28 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   return (
     <>
-      {/* 1. VISTA INTERACTIVA (Sensible a responsividad) */}
+      {/* VISTA PRINCIPAL (Se adapta para la exportación temporalmente) */}
       {isExample ? (
         <CredentialCard />
       ) : (
         <div className="credential-overlay" onClick={onClose}>
-          <CredentialCard />
+          
+          {/* Pantalla de carga que cubre la deformación temporal en móviles */}
+          {isExportMode && (
+            <div style={{
+              position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+              backgroundColor: '#1c4c44', zIndex: 99999, display: 'flex', 
+              flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#fff'
+            }}>
+              <Loader2 className="animate-spin" size={60} color="#9FC05A" />
+              <h2 style={{marginTop: '25px', fontFamily: 'var(--font-heading)', color: '#9FC05A'}}>Generando Credencial HD...</h2>
+              <p style={{marginTop: '10px', fontSize: '1.1rem', opacity: 0.8}}>Por favor espera, optimizando imágenes para Safari.</p>
+            </div>
+          )}
+
+          <CredentialCard isExport={isExportMode} />
         </div>
       )}
-
-      <div 
-        className="export-container-hidden no-export"
-        style={{ 
-          position: 'fixed', 
-          left: '0', 
-          top: '0', 
-          width: '850px',
-          height: 'auto',
-          overflow: 'hidden',
-          zIndex: 9990, // Justo debajo de la modal (9999) para que sea "visible" al navegador pero oculta al usuario
-          pointerEvents: 'none',
-          visibility: 'visible',
-          opacity: '0.02', // Mínima opacidad para forzar el pintado en iOS Safari
-          background: 'transparent'
-        }}
-      >
-        <CredentialCard innerRef={exportRef} isExport={true} />
-      </div>
     </>
   );
 };
