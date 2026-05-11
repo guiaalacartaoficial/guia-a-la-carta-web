@@ -250,7 +250,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         </div>
 
         {/* ACTIONS (solo en visualización real) */}
-        {(!isExample) && (
+        {(!isExample && !isExport) && (
           <div className="v2-credential-actions no-export">
             <div className="v2-main-actions">
               <div className="v2-request-container">
