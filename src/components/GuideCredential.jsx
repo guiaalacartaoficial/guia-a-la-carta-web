@@ -41,58 +41,22 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     
     setIsGenerating(true);
     try {
-      // Usamos el contenedor visible pero forzamos el formato de escritorio en memoria
+      // Pequeña espera para asegurar que los estilos y recursos estén listos en el DOM de exportación
+      await new Promise(resolve => setTimeout(resolve, 150));
+
       const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
-        pixelRatio: 3, // Ultra HD (2550px de ancho final)
-        useCORS: true, // Crucial para las fotos de perfil y banderas
+        pixelRatio: 4, // Incrementamos a 4 para asegurar Ultra HD real (3400px de ancho)
+        useCORS: true,
+        backgroundColor: 'transparent',
         filter: (node) => {
           if (node.classList && node.classList.contains('no-export')) {
             return false;
           }
           return true;
-        },
-        onclone: (document) => {
-          const element = document.getElementById('credential-to-download');
-          if (element) {
-            // Forzamos estilos de escritorio ignorando cualquier media query móvil
-            const style = document.createElement('style');
-            style.innerHTML = `
-              * {
-                animation: none !important;
-                transition: none !important;
-              }
-              #credential-to-download {
-                width: 850px !important;
-                max-width: 850px !important;
-                min-width: 850px !important;
-                padding: 50px !important;
-                margin: 0 !important;
-                transform: none !important;
-                border-radius: 45px !important;
-              }
-              .credential-middle-content { grid-template-columns: 280px 1fr !important; }
-              .v2-profile-img-container { max-width: 280px !important; }
-              .v2-seals-column { flex-direction: column !important; width: auto !important; justify-content: flex-start !important; flex-wrap: nowrap !important; }
-              .v2-title-row { flex-direction: row !important; text-align: left !important; }
-              .v2-guide-name { font-size: 2.8rem !important; }
-              .v2-status-bar { flex-direction: row !important; align-items: center !important; }
-              .v2-languages-bar { flex-direction: row !important; }
-              .v2-flags-row { flex-wrap: nowrap !important; justify-content: flex-start !important; }
-              .v2-header-info-block { padding: 30px 40px !important; border-radius: 40px !important; }
-              .credential-top-row { flex-direction: row !important; align-items: stretch !important; gap: 30px !important; }
-              .credential-top-left-logos { flex-direction: column !important; justify-content: center !important; }
-              .v2-bio-container, .v2-formation-container { padding: 40px !important; }
-              .credential-bottom-experience { padding: 50px !important; margin-top: 50px !important; }
-              .v2-formation-container h3, .v2-exp-title { font-size: 2.2rem !important; margin-bottom: 25px !important; }
-              .v2-formation-container li { font-size: 1.1rem !important; }
-            `;
-            document.head.appendChild(style);
-          }
         }
       });
       
-      // Descargamos el PNG generado en memoria
       download(dataUrl, `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`);
     } catch (err) {
       console.error('Error generating image:', err);
@@ -126,13 +90,13 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const levelInfo = getLevelInfo(guia.nivel);
 
   // Subcomponente de la tarjeta para reutilizar visualización y exportación
-  const CredentialCard = ({ innerRef = null }) => {
+  const CredentialCard = ({ innerRef = null, isExport = false }) => {
     return (
       <div 
-        id="credential-to-download"
+        id={isExport ? "credential-export-node" : "credential-to-view"}
         ref={innerRef}
-        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${levelInfo.colorClass}`} 
-        onClick={(e) => (!isExample) && e.stopPropagation()}
+        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${isExport ? 'is-export' : ''} ${levelInfo.colorClass}`} 
+        onClick={(e) => (!isExample && !isExport) && e.stopPropagation()}
       >
         {(!isExample) && (
           <button className="credential-close-v2 no-export" onClick={onClose}>
@@ -175,9 +139,9 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
                 <img src="/icono-voz.png" alt="Voz" />
               </div>
               <div className="v2-flags-row">
-                {guia.idiomas.map((lang, idx) => (
+                {guia.idiomas?.map((lang, idx) => (
                   <img key={idx} src={getFlagUrl(lang)} alt={lang} className="v2-lang-flag" />
-                ))}
+                )) || <span className="v2-no-data">No especificado</span>}
               </div>
             </div>
           </div>
@@ -224,9 +188,9 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
             <div className="v2-formation-container">
               <h3>Formación Profesional</h3>
               <ul>
-                {guia.formacion.map((item, idx) => (
+                {guia.formacion?.map((item, idx) => (
                   <li key={idx}>{item}</li>
-                ))}
+                )) || <li>Información en proceso</li>}
               </ul>
             </div>
           </div>
@@ -236,11 +200,11 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         <div className="credential-bottom-experience">
           <h3 className="v2-exp-title">Experiencia en Terreno</h3>
           <div className="v2-experience-grid">
-            {guia.experiencia.map((item, idx) => (
+            {guia.experiencia?.map((item, idx) => (
               <div key={idx} className="v2-exp-item">
                 <span className="v2-bullet">•</span> {item}
               </div>
-            ))}
+            )) || <div className="v2-exp-item">Amplia experiencia en terreno</div>}
           </div>
         </div>
 
@@ -286,14 +250,32 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   return (
     <>
-      {/* Vista interactiva normal que ahora también sirve como origen para la exportación perfecta */}
+      {/* 1. VISTA INTERACTIVA (Sensible a responsividad) */}
       {isExample ? (
-        <CredentialCard innerRef={exportRef} />
+        <CredentialCard />
       ) : (
         <div className="credential-overlay" onClick={onClose}>
-          <CredentialCard innerRef={exportRef} />
+          <CredentialCard />
         </div>
       )}
+
+      {/* 2. NODO DE EXPORTACIÓN (Oculto, siempre en formato desktop 850px) */}
+      {/* Se renderiza fuera del viewport para no afectar la UX pero permitir captura perfecta */}
+      <div 
+        className="export-container-hidden"
+        style={{ 
+          position: 'absolute', 
+          left: '-9999px', 
+          top: '0', 
+          width: '850px',
+          height: 'auto',
+          overflow: 'hidden',
+          zIndex: -100,
+          pointerEvents: 'none'
+        }}
+      >
+        <CredentialCard innerRef={exportRef} isExport={true} />
+      </div>
     </>
   );
 };
