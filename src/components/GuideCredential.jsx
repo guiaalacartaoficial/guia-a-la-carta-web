@@ -41,23 +41,47 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     
     setIsGenerating(true);
     try {
-      // 1. Asegurar que las imágenes en el nodo de exportación estén cargadas
+      // 1. SOLUCIÓN DEFINITIVA PARA SAFARI/iOS: Convertir todas las imágenes a Base64 manualmente.
+      // Safari bloquea imágenes externas dentro de SVG foreignObject (lo que usa html-to-image),
+      // incluso con useCORS: true. Al inyectar Base64 directamente, esquivamos la restricción de red.
       const images = exportRef.current.querySelectorAll('img');
-      const imagePromises = Array.from(images).map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        });
+      const imagePromises = Array.from(images).map(async (img) => {
+        if (img.src.startsWith('data:')) return Promise.resolve();
+        
+        try {
+          // Crear URL absoluta y añadir cache-busting para evitar que Safari use una versión cacheada sin CORS
+          const url = new URL(img.src, window.location.href);
+          url.searchParams.append('cb', new Date().getTime());
+          
+          const response = await fetch(url.toString(), { 
+            mode: 'cors', 
+            cache: 'no-cache' 
+          });
+          
+          if (!response.ok) throw new Error('Network error');
+          
+          const blob = await response.blob();
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              img.src = reader.result; // Reemplazar con Base64
+              resolve();
+            };
+            reader.onerror = resolve;
+            reader.readAsDataURL(blob);
+          });
+        } catch (err) {
+          console.warn('Fallo al convertir a Base64 (Safari fallback):', img.src);
+          return Promise.resolve();
+        }
       });
       
       await Promise.all(imagePromises);
 
       // 2. Hack para iOS/Safari: primera llamada para "calentar" el renderizado de recursos
-      // Esto suele solucionar el problema de imágenes faltantes en el primer intento en móviles
       await toPng(exportRef.current, { cacheBust: true, useCORS: true }).catch(() => {});
 
-      // 3. Pequeña espera adicional para que el motor de renderizado móvil se estabilice
+      // 3. Espera para asegurar que los Base64 estén renderizados en el DOM
       await new Promise(resolve => setTimeout(resolve, 800));
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -125,10 +149,10 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         <div className="credential-top-row">
           <div className="credential-top-left-logos">
             <div className="logo-circle-v2">
-              <img src="/logo.png" alt="Guia a la Carta" />
+              <img src="/logo.png" alt="Guia a la Carta" crossOrigin="anonymous" />
             </div>
             <div className="logo-circle-v2 verified">
-              <img src="/sello-verificado.png" alt="Verificado" />
+              <img src="/sello-verificado.png" alt="Verificado" crossOrigin="anonymous" />
             </div>
           </div>
           
@@ -137,7 +161,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
               <h1 className="v2-guide-name">
                 {guia.nombre} | {guia.edad} años 
               </h1>
-              <img src={getFlagUrl('Chile')} alt="Chile" className="v2-main-flag" />
+              <img src={getFlagUrl('Chile')} alt="Chile" className="v2-main-flag" crossOrigin="anonymous" />
             </div>
             
             <div className="v2-status-bar">
@@ -153,11 +177,11 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
             <div className="v2-languages-bar">
               <div className="v2-speaker-icon">
-                <img src="/icono-voz.png" alt="Voz" />
+                <img src="/icono-voz.png" alt="Voz" crossOrigin="anonymous" />
               </div>
               <div className="v2-flags-row">
                 {guia.idiomas?.map((lang, idx) => (
-                  <img key={idx} src={getFlagUrl(lang)} alt={lang} className="v2-lang-flag" />
+                  <img key={idx} src={getFlagUrl(lang)} alt={lang} className="v2-lang-flag" crossOrigin="anonymous" />
                 )) || <span className="v2-no-data">No especificado</span>}
               </div>
             </div>
@@ -168,7 +192,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         <div className="credential-middle-content">
           <div className="v2-left-pane">
             <div className="v2-profile-img-container">
-              <img src={guia.imagen} alt={guia.nombre} className="v2-profile-img" />
+              <img src={guia.imagen} alt={guia.nombre} className="v2-profile-img" crossOrigin="anonymous" />
             </div>
             
             {/* COMPATIBILIDAD CON AMBOS FORMATOS DE CERTIFICACIONES */}
@@ -178,20 +202,20 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
             ) && (
               <div className="v2-seals-column">
                 {guia.certificaciones?.sernatur && (
-                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" /></div>
+                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 {guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" /></div>
+                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 {guia.certificaciones?.wafa && !guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper"><img src="/wafa.png" alt="WAFA" className="v2-seal-img" /></div>
+                  <div className="v2-seal-wrapper"><img src="/wafa.png" alt="WAFA" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 
                 {Array.isArray(guia.certificaciones) && guia.certificaciones.includes('SERNATUR') && (
-                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" /></div>
+                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 {Array.isArray(guia.certificaciones) && guia.certificaciones.includes('Primeros Auxilios') && !guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" /></div>
+                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
               </div>
             )}
