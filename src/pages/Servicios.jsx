@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  Briefcase, MapPin, Clock, Settings, Compass, CheckCircle, 
-  Award, ShieldCheck, Phone, Zap, Users, 
-  Shield, ChevronDown, ChevronUp, Star, AlertCircle, 
+import {
+  Briefcase, MapPin, Clock, Settings, Compass, CheckCircle,
+  Award, ShieldCheck, Phone, Zap, Users,
+  Shield, ChevronDown, ChevronUp, Star, AlertCircle,
   HeartHandshake, Globe, Truck, Lightbulb, CalendarClock, TrendingUp,
   Target, Languages
 } from 'lucide-react';
@@ -47,7 +47,7 @@ const Servicios = () => {
 
   return (
     <div className="servicios-page">
-      
+
       {/* =========================================== */}
       {/* 1. HERO B2B                                */}
       {/* =========================================== */}
@@ -56,22 +56,22 @@ const Servicios = () => {
         <div className="container b2b-hero-content text-center">
           <h1>Soluciones operativas en guiado turístico para empresas</h1>
           <p className="hero-subtitle">
-            Asignamos guías certificados, coordinamos logística y entregamos respaldo 
+            Asignamos guías certificados, coordinamos logística y entregamos respaldo
             operativo para que cada experiencia cumpla con tu estándar de servicio.
           </p>
           <div className="b2b-hero-actions">
             <Link to="/reservar" className="btn btn-hero">Solicitar reserva inmediata</Link>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
-              <Phone size={20} style={{marginRight: '8px'}}/> Hablar por WhatsApp
+              <Phone size={20} style={{ marginRight: '8px' }} /> Hablar por WhatsApp
             </a>
           </div>
-          
+
           <div className="b2b-trust-badges">
-            <span className="trust-badge"><ShieldCheck className="trust-badge-icon" size={18}/> Guías Certificados</span>
-            <span className="trust-badge"><Award className="trust-badge-icon" size={18}/> Registro SERNATUR</span>
-            <span className="trust-badge"><Shield className="trust-badge-icon" size={18}/> Primeros Auxilios</span>
-            <span className="trust-badge"><MapPin className="trust-badge-icon" size={18}/> Cobertura Nacional</span>
-            <span className="trust-badge"><Settings className="trust-badge-icon" size={18}/> Soporte Operativo</span>
+            <span className="trust-badge"><ShieldCheck className="trust-badge-icon" size={18} /> Guías Certificados</span>
+            <span className="trust-badge"><Award className="trust-badge-icon" size={18} /> Registro SERNATUR</span>
+            <span className="trust-badge"><Shield className="trust-badge-icon" size={18} /> Primeros Auxilios</span>
+            <span className="trust-badge"><MapPin className="trust-badge-icon" size={18} /> Cobertura Nacional</span>
+            <span className="trust-badge"><Settings className="trust-badge-icon" size={18} /> Soporte Operativo</span>
           </div>
         </div>
       </section>
@@ -85,31 +85,31 @@ const Servicios = () => {
             <h2>El respaldo operativo que tu empresa necesita</h2>
             <p>Conocemos los desafíos reales de la operación turística. Estas son las situaciones que resolvemos a diario.</p>
           </div>
-          
+
           <div className="pain-points-grid">
             <div className="pain-point-card">
-              <div className="pain-icon"><Clock size={24}/></div>
+              <div className="pain-icon"><Clock size={24} /></div>
               <div className="pain-content">
                 <h4>Reemplazos de último minuto</h4>
                 <p>Cubrimos bajas repentinas con guías validados listos para operar, evitando cancelaciones y protegiendo tu reputación.</p>
               </div>
             </div>
             <div className="pain-point-card">
-              <div className="pain-icon"><Users size={24}/></div>
+              <div className="pain-icon"><Users size={24} /></div>
               <div className="pain-content">
                 <h4>Alta demanda en temporada</h4>
                 <p>Escalamos tu capacidad operativa en meses peak sin que aumentes tu estructura de costos fijos.</p>
               </div>
             </div>
             <div className="pain-point-card">
-              <div className="pain-icon"><Globe size={24}/></div>
+              <div className="pain-icon"><Globe size={24} /></div>
               <div className="pain-content">
                 <h4>Requerimientos por idioma</h4>
                 <p>Encontramos el perfil exacto cuando necesitas cobertura en portugués, inglés, francés u otros idiomas específicos.</p>
               </div>
             </div>
             <div className="pain-point-card">
-              <div className="pain-icon"><Settings size={24}/></div>
+              <div className="pain-icon"><Settings size={24} /></div>
               <div className="pain-content">
                 <h4>Sobrecarga logística interna</h4>
                 <p>Absorbemos la coordinación completa entre guía, transporte y pasajeros, liberando a tu equipo comercial.</p>
@@ -131,21 +131,21 @@ const Servicios = () => {
 
           {/* Lista de Servicios unificada */}
           <div className="services-b2b-list">
-            
+
             {/* 1. Provisión de Guías */}
             <div className="service-b2b-card">
               <div className="service-b2b-content">
                 <div className="service-number">01</div>
                 <h3>Provisión de Guías y Coordinadores Certificados</h3>
                 <p className="service-desc">
-                  Asignamos profesionales validados según el tipo de servicio, perfil de pasajero e idioma requerido. 
+                  Asignamos profesionales validados según el tipo de servicio, perfil de pasajero e idioma requerido.
                   Garantizamos cobertura confiable con expertos listos para operar desde el primer momento.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Validación de perfiles y certificaciones</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Registro SERNATUR vigente</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Manejo de idiomas específicos</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Briefing técnico previo al servicio</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Validación de perfiles y certificaciones</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Registro SERNATUR vigente</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Manejo de idiomas específicos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Briefing técnico previo al servicio</div>
                 </div>
                 <div className="service-cta-wrapper">
                   <Link to="/reservar" className="btn btn-primary">Solicitar guía</Link>
@@ -162,14 +162,14 @@ const Servicios = () => {
                 <div className="service-number">02</div>
                 <h3>Guía SOS</h3>
                 <p className="service-desc">
-                  Servicio de respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos operativos. 
+                  Servicio de respuesta inmediata para cubrir contingencias, reemplazos urgentes o refuerzos operativos.
                   Solución rápida cuando más lo necesitas, sin comprometer la calidad del servicio.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Respuesta prioritaria</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Gestión de reemplazos urgentes</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Red activa de disponibilidad</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Soporte 24/7 para emergencias</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Respuesta prioritaria</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Gestión de reemplazos urgentes</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Red activa de disponibilidad</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Soporte 24/7 para emergencias</div>
                 </div>
                 <div className="service-cta-wrapper">
                   <a href={WHATSAPP_URL} className="btn btn-secondary">Activar SOS ahora</a>
@@ -186,14 +186,14 @@ const Servicios = () => {
                 <div className="service-number">03</div>
                 <h3>Soporte y Asistencia Logística</h3>
                 <p className="service-desc">
-                  Absorbemos la carga operativa de tu equipo. Coordinamos la planificación, comunicación operativa 
+                  Absorbemos la carga operativa de tu equipo. Coordinamos la planificación, comunicación operativa
                   y el seguimiento en terreno para asegurar que cada detalle se cumpla según lo previsto.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Coordinación centralizada</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Seguimiento en tiempo real</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Resolución de imprevistos</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Gestión de flujos comunicativos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Coordinación centralizada</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Seguimiento en tiempo real</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Resolución de imprevistos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Gestión de flujos comunicativos</div>
                 </div>
                 <div className="service-cta-wrapper">
                   <Link to="/reservar" className="btn btn-primary">Cotizar soporte</Link>
@@ -210,14 +210,14 @@ const Servicios = () => {
                 <div className="service-number">04</div>
                 <h3>DrivePlus+</h3>
                 <p className="service-desc">
-                  Red de conductores profesionales y transporte turístico integrado directamente con tu operación. 
+                  Red de conductores profesionales y transporte turístico integrado directamente con tu operación.
                   DrivePlus+ conecta conductores especializados para operar junto a guías o de forma independiente.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Conductores profesionales</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Vehículos registrados y autorizados</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Coordinación guía + driver</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Servicios privados y grupales</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Conductores profesionales</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Vehículos registrados y autorizados</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Coordinación guía + driver</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Servicios privados y grupales</div>
                 </div>
                 <div className="service-cta-wrapper">
                   <Link to="/contacto" className="btn btn-secondary">Consultar flota</Link>
@@ -234,14 +234,14 @@ const Servicios = () => {
                 <div className="service-number">05</div>
                 <h3>Levantamiento y Optimización de Experiencias Turísticas</h3>
                 <p className="service-desc">
-                  Analizamos, diseñamos y mejoramos tus servicios turísticos para aumentar calidad, eficiencia operativa y valor percibido. 
+                  Analizamos, diseñamos y mejoramos tus servicios turísticos para aumentar calidad, eficiencia operativa y valor percibido.
                   Transformas tus tours en productos más competitivos y rentables.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Auditoría de experiencias</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Diseño de nuevos itinerarios</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Optimización de costos operativos</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent"/> Mejora en el valor percibido</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Auditoría de experiencias</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Diseño de nuevos itinerarios</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Optimización de costos operativos</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Mejora en el valor percibido</div>
                 </div>
                 <div className="service-cta-wrapper">
                   <Link to="/contacto" className="btn btn-primary">Agendar consultoría</Link>
@@ -263,11 +263,11 @@ const Servicios = () => {
         <div className="container">
           <div className="b2b-section-header">
             <h2>Niveles de Especialización</h2>
-            <p>Cada servicio exige un perfil diferente. Nosotros te asignamos el match correcto según idioma, complejidad y tipo de pasajero.</p>
+            <p>Cada servicio exige un perfil diferente. Nosotros te asignamos el guía correcto según idioma, complejidad y tipo de pasajero.</p>
           </div>
 
           <div className="profiles-pricing-grid">
-            
+
             {/* Junior */}
             <div className="profile-tier-card">
               <div className="tier-header">
@@ -276,11 +276,11 @@ const Servicios = () => {
               </div>
               <div className="tier-features">
                 <ul>
-                  <li><CheckCircle className="text-accent" size={18}/> Apoyo logístico y coordinación base</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Asistencia a guías Senior en terreno</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Grupos masivos, colegios y traslados</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Manejo básico de contingencias</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Manejo básico de primeros auxilios</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Apoyo logístico y coordinación base</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Asistencia a guías Senior en terreno</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Grupos masivos, colegios y traslados</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Manejo básico de contingencias</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Manejo básico de primeros auxilios</li>
                 </ul>
               </div>
               <div className="profile-disclaimer">
@@ -291,18 +291,18 @@ const Servicios = () => {
 
             {/* Full */}
             <div className="profile-tier-card">
-              <div className="profile-tier-badge" style={{background: 'var(--c-primary-dark)'}}>Recomendado</div>
+              <div className="profile-tier-badge" style={{ background: 'var(--c-primary-dark)' }}>Recomendado</div>
               <div className="tier-header">
                 <h4>Guía Full</h4>
                 <div className="tier-price"><span>desde </span>$60.000<span> CLP</span></div>
               </div>
               <div className="tier-features">
                 <ul>
-                  <li><CheckCircle className="text-accent" size={18}/> Alta autonomía resolutiva</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Manejo de idiomas (Inglés/Portugués)</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Relato estructurado e interpretativo</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Manejo de dinámicas grupales</li>
-                  <li><CheckCircle className="text-accent" size={18}/> Certificación en primeros auxilios (WFR/WAFA)</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Alta autonomía resolutiva</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Manejo de idiomas (Inglés/Portugués)</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Relato estructurado e interpretativo</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Manejo de dinámicas grupales</li>
+                  <li><CheckCircle className="text-accent" size={18} /> Certificación en primeros auxilios (WFR/WAFA)</li>
                 </ul>
               </div>
               <div className="profile-disclaimer">
@@ -316,17 +316,17 @@ const Servicios = () => {
               <div className="profile-tier-badge">Premium</div>
               <div className="tier-header">
                 <h4>Guía Senior / Especializado</h4>
-                <div className="tier-price" style={{color: 'var(--b2b-gold)'}}><span>desde </span>$70.000<span> CLP</span></div>
+                <div className="tier-price" style={{ color: 'var(--b2b-gold)' }}><span>desde </span>$70.000<span> CLP</span></div>
               </div>
               <div className="tier-features">
                 <ul>
-                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Especialización técnica (Naturaleza, Vino, Historia)</li>
-                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Certificaciones avanzadas en primeros auxilios (WFR/WAFA)</li>
-                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Perfil orientado a servicios VIP privados</li>
-                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Manejo de pasajeros de alta exigencia</li>
+                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18} /> Especialización técnica (Naturaleza, Vino, Historia)</li>
+                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18} /> Certificaciones avanzadas en primeros auxilios (WFR/WAFA)</li>
+                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18} /> Perfil orientado a servicios VIP privados</li>
+                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18} /> Manejo de pasajeros de alta exigencia</li>
                 </ul>
               </div>
-              <div className="profile-disclaimer" style={{background: '#FDF6E3', borderColor: '#D4AF37'}}>
+              <div className="profile-disclaimer" style={{ background: '#FDF6E3', borderColor: '#D4AF37' }}>
                 <AlertCircle size={28} color="#D4AF37" />
                 <span>Indispensable para alta montaña, trekking técnico y corporativos de alto nivel.</span>
               </div>
@@ -335,7 +335,7 @@ const Servicios = () => {
           </div>
 
           <div className="pricing-note">
-            <AlertCircle size={20}/>
+            <AlertCircle size={20} />
             La elección del perfil no depende solo del precio, sino del nivel de exigencia, idioma, tipo de pasajero y estándar esperado por la empresa.
           </div>
         </div>
@@ -420,7 +420,7 @@ const Servicios = () => {
                 <span className="b2b-tag">Valles Vitivinícolas (Maipo, Casablanca)</span>
               </div>
             </div>
-            
+
             <div className="coverage-box">
               <h4><Compass size={22} className="text-accent" /> Experiencias</h4>
               <div className="coverage-tags">
@@ -484,32 +484,32 @@ const Servicios = () => {
 
           <div className="why-us-grid">
             <div className="why-card">
-              <div className="why-icon"><Zap size={30}/></div>
+              <div className="why-icon"><Zap size={30} /></div>
               <h4>Agilidad Logística</h4>
               <p>Reducimos las horas-hombre que tu equipo pierde buscando guía tras guía. Nosotros lo resolvemos en horas, no en días.</p>
             </div>
             <div className="why-card">
-              <div className="why-icon"><Shield size={30}/></div>
+              <div className="why-icon"><Shield size={30} /></div>
               <h4>Estándar de Calidad</h4>
               <p>Menos improvisación. Validamos certificaciones, primeros auxilios, idiomas y conocimiento técnico real.</p>
             </div>
             <div className="why-card">
-              <div className="why-icon"><Users size={30}/></div>
+              <div className="why-icon"><Users size={30} /></div>
               <h4>Flexibilidad de Equipo</h4>
               <p>No engrosas costos fijos anuales, pero mantienes cobertura total cuando la demanda lo requiere.</p>
             </div>
             <div className="why-card">
-              <div className="why-icon"><HeartHandshake size={30}/></div>
+              <div className="why-icon"><HeartHandshake size={30} /></div>
               <h4>Respaldo Real</h4>
               <p>Si algo ocurre en terreno, hay un equipo detrás gestionando la contingencia junto al transporte y la empresa.</p>
             </div>
             <div className="why-card">
-              <div className="why-icon"><Target size={30}/></div>
+              <div className="why-icon"><Target size={30} /></div>
               <h4>Perfiles Alineados</h4>
               <p>No asignamos al azar. Cada guía se selecciona por perfil técnico, idioma, zona de experiencia y nivel de autonomía.</p>
             </div>
             <div className="why-card">
-              <div className="why-icon"><TrendingUp size={30}/></div>
+              <div className="why-icon"><TrendingUp size={30} /></div>
               <h4>Continuidad Operativa</h4>
               <p>Mantienes tu estándar de servicio sin depender de una sola persona. Si un guía no está, la red responde.</p>
             </div>
@@ -530,15 +530,15 @@ const Servicios = () => {
           <div className="b2b-faq">
             {faqs.map((faq, index) => (
               <div key={index} className="faq-item">
-                <button 
-                  className="faq-question" 
+                <button
+                  className="faq-question"
                   onClick={() => toggleFaq(index)}
                   aria-expanded={openFaq === index}
                 >
                   {faq.q}
-                  {openFaq === index 
-                    ? <ChevronUp size={20} className="text-accent"/> 
-                    : <ChevronDown size={20} className="text-accent"/>
+                  {openFaq === index
+                    ? <ChevronUp size={20} className="text-accent" />
+                    : <ChevronDown size={20} className="text-accent" />
                   }
                 </button>
                 {openFaq === index && (
@@ -560,15 +560,15 @@ const Servicios = () => {
           <div className="b2b-cta-final">
             <h2>Asegura tu próxima operación hoy</h2>
             <p>
-              Cuéntanos fecha, destino, idioma y tipo de grupo. 
+              Cuéntanos fecha, destino, idioma y tipo de grupo.
               Te ayudamos a encontrar el perfil adecuado para tu operación.
             </p>
             <div className="b2b-cta-actions">
-              <Link to="/contacto" className="btn btn-secondary" style={{padding: '0.8rem 2.2rem', fontSize: '1.05rem'}}>
+              <Link to="/contacto" className="btn btn-secondary" style={{ padding: '0.8rem 2.2rem', fontSize: '1.05rem' }}>
                 Solicitar cotización
               </Link>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{display: 'flex', alignItems: 'center'}}>
-                <Phone size={20} style={{marginRight: '8px'}}/> Coordinación por WhatsApp
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{ display: 'flex', alignItems: 'center' }}>
+                <Phone size={20} style={{ marginRight: '8px' }} /> Coordinación por WhatsApp
               </a>
             </div>
           </div>

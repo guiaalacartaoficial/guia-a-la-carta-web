@@ -384,22 +384,24 @@
 
 .profile-tier-card {
   background: var(--c-surface);
-  border: 1px solid var(--b2b-border);
-  border-radius: var(--radius-lg);
+  border: 2px solid rgba(159, 192, 90, 0.4); /* Borde verde claro sutil pero notorio */
+  border-radius: 16px;
   padding: 2.5rem 2rem;
   position: relative;
   display: flex;
   flex-direction: column;
   transition: all 0.35s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 .profile-tier-card:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
-  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px);
+  border-color: var(--c-accent);
 }
 
 .profile-tier-card.featured {
-  border-color: var(--b2b-gold);
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.12);
+  border: 3px solid var(--b2b-gold); /* Borde dorado más grueso para Senior */
+  box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
 }
 
 .profile-tier-badge {
