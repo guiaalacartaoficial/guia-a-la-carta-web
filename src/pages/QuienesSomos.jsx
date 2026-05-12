@@ -96,7 +96,7 @@ const respaldoItems = [
   },
   {
     icon: <Globe size={26} />,
-    img: null, // Espacio para logo futuro
+    img: '/Logo_MarcaChile_Caja Roja.png', // Espacio para logo futuro
     title: 'Vinculación con Marca Chile',
     desc: 'Contamos con vinculación o autorización asociada a Marca Chile, reforzando nuestro compromiso con un turismo de alto estándar.'
   },
