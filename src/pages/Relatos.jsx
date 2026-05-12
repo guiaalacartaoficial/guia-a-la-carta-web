@@ -163,7 +163,7 @@ const Relatos = () => {
               ))}
             </div>
           ) : (
-            <div className="empty-state text-center" style={{ padding: '4rem', background: '#f8fafc', borderRadius: '16px', border: '1px dashed #cbd5e1' }}>
+            <div className="empty-state text-center" style={{ padding: '4rem', background: 'rgba(255, 255, 255, 0.3)', borderRadius: '16px', border: '1px dashed rgba(14, 91, 76, 0.2)' }}>
               <BookOpen size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
               <h3>Aún no hay relatos publicados</h3>
               <p>Sé el primero en compartir una experiencia única.</p>
@@ -188,9 +188,13 @@ const Relatos = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN COLABORADOR */}
-      <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#fff' }}>
+      <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#CDE0CC' }}>
         <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '800px' }}>
-          <img src="/biblioteca-turismo-logo.png" alt="Biblioteca del Turismo" style={{ maxWidth: '280px', marginBottom: '30px', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }} />
+          <img 
+            src="/biblioteca-turismo-logo.png" 
+            alt="Biblioteca del Turismo" 
+            className="colaborador-logo"
+          />
           <h3 style={{ color: 'var(--c-primary-dark)', fontSize: '1.8rem', marginBottom: '20px' }}>
             Contenido desarrollado en colaboración con la Biblioteca del Turismo
           </h3>

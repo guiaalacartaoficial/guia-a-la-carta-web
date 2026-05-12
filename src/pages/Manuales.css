@@ -4,7 +4,7 @@
 }
 
 .manuales-grid-section {
-  background-color: #CDE0CC !important;
+  background-color: #CDE0CC;
   padding-top: 4rem;
   padding-bottom: 5rem;
 }
@@ -101,10 +101,7 @@
 }
 
 /* GRID SECTION */
-.manuales-grid-section {
-  padding-top: 4rem;
-  padding-bottom: 5rem;
-}
+
 
 .manuals-grid {
   display: grid;

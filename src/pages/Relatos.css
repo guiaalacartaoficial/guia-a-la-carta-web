@@ -55,6 +55,7 @@
 
 .relatos-grid-section {
   padding: 80px 0;
+  background-color: #CDE0CC;
 }
 
 .relatos-grid {
@@ -202,6 +203,21 @@
   }
 }
 
+.colaborador-logo {
+  max-width: 280px;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  border: 3px solid var(--c-primary);
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 15px 35px rgba(14, 91, 76, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.colaborador-logo:hover {
+  transform: scale(1.03);
+}
+
 /* === DETALLE DE RELATO === */
 .relato-detalle-hero {
   height: 60vh;
@@ -261,7 +277,7 @@
 
 .relato-body-section {
   padding: 60px 0 100px;
-  background: white;
+  background: #CDE0CC;
 }
 
 .relato-main-content {
