@@ -108,7 +108,7 @@ const respaldoItems = [
   },
   {
     icon: <Star size={26} />,
-    img: '/logo.png', // Logo Guía a la Carta oficial
+    img: '/logo-guia.png', // Nuevo Logo Guía a la Carta Circular
     title: 'Compromiso con calidad operativa',
     desc: 'Trabajamos bajo procesos claros de coordinación, seguimiento y mejora continua del servicio.'
   }
