@@ -357,6 +357,25 @@
 /* ============================================= */
 /*  4. PERFILES DE GUÍA (PRICING)                */
 /* ============================================= */
+.section-niveles-especializacion {
+  background-color: var(--c-primary-dark);
+  padding: 5.5rem 0;
+}
+
+.section-niveles-especializacion .b2b-section-header h2 {
+  color: white !important;
+}
+
+.section-niveles-especializacion .b2b-section-header p {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.section-niveles-especializacion .pricing-note {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
 .profiles-pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

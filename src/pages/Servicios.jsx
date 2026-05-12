@@ -259,7 +259,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 4. PERFILES DE GUÍA                        */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-light">
+      <section className="b2b-section section-niveles-especializacion">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Niveles de Especialización</h2>
@@ -280,6 +280,7 @@ const Servicios = () => {
                   <li><CheckCircle className="text-accent" size={18}/> Asistencia a guías Senior en terreno</li>
                   <li><CheckCircle className="text-accent" size={18}/> Grupos masivos, colegios y traslados</li>
                   <li><CheckCircle className="text-accent" size={18}/> Manejo básico de contingencias</li>
+                  <li><CheckCircle className="text-accent" size={18}/> Manejo básico de primeros auxilios</li>
                 </ul>
               </div>
               <div className="profile-disclaimer">
@@ -301,6 +302,7 @@ const Servicios = () => {
                   <li><CheckCircle className="text-accent" size={18}/> Manejo de idiomas (Inglés/Portugués)</li>
                   <li><CheckCircle className="text-accent" size={18}/> Relato estructurado e interpretativo</li>
                   <li><CheckCircle className="text-accent" size={18}/> Manejo de dinámicas grupales</li>
+                  <li><CheckCircle className="text-accent" size={18}/> Certificación en primeros auxilios (WFR/WAFA)</li>
                 </ul>
               </div>
               <div className="profile-disclaimer">
@@ -319,7 +321,7 @@ const Servicios = () => {
               <div className="tier-features">
                 <ul>
                   <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Especialización técnica (Naturaleza, Vino, Historia)</li>
-                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Certificaciones avanzadas (WFR/WAFA)</li>
+                  <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Certificaciones avanzadas en primeros auxilios (WFR/WAFA)</li>
                   <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Perfil orientado a servicios VIP privados</li>
                   <li><Star fill="var(--b2b-gold)" stroke="var(--b2b-gold)" size={18}/> Manejo de pasajeros de alta exigencia</li>
                 </ul>
