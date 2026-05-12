@@ -5,7 +5,7 @@
 
 /* HERO SECTION */
 .manuales-hero {
-  background: #e8f3ee; /* Verde suave característico */
+  background: #CDE0CC; /* Verde suave solicitado */
   color: var(--c-primary-dark);
   padding: 8rem 0 5rem; /* Padding superior para compensar el navbar */
   text-align: center;
