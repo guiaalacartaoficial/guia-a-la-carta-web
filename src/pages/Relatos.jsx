@@ -117,6 +117,7 @@ const Relatos = () => {
   return (
     <div className="relatos-page">
       <section className="relatos-header">
+        <div className="relatos-hero-bg"></div>
         <div className="container text-center">
           <span className="pre-title">Bitácora de Experiencias</span>
           <h1>Relatos de Chile</h1>

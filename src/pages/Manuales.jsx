@@ -39,6 +39,7 @@ const Manuales = () => {
   return (
     <div className="manuales-page">
       <section className="manuales-hero">
+        <div className="manuales-hero-bg"></div>
         <div className="container">
           <h1>Manuales de Experiencia</h1>
           <p>Documentación técnica y estándares operativos para cada uno de nuestros servicios en terreno.</p>

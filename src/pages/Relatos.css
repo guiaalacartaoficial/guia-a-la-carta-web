@@ -3,9 +3,42 @@
 }
 
 .relatos-header {
+  position: relative;
   padding: 100px 0 60px;
-  background: linear-gradient(rgba(10, 59, 49, 0.9), rgba(10, 59, 49, 0.9)), url('https://images.unsplash.com/photo-1544411135-24e525a7707e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') center/cover;
+  background-color: var(--c-primary-dark);
   color: white;
+  overflow: hidden;
+}
+
+.relatos-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0E5B4C 0%, #0A3B31 100%);
+  z-index: 1;
+}
+
+.relatos-hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.8;
+}
+
+.relatos-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(159, 192, 90, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(159, 192, 90, 0.05) 0%, transparent 70%);
+}
+
+.relatos-header .container {
+  position: relative;
+  z-index: 2;
 }
 
 .relatos-header h1 {
@@ -17,6 +50,7 @@
 .relatos-header .bajada {
   color: rgba(255, 255, 255, 0.9);
   max-width: 800px;
+  margin: 0 auto;
 }
 
 .relatos-grid-section {

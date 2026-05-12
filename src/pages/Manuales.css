@@ -5,17 +5,49 @@
 
 /* HERO SECTION */
 .manuales-hero {
-  background: #CDE0CC; /* Verde suave solicitado */
-  color: var(--c-primary-dark);
-  padding: 8rem 0 5rem; /* Padding superior para compensar el navbar */
+  position: relative;
+  background-color: var(--c-primary-dark);
+  color: white;
+  padding: 8rem 0 5rem;
   text-align: center;
+  overflow: hidden;
+}
+
+.manuales-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0E5B4C 0%, #0A3B31 100%);
+  z-index: 1;
+}
+
+.manuales-hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.8;
+}
+
+.manuales-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(159, 192, 90, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+}
+
+.manuales-hero .container {
+  position: relative;
+  z-index: 2;
 }
 
 .manuales-hero h1 {
   font-size: clamp(2.5rem, 6vw, 3.5rem);
   font-weight: 900;
   margin-bottom: 1rem;
-  color: var(--c-primary-dark) !important;
+  color: white !important;
   letter-spacing: -1.5px;
 }
 
@@ -23,7 +55,7 @@
   font-size: 1.25rem;
   max-width: 750px;
   margin: 0 auto;
-  color: #475569;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
 }
 

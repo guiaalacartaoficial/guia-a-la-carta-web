@@ -28,14 +28,23 @@
   z-index: 1;
 }
 
+.ns-hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.8;
+}
+
 .ns-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
     radial-gradient(ellipse at 15% 85%, rgba(159, 192, 90, 0.1) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 15%, rgba(255, 255, 255, 0.05) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, rgba(159, 192, 90, 0.03) 0%, transparent 70%);
+    radial-gradient(ellipse at 85% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(159, 192, 90, 0.05) 0%, transparent 70%);
 }
 
 .ns-hero-content {
