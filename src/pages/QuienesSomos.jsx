@@ -392,7 +392,7 @@ const QuienesSomos = () => {
       {/* =========================================== */}
       {/* 8. CTA FINAL                               */}
       {/* =========================================== */}
-      <section className="ns-section" id="cta-nosotros">
+      <section className="ns-section bg-ns-medium" id="cta-nosotros">
         <div className="container">
           <div className="ns-cta-final ns-animate">
             <h2>¿Quieres conocer cómo trabajamos?</h2>
