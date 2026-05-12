@@ -395,9 +395,9 @@
   height: 100%;
   object-fit: contain;
   border-radius: 50%;
-  border: 6px solid #E4C000;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(228, 192, 0, 0.4);
-  background: rgba(255,255,255,0.05);
+  border: 4px solid var(--c-accent);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(159, 192, 90, 0.3);
+  background: white;
   animation: floatSello 6s ease-in-out infinite;
 }
 
