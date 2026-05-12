@@ -40,23 +40,47 @@ const ChileMap = () => {
   useEffect(() => {
     const fetchRealData = async () => {
       try {
-        // Obtenemos todos los guías y estudiantes aprobados
-        const { data: guias, error: errG } = await supabase.from('postulaciones_guias').select('region').eq('estado', 'aprobado');
-        const { data: ests, error: errE } = await supabase.from('postulaciones_estudiantes').select('region').eq('estado', 'aprobado');
+        const { data: guias, error: errG } = await supabase.from('postulaciones_guias').select('ciudad_residencia').eq('estado', 'aprobado');
+        const { data: ests, error: errE } = await supabase.from('postulaciones_estudiantes').select('ciudad_residencia').eq('estado', 'aprobado');
 
         if (errG || errE) throw errG || errE;
 
         const allRecords = [...(guias || []), ...(ests || [])];
         
-        // Contamos por región
+        // Mapeo simple de ciudad a región (puedes ampliarlo)
+        const getRegionFromCity = (city) => {
+          if (!city) return null;
+          const c = city.toLowerCase();
+          if (c.includes('santiago') || c.includes('metropol') || c.includes('puente alto') || c.includes('maipu') || c.includes('la florida')) return 'Metropolitana';
+          if (c.includes('valparaiso') || c.includes('viña') || c.includes('concon')) return 'Valparaíso';
+          // Si el usuario escribió la región directamente
+          if (c.includes('arica')) return 'Arica y Parinacota';
+          if (c.includes('tarapaca') || c.includes('iquique')) return 'Tarapacá';
+          if (c.includes('antofagasta')) return 'Antofagasta';
+          if (c.includes('atacama') || c.includes('copiapo')) return 'Atacama';
+          if (c.includes('coquimbo') || c.includes('la serena')) return 'Coquimbo';
+          if (c.includes('ohiggins') || c.includes('rancagua')) return 'O\'Higgins';
+          if (c.includes('maule') || c.includes('talca')) return 'Maule';
+          if (c.includes('ñuble') || c.includes('chillan')) return 'Ñuble';
+          if (c.includes('biobio') || c.includes('concepcion')) return 'Biobío';
+          if (c.includes('araucania') || c.includes('temuco')) return 'Araucanía';
+          if (c.includes('rios') || c.includes('valdivia')) return 'Los Ríos';
+          if (c.includes('lagos') || c.includes('puerto montt')) return 'Los Lagos';
+          if (c.includes('aysen')) return 'Aysén';
+          if (c.includes('magallanes') || c.includes('punta arenas')) return 'Magallanes';
+          return null;
+        };
+
+        // Contamos por región inferida
         const counts = allRecords.reduce((acc, curr) => {
-          if (curr.region) {
-            acc[curr.region] = (acc[curr.region] || 0) + 1;
+          const regionName = getRegionFromCity(curr.ciudad_residencia);
+          if (regionName) {
+            acc[regionName] = (acc[regionName] || 0) + 1;
           }
           return acc;
         }, {});
 
-        // Actualizamos el estado con los datos reales
+        // Actualizamos el estado con los datos reales, limpiando los ficticios
         setRegiones(prev => prev.map(r => ({
           ...r,
           guias: counts[r.nombre] || 0
