@@ -95,60 +95,59 @@ const Guias = () => {
               <div className="nivel-body">
                 <p className="perfil-desc">Apoyo operativo o servicios de menor complejidad.</p>
                 <div className="ideal-box" style={{textAlign: 'left'}}>
-                  <strong>Ideal para:</strong>
+                  <strong>IDEAL PARA:</strong>
                   <ul>
-                    <li><CheckCircle size={14}/> Servicios simples</li>
-                    <li><CheckCircle size={14}/> Apoyo en terreno</li>
-                    <li><CheckCircle size={14}/> Operaciones con menor exigencia</li>
+                    <li><CheckCircle size={16}/> Servicios simples</li>
+                    <li><CheckCircle size={16}/> Apoyo en terreno</li>
+                    <li><CheckCircle size={16}/> Operaciones menores</li>
                   </ul>
                 </div>
                 <div className="precio-box">
-                  <span>Rango referencial:</span>
-                  <strong>$40.000 – $50.000</strong>
+                  <span>Referencial:</span>
+                  <strong style={{ color: 'var(--c-primary-dark)' }}>$40.000 – $50.000</strong>
                 </div>
               </div>
             </div>
             
             <div className="nivel-detail-card destacado">
-              <div className="destacado-ribbon">Más solicitado</div>
+              <div className="destacado-ribbon">MÁS SOLICITADO</div>
               <div className="nivel-head">
                 <h3>Guía Full</h3>
               </div>
               <div className="nivel-body">
-                <p className="perfil-desc">Guía operativo estándar, autónomo y con experiencia comprobable.</p>
+                <p className="perfil-desc">Operativo estándar, autónomo y con experiencia comprobable.</p>
                 <div className="ideal-box" style={{textAlign: 'left'}}>
-                  <strong>Ideal para:</strong>
+                  <strong>IDEAL PARA:</strong>
                   <ul>
-                    <li><CheckCircle size={14}/> Tours regulares</li>
-                    <li><CheckCircle size={14}/> Servicios completos</li>
-                    <li><CheckCircle size={14}/> Atención general de pasajeros</li>
+                    <li><CheckCircle size={16}/> Tours regulares</li>
+                    <li><CheckCircle size={16}/> Servicios completos</li>
+                    <li><CheckCircle size={16}/> Atención a pasajeros</li>
                   </ul>
                 </div>
                 <div className="precio-box">
                   <span>Referencial:</span>
-                  <strong>Desde $60.000</strong>
+                  <strong style={{ color: 'var(--c-primary-dark)' }}>Desde $60.000</strong>
                 </div>
               </div>
             </div>
             
-            <div className="nivel-detail-card premium">
+            <div className="nivel-detail-card">
               <div className="nivel-head">
                 <h3>Guía Senior</h3>
               </div>
               <div className="nivel-body">
-                <p className="perfil-desc">Mayor experiencia, resolución y capacidad de representación.</p>
+                <p className="perfil-desc">Máxima resolución y capacidad de representación.</p>
                 <div className="ideal-box" style={{textAlign: 'left'}}>
-                  <strong>Ideal para:</strong>
+                  <strong>IDEAL PARA:</strong>
                   <ul>
-                    <li><CheckCircle size={14}/> Servicios exigentes</li>
-                    <li><CheckCircle size={14}/> Grupos especiales</li>
-                    <li><CheckCircle size={14}/> Pasajeros premium</li>
-                    <li><CheckCircle size={14}/> Operaciones delicadas</li>
+                    <li><CheckCircle size={16}/> Servicios exigentes</li>
+                    <li><CheckCircle size={16}/> Grupos especiales / VIP</li>
+                    <li><CheckCircle size={16}/> Operaciones delicadas</li>
                   </ul>
                 </div>
                 <div className="precio-box">
                   <span>Referencial:</span>
-                  <strong>Desde $70.000</strong>
+                  <strong style={{ color: 'var(--c-primary-dark)' }}>Desde $70.000</strong>
                 </div>
               </div>
             </div>

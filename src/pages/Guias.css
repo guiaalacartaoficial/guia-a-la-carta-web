@@ -161,37 +161,36 @@
 }
 
 .nivel-detail-card {
-  background: white;
+  background: white; 
+  padding: 2.5rem 2rem; 
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: flex;
   flex-direction: column;
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s;
-}
-
-.nivel-detail-card {
-  background: white;
-  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s;
 }
 
 .nivel-detail-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg); 
+  transform: translateY(-4px);
+}
+
+.nivel-detail-card:first-child {
+  border: 2px solid var(--c-primary);
 }
 
 .nivel-detail-card.destacado {
   border: 2px solid var(--c-accent);
-  transform: scale(1.03);
-  box-shadow: var(--shadow-lg);
+  transform: scale(1.05);
   z-index: 2;
+  box-shadow: var(--shadow-lg);
+}
+
+.nivel-detail-card:last-child {
+  border: 2px solid #D4AF37; /* Marco Dorado Senior */
 }
 
 .destacado-ribbon {
@@ -205,23 +204,24 @@
   border-radius: 20px;
   font-weight: 800;
   font-size: 0.8rem;
+  text-transform: uppercase;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .nivel-head {
-  background: #F8FAF6;
-  padding: var(--s-4);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  text-align: center;
+  margin-bottom: 0.8rem;
 }
 
 .nivel-head h3 {
   color: var(--c-primary-dark);
   margin: 0;
   font-size: 1.5rem;
+  font-weight: 800;
 }
 
 .nivel-body {
-  padding: var(--s-4);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -229,20 +229,27 @@
 
 .perfil-desc {
   color: var(--c-text-main);
-  margin-bottom: var(--s-4);
-  min-height: 40px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  min-height: 2.8rem;
+  font-weight: 500;
 }
 
 .ideal-box {
-  margin-bottom: var(--s-4);
   flex-grow: 1;
+  margin-bottom: 1.5rem;
 }
 
 .ideal-box strong {
-  color: var(--c-primary);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.8rem;
+  font-weight: 800;
+  color: var(--c-primary-dark);
   display: block;
-  margin-bottom: 8px;
 }
 
 .ideal-box ul {
@@ -252,38 +259,39 @@
 }
 
 .ideal-box li {
-  color: var(--c-text-light);
-  font-size: 0.95rem;
-  margin-bottom: 6px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+  color: var(--c-text-main);
 }
 
-.ideal-box li svg {
-  color: var(--c-accent);
-  flex-shrink: 0;
-}
+.nivel-detail-card:first-child .ideal-box li svg { color: var(--c-primary); }
+.nivel-detail-card.destacado .ideal-box li svg { color: var(--c-accent); }
+.nivel-detail-card:last-child .ideal-box li svg { color: #D4AF37; }
 
 .precio-box {
-  background: #F8FAF6;
-  padding: var(--s-3);
-  border-radius: var(--radius-md);
-  text-align: center;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border-radius: 0;
+  text-align: left;
 }
 
 .precio-box span {
-  display: block;
   font-size: 0.8rem;
   color: var(--c-text-light);
   text-transform: uppercase;
-  margin-bottom: 4px;
 }
 
 .precio-box strong {
-  display: block;
   color: var(--c-primary-dark);
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 800;
 }
 
