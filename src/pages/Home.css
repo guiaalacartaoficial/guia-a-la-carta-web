@@ -642,6 +642,7 @@
   padding: 7rem 0;
   position: relative;
   overflow: hidden;
+  background-color: #f0f7f2; /* Verde suave para armonía visual */
 }
 
 .collage-slider-wrapper {
