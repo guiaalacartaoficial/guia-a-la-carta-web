@@ -8,7 +8,6 @@
   background-color: var(--c-primary-dark);
   color: white;
   padding: 120px 0 5.5rem;
-  border-bottom: 4px solid var(--c-accent);
 }
 
 .guias-header h1 {
@@ -400,7 +399,6 @@
   padding: var(--s-8) 0;
   background-color: #F8FAF6;
   /* Fondo claro igual que la sección superior */
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .junior-section h2 {

@@ -6,20 +6,6 @@
   overflow: hidden;
 }
 
-/* Verde accent divider */
-.chile-map-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(80%, 900px);
-  height: 3px;
-  background: linear-gradient(90deg, transparent 0%, var(--c-accent) 50%, transparent 100%);
-  border-radius: 2px;
-  z-index: 10;
-}
-
 .map-header {
   max-width: 700px;
   margin: 0 auto;

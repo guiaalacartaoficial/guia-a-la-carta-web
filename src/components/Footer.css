@@ -5,11 +5,6 @@
   margin-top: auto;
 }
 
-.footer-accent-bar {
-  height: 4px;
-  background: linear-gradient(90deg, var(--c-accent) 0%, var(--c-primary) 50%, var(--c-accent) 100%);
-}
-
 .footer-main {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
