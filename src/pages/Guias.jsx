@@ -82,6 +82,8 @@ const Guias = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       <section className="section bg-light text-center" style={{paddingBottom: '3rem', paddingTop: '4rem'}}>
         <div className="container">
           <h2 style={{color: 'var(--c-primary-dark)', marginBottom: '1rem'}}>Niveles de guía disponibles</h2>
@@ -156,6 +158,8 @@ const Guias = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* SECCIÓN GUÍAS ACTIVOS (FULL Y SENIOR) */}
       <section className="section" style={{paddingTop: '2rem'}}>
         <div className="container">
@@ -200,6 +204,8 @@ const Guias = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Sección Sello Guía a la Carta - Revertida a Centrada */}
       <section className="section-sello">
         <div className="container" style={{display: 'flex', justifyContent: 'center'}}>
@@ -217,6 +223,8 @@ const Guias = () => {
           </div>
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* SECCIÓN RED DE GUÍAS JUNIOR */}
       <section className="junior-section">

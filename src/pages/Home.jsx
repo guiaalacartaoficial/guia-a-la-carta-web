@@ -63,6 +63,8 @@ const Home = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* SECCIÓN 2: QUÉ PROBLEMA RESOLVEMOS */}
       <section className="section-problema">
         <div className="container">
@@ -123,6 +125,8 @@ const Home = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* SECCIÓN 3: NUESTRA SOLUCIÓN */}
       <section className="section-solucion">
         <div className="container">
@@ -167,6 +171,8 @@ const Home = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* SECCIÓN 4: SERVICIOS DESTACADOS */}
       <section className="section-servicios">
         <div className="container text-center">
@@ -206,6 +212,8 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* SECCIÓN 6: NIVELES DE GUÍA */}
       <section className="section-niveles-home">
@@ -270,6 +278,8 @@ const Home = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* SECCIÓN 7: COBERTURA */}
       <section className="section-cobertura">
         <div className="container">
@@ -287,6 +297,8 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* SECCIÓN 8: CONFIANZA / RESPALDO */}
       <section className="section-confianza">
@@ -318,8 +330,12 @@ const Home = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* SECCIÓN NUEVA: MAPA INTERACTIVO */}
       <ChileMap />
+
+      <div className="section-divider" />
 
       {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (COLLAGE SLIDER) */}
       <section className="section-gallery bg-b2b-light">
@@ -394,6 +410,8 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* SECCIÓN 9: LLAMADO FINAL */}
       <section className="section-cta-final text-center">

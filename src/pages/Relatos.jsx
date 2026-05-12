@@ -124,6 +124,8 @@ const Relatos = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       <section className="relatos-grid-section">
         <div className="container">
           {loading ? (
@@ -170,6 +172,8 @@ const Relatos = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       <section className="relatos-cta">
         <div className="container text-center">
           <div className="cta-glass-box">
@@ -179,6 +183,8 @@ const Relatos = () => {
           </div>
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* SECCIÓN COLABORADOR */}
       <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#fff', borderBottom: '1px solid #eaeaea' }}>
@@ -198,6 +204,8 @@ const Relatos = () => {
           </p>
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* MODAL FORMULARIO DE RELATO */}
       {isFormOpen && (

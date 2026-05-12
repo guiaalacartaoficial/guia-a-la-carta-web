@@ -128,3 +128,27 @@ ul, ol { list-style: none; }
 .bajada { font-size: 1.15rem; color: var(--c-text-light); max-width: 750px; margin: 0 auto; line-height: 1.6; font-weight: 500; }
 .bajada-resalte { font-size: 1.1rem; color: var(--c-primary-dark); }
 .bg-light { background-color: #F8FAF6; }
+
+/* ===== SECTION DIVIDER (BRAND GLOW) ===== */
+.section-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 0%, var(--c-accent) 50%, transparent 100%);
+  margin: 0;
+  opacity: 0.7;
+  position: relative;
+  border: none;
+  display: block;
+}
+
+.section-divider::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  box-shadow: 0 0 12px 1px var(--c-accent);
+  opacity: 0.5;
+}
+

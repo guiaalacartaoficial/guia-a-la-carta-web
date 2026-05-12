@@ -75,7 +75,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 2. QUÉ RESOLVEMOS                          */}
       {/* =========================================== */}
@@ -118,7 +118,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 3. SERVICIOS PRINCIPALES                   */}
       {/* =========================================== */}
@@ -255,7 +255,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 4. PERFILES DE GUÍA                        */}
       {/* =========================================== */}
@@ -340,7 +340,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 5. CÓMO FUNCIONA                           */}
       {/* =========================================== */}
@@ -397,7 +397,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 6. COBERTURA OPERATIVA                     */}
       {/* =========================================== */}
@@ -447,7 +447,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 7. MODALIDAD COMERCIAL                     */}
       {/* =========================================== */}
@@ -471,7 +471,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 8. ¿POR QUÉ TRABAJAR CON NOSOTROS?        */}
       {/* =========================================== */}
@@ -516,7 +516,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 9. FAQ                                     */}
       {/* =========================================== */}
@@ -551,7 +551,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-
+      <div className="section-divider" />
       {/* =========================================== */}
       {/* 10. CTA FINAL                              */}
       {/* =========================================== */}

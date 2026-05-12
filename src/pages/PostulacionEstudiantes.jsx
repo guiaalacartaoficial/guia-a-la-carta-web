@@ -173,6 +173,8 @@ const PostulacionEstudiantes = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       <section className="section">
         <div className="container max-w-3xl postulacion-form-container">
           

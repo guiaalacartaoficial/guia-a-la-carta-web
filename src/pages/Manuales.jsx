@@ -44,6 +44,8 @@ const Manuales = () => {
         </div>
       </section>
 
+      <div className="section-divider" />
+
       {/* Search & Filter */}
       <section className="manuales-filters">
         <div className="container">
@@ -58,6 +60,8 @@ const Manuales = () => {
           </div>
         </div>
       </section>
+
+      <div className="section-divider" />
 
       {/* Content Grid */}
       <section className="manuales-grid-section">

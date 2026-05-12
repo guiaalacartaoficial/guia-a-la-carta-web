@@ -11,6 +11,8 @@ const Contacto = () => {
         </p>
       </div>
 
+      <div className="section-divider" />
+
       <div className="container contacto-grid">
         
         <div className="contacto-info-card">
