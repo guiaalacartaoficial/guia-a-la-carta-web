@@ -247,9 +247,12 @@ const QuienesSomos = () => {
               </div>
               <h3>Nuestra Misión</h3>
               <p>
-                Facilitar la gestión de guías turísticos en Chile mediante una red confiable de guías certificados,
-                garantizando excelencia operativa, respuesta ágil y una coordinación más eficiente para empresas
-                del rubro turístico.
+                Nuestra misión es profesionalizar y optimizar la operación turística mediante soluciones humanas y operativas confiables, 
+                conectando empresas del rubro con guías certificados y equipos preparados para entregar experiencias de alta calidad.
+              </p>
+              <p>
+                Buscamos convertirnos en un aliado estratégico para agencias, operadores y empresas turísticas, facilitando operaciones 
+                más eficientes, organizadas y escalables, con foco en la excelencia, la comunicación y la representación profesional de cada marca.
               </p>
             </div>
             <div className="ns-mv-card vision ns-animate ns-animate-delay-2">
@@ -258,9 +261,12 @@ const QuienesSomos = () => {
               </div>
               <h3>Nuestra Visión</h3>
               <p>
-                Ser la red de guías turísticos más confiable y reconocida de Chile, referente en profesionalismo,
-                respaldo operativo y estándar de calidad, con capacidad de escalar hacia nuevas soluciones para
-                la industria turística nacional e internacional.
+                Nuestra visión es posicionarnos como una de las principales redes operativas y de coordinación turística de Latinoamérica, 
+                elevando los estándares de servicio dentro de la industria y construyendo un modelo escalable, flexible e internacional.
+              </p>
+              <p>
+                Aspiramos a transformar la manera en que las empresas gestionan sus operaciones turísticas, integrando talento humano, 
+                coordinación eficiente y tecnología para crear experiencias más profesionales, sostenibles y memorables.
               </p>
             </div>
           </div>
