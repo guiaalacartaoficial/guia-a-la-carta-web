@@ -25,7 +25,7 @@ const SelloModal = ({ isOpen, onClose }) => {
 
         <div className="sello-modal-header">
           <div className="sello-modal-logo-container">
-            <img src="/sello-verificado.png?v=2" alt="Sello Guía a la Carta" className="sello-modal-logo" />
+            <img src="/sello-verificado.png?v=3" alt="Sello Guía a la Carta" className="sello-modal-logo" />
             <div className="sello-modal-logo-glow"></div>
           </div>
           <h2>Sello Guía a la Carta</h2>
