@@ -612,20 +612,18 @@
   gap: 0.6rem;
 }
 .b2b-tag {
-  background: rgba(14, 91, 76, 0.05);
-  border: 1px solid rgba(14, 91, 76, 0.15);
+  background: var(--c-primary-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.45rem 0.9rem;
   border-radius: var(--radius-full);
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--c-primary-dark); /* Texto mucho más oscuro para contraste */
-  transition: all 0.2s;
+  color: white; /* Texto blanco fijo */
+  transition: transform 0.2s;
   cursor: default;
 }
 .b2b-tag:hover {
-  background: var(--c-primary-dark);
-  border-color: var(--c-primary-dark);
-  color: white;
+  transform: scale(1.05); /* Un pequeño realce sin cambiar colores */
 }
 
 /* ============================================= */
