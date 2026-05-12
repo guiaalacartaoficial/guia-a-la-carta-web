@@ -217,7 +217,7 @@ const Guias = () => {
 
             <div className="sello-badge-wrapper">
               <div className="sello-glow-effect"></div>
-              <img src="/sello-verificado.png" alt="Sello Guía a la Carta Verificado" className="sello-logo-custom" />
+              <img src="/sello-verificado.png?v=2" alt="Sello Guía a la Carta Verificado" className="sello-logo-custom" />
             </div>
 
             <button onClick={() => setIsSelloOpen(true)} className="btn btn-hero">Explorar Estándar</button>
