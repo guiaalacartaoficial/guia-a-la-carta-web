@@ -291,7 +291,7 @@ const Servicios = () => {
 
             {/* Full */}
             <div className="profile-tier-card">
-              <div className="profile-tier-badge" style={{ background: 'var(--c-primary-dark)' }}>Recomendado</div>
+              <div className="profile-tier-badge">Recomendado</div>
               <div className="tier-header">
                 <h4>Guía Full</h4>
                 <div className="tier-price"><span>desde </span>$60.000<span> CLP</span></div>

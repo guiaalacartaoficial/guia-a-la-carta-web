@@ -384,44 +384,47 @@
 
 .profile-tier-card {
   background: var(--c-surface);
-  border: 2px solid rgba(159, 192, 90, 0.4); /* Borde verde claro sutil pero notorio */
-  border-radius: 16px;
+  border: 4px solid rgba(159, 192, 90, 0.6); /* Borde más grueso y brillante */
+  border-radius: 20px;
   padding: 2.5rem 2rem;
   position: relative;
   display: flex;
   flex-direction: column;
   transition: all 0.35s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 .profile-tier-card:hover {
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  transform: translateY(-8px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  transform: translateY(-10px);
   border-color: var(--c-accent);
 }
 
 .profile-tier-card.featured {
-  border: 3px solid var(--b2b-gold); /* Borde dorado más grueso para Senior */
-  box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+  border: 4px solid var(--b2b-gold); /* Borde dorado grueso para Senior */
+  box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
 }
 
 .profile-tier-badge {
   position: absolute;
-  top: -12px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--c-primary-dark);
-  color: white;
-  padding: 0.25rem 1.2rem;
+  background: var(--c-accent); /* Fondo brillante para contraste */
+  color: var(--c-primary-dark); /* Texto oscuro */
+  padding: 0.4rem 1.5rem;
   border-radius: var(--radius-full);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 10;
 }
 .profile-tier-card.featured .profile-tier-badge {
-  background: linear-gradient(135deg, #D4AF37, #C49B2C);
-  color: #fff;
+  background: #ffffff;
+  color: #D4AF37;
+  border: 1px solid #D4AF37;
 }
 
 .tier-header {
