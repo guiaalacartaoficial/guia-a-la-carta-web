@@ -755,11 +755,11 @@
 /*  8. CTA FINAL                                 */
 /* ============================================= */
 .ns-cta-final {
-  background: var(--ns-gradient);
+  background: #CDE0CC;
   padding: 5rem 3rem;
   border-radius: var(--radius-lg);
   text-align: center;
-  color: white;
+  color: var(--c-primary-dark);
   position: relative;
   overflow: hidden;
 }
@@ -768,13 +768,11 @@
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 25% 75%, rgba(159, 192, 90, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 75% 25%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+  background: none;
 }
 
 .ns-cta-final h2 {
-  color: white;
+  color: var(--c-primary-dark);
   font-size: 2.5rem;
   margin-bottom: 1rem;
   position: relative;
@@ -784,7 +782,7 @@
   font-size: 1.12rem;
   max-width: 580px;
   margin: 0 auto 2.5rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--ns-text-muted);
   position: relative;
   line-height: 1.65;
 }
