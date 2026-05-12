@@ -551,7 +551,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 10. CTA FINAL                              */}
       {/* =========================================== */}

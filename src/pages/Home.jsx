@@ -411,7 +411,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 9: LLAMADO FINAL */}
       <section className="section-cta-final text-center">

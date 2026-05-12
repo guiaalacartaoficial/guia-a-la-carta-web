@@ -187,7 +187,7 @@ const Relatos = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN COLABORADOR */}
-      <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#fff', borderBottom: '1px solid #eaeaea' }}>
+      <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#fff' }}>
         <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '800px' }}>
           <img src="/biblioteca-turismo-logo.png" alt="Biblioteca del Turismo" style={{ maxWidth: '280px', marginBottom: '30px', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }} />
           <h3 style={{ color: 'var(--c-primary-dark)', fontSize: '1.8rem', marginBottom: '20px' }}>
