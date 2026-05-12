@@ -196,13 +196,18 @@ const QuienesSomos = () => {
               <div className="ns-origin-text">
                 <h3>Cómo nacimos</h3>
                 <p>
-                  Nacimos desde la experiencia directa en terreno, al identificar una necesidad crítica del sector:
-                  la dificultad de encontrar guías confiables, disponibles y alineados con el nivel de servicio
-                  que cada operación necesita.
+                  Guía a la Carta nació desde la experiencia real en la operación turística, identificando una necesidad constante 
+                  dentro de la industria: la dificultad de encontrar personal confiable, disponible y preparado para responder 
+                  a los estándares que cada servicio requiere.
                 </p>
                 <p>
-                  A partir de esa realidad, decidimos construir una red profesional que permitiera a las empresas
-                  operar con más orden, rapidez y seguridad, conectando cada servicio con el guía correcto.
+                  Con el crecimiento del turismo y la alta demanda operativa, muchas empresas enfrentaban problemas de coordinación, 
+                  falta de cobertura y dependencia de contactos informales para cubrir sus servicios. Frente a esa realidad, 
+                  decidimos crear una solución más profesional, organizada y eficiente.
+                </p>
+                <p>
+                  Así nació Guía a la Carta: una red colaborativa enfocada en conectar empresas turísticas con guías certificados 
+                  y equipos operativos adecuados para cada experiencia, permitiendo operar con mayor seguridad, rapidez y calidad de servicio.
                 </p>
                 <div className="ns-origin-highlight">
                   <div className="ns-origin-stat">
