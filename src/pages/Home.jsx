@@ -331,23 +331,23 @@ const Home = () => {
 
           <div className="collage-slider-wrapper">
             <div className="collage-slider">
-              {/* Slide 1 */}
+              {/* Slide 1: Santiago Icónico */}
               <div className="collage-slide active">
                 <div className="custom-collage-grid">
-                  <div className="collage-item item-1"><img src="/gallery/g1.png" alt="Exp 1" /></div>
-                  <div className="collage-item item-2"><img src="/gallery/g2.png" alt="Exp 2" /></div>
-                  <div className="collage-item item-3"><img src="/gallery/g3.png" alt="Exp 3" /></div>
-                  <div className="collage-item item-4"><img src="/gallery/g4.png" alt="Exp 4" /></div>
+                  <div className="collage-item item-1"><img src="/gallery/Bellavista.jpg" alt="Barrio Bellavista" /></div>
+                  <div className="collage-item item-2"><img src="/gallery/Costanera-Center.jpg" alt="Costanera Center" /></div>
+                  <div className="collage-item item-3"><img src="/gallery/Gastronomia-Santiago.jpg" alt="Gastronomía Chilena" /></div>
+                  <div className="collage-item item-4"><img src="/gallery/Museo-a-cielo-abierto-1.jpg" alt="Museo a Cielo Abierto" /></div>
                 </div>
               </div>
 
-              {/* Slide 2 */}
+              {/* Slide 2: Patrimonio y Cultura */}
               <div className="collage-slide">
                 <div className="custom-collage-grid">
-                  <div className="collage-item item-1"><img src="/gallery/g5.png" alt="Exp 5" /></div>
-                  <div className="collage-item item-2"><img src="/gallery/g6.png" alt="Exp 6" /></div>
-                  <div className="collage-item item-3"><img src="/gallery/g7.png" alt="Exp 7" /></div>
-                  <div className="collage-item item-4"><img src="/gallery/g8.png" alt="Exp 8" /></div>
+                  <div className="collage-item item-1"><img src="/gallery/Plaza-de-Armas-Filipa.jpg" alt="Plaza de Armas" /></div>
+                  <div className="collage-item item-2"><img src="/gallery/lastarria.jpg" alt="Barrio Lastarria" /></div>
+                  <div className="collage-item item-3"><img src="/gallery/mercado-central.jpg" alt="Mercado Central" /></div>
+                  <div className="collage-item item-4"><img src="/gallery/Bellavista.jpg" alt="Barrio Bellavista" /></div>
                 </div>
               </div>
             </div>
