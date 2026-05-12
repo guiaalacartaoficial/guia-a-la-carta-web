@@ -108,7 +108,7 @@ const respaldoItems = [
   },
   {
     icon: <Star size={26} />,
-    img: '/AdobeExpressPhotos_e6381cd102714e09862dca262a563dbb_CopyEdited.png', // Foto de Calidad Operativa
+    img: '/logo.png', // Logo Guía a la Carta oficial
     title: 'Compromiso con calidad operativa',
     desc: 'Trabajamos bajo procesos claros de coordinación, seguimiento y mejora continua del servicio.'
   }
