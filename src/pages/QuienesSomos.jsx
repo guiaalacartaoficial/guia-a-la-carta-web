@@ -337,16 +337,20 @@ const QuienesSomos = () => {
                   className={`ns-respaldo-card ns-animate ns-animate-delay-${idx + 1}`}
                   key={idx}
                 >
-                  <div className="ns-respaldo-seal">
-                    {item.img ? (
-                      <img src={item.img} alt={item.title} className="ns-respaldo-img" />
-                    ) : (
-                      item.icon
-                    )}
-                  </div>
-                  <div className="ns-respaldo-text">
+                  <div className="ns-respaldo-card-top">
                     <h4>{item.title}</h4>
                     <p>{item.desc}</p>
+                  </div>
+                  
+                  <div className="ns-respaldo-card-img-box">
+                    {item.img ? (
+                      <img src={item.img} alt={item.title} className="ns-respaldo-custom-img" />
+                    ) : (
+                      <div className="ns-respaldo-card-placeholder">
+                        {item.icon}
+                        <span>Logo {idx + 1}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

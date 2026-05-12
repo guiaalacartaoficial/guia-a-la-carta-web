@@ -558,52 +558,69 @@
 }
 
 .ns-respaldo-card {
-  background: var(--c-surface);
-  border: 1px solid var(--ns-border);
+  background: var(--c-primary-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 2rem 1.5rem;
   display: flex;
-  gap: 1.25rem;
-  align-items: flex-start;
-  transition: all 0.3s ease;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  transition: all 0.4s ease;
+  height: 100%;
 }
 
 .ns-respaldo-card:hover {
-  box-shadow: 0 8px 24px rgba(14, 91, 76, 0.06);
-  border-color: var(--c-primary);
-  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px);
+  border-color: var(--c-accent);
 }
 
-.ns-respaldo-seal {
-  width: 56px;
-  height: 56px;
-  min-width: 56px;
-  border-radius: 50%;
+.ns-respaldo-card-top h4 {
+  color: var(--c-accent);
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+  font-weight: 800;
+}
+
+.ns-respaldo-card-top p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.ns-respaldo-card-img-box {
+  width: 100%;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  background: rgba(14, 91, 76, 0.08); /* Fondo verde suave unificado */
-  color: var(--c-primary); /* Icono verde principal */
+  margin-top: auto;
+  overflow: hidden;
 }
 
-.ns-respaldo-img {
-  width: 100%;
-  height: 100%;
+.ns-respaldo-custom-img {
+  max-width: 85%;
+  max-height: 85%;
   object-fit: contain;
-  padding: 8px; /* Espacio para que el logo no toque los bordes */
 }
 
-.ns-respaldo-text h4 {
-  font-size: 1.08rem;
-  margin-bottom: 0.4rem;
-  color: var(--c-primary-dark);
+.ns-respaldo-card-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.2);
 }
 
-.ns-respaldo-text p {
-  font-size: 0.93rem;
-  color: var(--ns-text-muted);
-  line-height: 1.55;
+.ns-respaldo-card-placeholder span {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* ============================================= */
