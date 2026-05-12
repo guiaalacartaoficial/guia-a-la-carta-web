@@ -321,6 +321,69 @@ const Home = () => {
       {/* SECCIÓN NUEVA: MAPA INTERACTIVO */}
       <ChileMap />
 
+      {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (COLLAGE SLIDER) */}
+      <section className="section-gallery bg-b2b-light">
+        <div className="container">
+          <div className="section-header text-center mb-5">
+            <h2 className="display-5 fw-bold text-primary-dark">Nuestra Comunidad en Acción</h2>
+            <p className="lead text-muted">Resumen visual de las experiencias y el estándar operativo que entregamos en cada rincón de Chile.</p>
+          </div>
+
+          <div className="collage-slider-wrapper">
+            <div className="collage-slider">
+              {[1, 2, 3].map((num, index) => (
+                <div 
+                  key={num} 
+                  className={`collage-slide ${index === 0 ? 'active' : ''}`}
+                  id={`gallery-slide-${index}`}
+                >
+                  <div className="collage-frame">
+                    <img src={`/gallery/collage-${num}.png`} alt={`Experiencias Guía a la Carta ${num}`} />
+                    <div className="collage-overlay">
+                      <span className="badge-category">Operación Real</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="slider-controls">
+              <button className="slider-btn prev" onClick={() => {
+                const slides = document.querySelectorAll('.collage-slide');
+                let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
+                slides[activeIdx].classList.remove('active');
+                let nextIdx = (activeIdx - 1 + slides.length) % slides.length;
+                slides[nextIdx].classList.add('active');
+              }}>
+                <ChevronLeft size={32} />
+              </button>
+              <button className="slider-btn next" onClick={() => {
+                const slides = document.querySelectorAll('.collage-slide');
+                let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
+                slides[activeIdx].classList.remove('active');
+                let nextIdx = (activeIdx + 1) % slides.length;
+                slides[nextIdx].classList.add('active');
+              }}>
+                <ChevronRight size={32} />
+              </button>
+            </div>
+
+            <div className="slider-dots">
+              {[0, 1, 2].map((i) => (
+                <span key={i} className={`dot ${i === 0 ? 'active' : ''}`} onClick={() => {
+                  const slides = document.querySelectorAll('.collage-slide');
+                  const dots = document.querySelectorAll('.dot');
+                  slides.forEach(s => s.classList.remove('active'));
+                  dots.forEach(d => d.classList.remove('active'));
+                  slides[i].classList.add('active');
+                  dots[i].classList.add('active');
+                }}></span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* SECCIÓN 9: LLAMADO FINAL */}
       <section className="section-cta-final text-center">
         <div className="container">
