@@ -90,7 +90,7 @@ const enfoqueItems = [
 const respaldoItems = [
   {
     icon: <ShieldCheck size={26} />,
-    img: null, // Espacio para logo futuro
+    img: '/sernatur.png', // Espacio para logo futuro
     title: 'Empresa registrada en SERNATUR',
     desc: 'Cumplimos con los requisitos formales del Servicio Nacional de Turismo para operar en el sector.'
   },
