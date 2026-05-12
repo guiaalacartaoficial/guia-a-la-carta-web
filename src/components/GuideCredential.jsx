@@ -9,8 +9,6 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   
-  // Referencia para la exportación perfecta en alta resolución
-  const exportRef = useRef(null);
 
   if (!guia) return null;
 
