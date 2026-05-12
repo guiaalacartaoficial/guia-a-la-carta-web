@@ -475,7 +475,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 8. ¿POR QUÉ TRABAJAR CON NOSOTROS?        */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-light">
+      <section className="b2b-section section-why-us">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Hacemos que tu operación no falle</h2>

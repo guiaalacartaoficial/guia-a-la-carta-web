@@ -732,39 +732,54 @@
 
 .why-card {
   text-align: center;
-  padding: 2.5rem 1.5rem;
-  background: var(--c-surface);
-  border: 1px solid var(--b2b-border);
+  padding: 3rem 2rem;
+  background: var(--c-primary-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
+
 .why-card:hover {
-  border-color: var(--c-primary);
-  box-shadow: 0 8px 24px rgba(14, 91, 76, 0.06);
-  transform: translateY(-3px);
+  transform: translateY(-8px);
+  border-color: var(--c-accent);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .why-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1.5rem;
-  background: var(--c-primary-dark);
-  color: var(--c-text-invert);
-  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 0.5rem;
+  background: rgba(159, 192, 90, 0.15);
+  color: var(--c-accent);
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.why-card:hover .why-icon {
+  background: var(--c-accent);
+  color: var(--c-primary-dark);
+  transform: rotate(10deg);
 }
 
 .why-card h4 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  color: var(--c-primary-dark);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: white !important;
+  font-weight: 700;
 }
+
 .why-card p {
-  color: var(--b2b-text-muted);
-  font-size: 0.93rem;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 /* ============================================= */
