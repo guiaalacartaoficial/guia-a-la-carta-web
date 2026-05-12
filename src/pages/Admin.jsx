@@ -4,7 +4,7 @@ import {
   Users, FileText, Calendar, CheckCircle, XCircle, 
   Clock, ExternalLink, Eye, Trash2, Check, ArrowLeft,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
-  ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon
+  ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download
 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
 import './Admin.css';
@@ -20,6 +20,7 @@ const AdminDashboard = () => {
   const [postulacionesEstudiantes, setPostulacionesEstudiantes] = useState([]);
   const [relatos, setRelatos] = useState([]);
   const [comentarios, setComentarios] = useState([]);
+  const [manuales, setManuales] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
@@ -34,12 +35,14 @@ const AdminDashboard = () => {
       const { data: estData } = await supabase.from('postulaciones_estudiantes').select('*').order('created_at', { ascending: false });
       const { data: relatoData } = await supabase.from('relatos').select('*').order('fecha', { ascending: false });
       const { data: comData } = await supabase.from('comentarios_relatos').select('*, relatos(titulo)').order('fecha', { ascending: false });
+      const { data: manualesData } = await supabase.from('manuales').select('*').order('created_at', { ascending: false });
       
       setReservas(resData || []);
       setPostulacionesGuias(guiasData || []);
       setPostulacionesEstudiantes(estData || []);
       setRelatos(relatoData || []);
       setComentarios(comData || []);
+      setManuales(manualesData || []);
       console.log("Data fetched successfully.");
     } catch (error) {
       console.error('Error fetching admin data:', error);
@@ -102,10 +105,13 @@ const AdminDashboard = () => {
         finalData.url_primeros_auxilios = await uploadFile(editData.file_wfr, 'documentos', 'certificados');
         delete finalData.file_wfr;
       }
-      if (editData.file_otras instanceof File) {
-        // Descomentar cuando la columna 'url_otras_certificaciones' exista en Supabase
+      if (editData.file_otras) {
         // finalData.url_otras_certificaciones = await uploadFile(editData.file_otras, 'documentos', 'certificados');
         delete finalData.file_otras;
+      }
+      if (editData.file_manual instanceof File) {
+        finalData.url_archivo = await uploadFile(editData.file_manual, 'documentos', 'manuales');
+        delete finalData.file_manual;
       }
 
       // Limpiar campos que no deben ir a la DB si son objetos File que no manejamos arriba
@@ -113,14 +119,21 @@ const AdminDashboard = () => {
         if (finalData[key] instanceof File) delete finalData[key];
       });
 
-      const { error } = await supabase.from(table).update(finalData).eq('id', id);
-      if (error) {
-        if (error.code === '42703') {
-          alert("Error: Una de las columnas no existe en la base de datos. Por favor, verifica el SQL en Supabase.");
+      if (id === 'new') {
+        const { error } = await supabase.from(table).insert([finalData]);
+        if (error) throw error;
+        alert("Registro creado correctamente");
+      } else {
+        const { error } = await supabase.from(table).update(finalData).eq('id', id);
+        if (error) {
+          if (error.code === '42703') {
+            alert("Error: Una de las columnas no existe en la base de datos. Por favor, verifica el SQL en Supabase.");
+          }
+          throw error;
         }
-        throw error;
+        alert("Registro actualizado correctamente");
       }
-      alert("Registro actualizado correctamente");
+      
       setEditingId(null);
       fetchData();
     } catch (error) {
@@ -320,6 +333,9 @@ const AdminDashboard = () => {
             </button>
             <button className={`admin-nav-link ${activeTab === 'comunidad' ? 'active' : ''}`} onClick={() => { setActiveTab('comunidad'); setSubTab('relatos'); }}>
               <Globe size={20} /> Gestión de Relatos
+            </button>
+            <button className={`admin-nav-link ${activeTab === 'manuales' ? 'active' : ''}`} onClick={() => setActiveTab('manuales')}>
+              <BookOpen size={20} /> Gestión de Manuales
             </button>
           </nav>
         </aside>
@@ -642,6 +658,98 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
+            )}
+
+            {activeTab === 'manuales' && (
+              <div className="manuales-admin-container">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                  <h3>Manuales de Experiencia</h3>
+                  <button 
+                    className="btn-add-new" 
+                    onClick={() => {
+                      setEditingId('new');
+                      setEditData({ titulo: '', destino: '', categoria: 'Servicio', descripcion: '' });
+                    }}
+                    style={{ background: '#0f172a', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                  >
+                    <Plus size={18} /> Agregar Nuevo Manual
+                  </button>
+                </div>
+
+                {editingId === 'new' && (
+                  <div className="edit-form-grid" style={{ background: '#f8fafc', padding: '2rem', borderRadius: '15px', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+                    <div className="form-group"><label>Título del Manual</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" placeholder="Ej: Manual Trekking Torres del Paine" /></div>
+                    <div className="form-group"><label>Destino / Zona</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" placeholder="Ej: Magallanes" /></div>
+                    <div className="form-group">
+                      <label>Categoría</label>
+                      <select name="categoria" value={editData.categoria} onChange={handleEditChange} className="form-control">
+                        <option value="Servicio">Servicio General</option>
+                        <option value="Trekking">Trekking / Aventura</option>
+                        <option value="Cultural">Cultural / Histórico</option>
+                        <option value="Gastronomía">Gastronomía</option>
+                        <option value="Logística">Logística</option>
+                      </select>
+                    </div>
+                    <div className="form-group"><label>Archivo PDF</label><input type="file" name="file_manual" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
+                    <div className="full-width"><label>Descripción Corta</label><textarea name="descripcion" value={editData.descripcion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                    <div className="edit-actions">
+                      <button onClick={() => handleUpdateRecord('manuales', 'new')} className="btn btn-save" disabled={loading}><Save size={16}/> {loading ? 'Subiendo...' : 'Crear Manual'}</button>
+                      <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                    </div>
+                  </div>
+                )}
+
+                <table className="pro-table">
+                  <thead>
+                    <tr><th>Manual / Categoría</th><th>Destino</th><th>Fecha</th><th className="text-right">Acciones</th></tr>
+                  </thead>
+                  <tbody>
+                    {manuales.map(m => (
+                      <React.Fragment key={m.id}>
+                        <tr className={expandedId === m.id ? 'row-expanded' : ''}>
+                          <td><div className="main-text">{m.titulo}</div><div className="sub-text">{m.categoria}</div></td>
+                          <td>{m.destino}</td>
+                          <td>{new Date(m.created_at).toLocaleDateString()}</td>
+                          <td className="text-right">
+                            <div className="admin-actions">
+                              <button onClick={() => toggleExpand(m.id)} className="btn-action view"><Eye size={16}/></button>
+                              <button onClick={() => startEditing(m)} className="btn-action edit"><Edit size={16}/></button>
+                              <a href={m.url_archivo} target="_blank" rel="noreferrer" className="btn-action download"><Download size={16}/></a>
+                              <button onClick={() => handleDelete('manuales', m.id)} className="btn-action delete"><Trash2 size={16}/></button>
+                            </div>
+                          </td>
+                        </tr>
+                        {expandedId === m.id && (
+                          <tr className="detail-row">
+                            <td colSpan="4">
+                              <div className="detail-content">
+                                {editingId === m.id ? (
+                                  <div className="edit-form-grid">
+                                    <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Destino</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Categoría</label><input name="categoria" value={editData.categoria} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Actualizar PDF</label><input type="file" name="file_manual" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
+                                    <div className="full-width"><label>Descripción</label><textarea name="descripcion" value={editData.descripcion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                    <div className="edit-actions">
+                                      <button onClick={() => handleUpdateRecord('manuales', m.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
+                                      <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="detail-grid">
+                                    <div className="full-width"><strong>Descripción:</strong> {m.descripcion || 'Sin descripción'}</div>
+                                    <div className="full-width"><strong>URL Archivo:</strong> <a href={m.url_archivo} target="_blank" rel="noreferrer">{m.url_archivo}</a></div>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>

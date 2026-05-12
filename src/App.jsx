@@ -15,6 +15,7 @@ import Relatos from './pages/Relatos';
 import RelatoDetalle from './pages/RelatoDetalle';
 import AdminDashboard from './pages/Admin';
 import Reserva from './pages/Reserva';
+import Manuales from './pages/Manuales';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/servicios" element={<Servicios />} />
             <Route path="/postular-guia" element={<PostulacionGuias />} />
             <Route path="/postular-estudiante" element={<PostulacionEstudiantes />} />
+            <Route path="/manuales" element={<Manuales />} />
             <Route path="/quienes-somos" element={<QuienesSomos />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/relatos" element={<Relatos />} />

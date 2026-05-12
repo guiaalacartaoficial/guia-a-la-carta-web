@@ -54,6 +54,7 @@ const Navbar = () => {
             </div>
           </div>
           
+          <NavLink to="/manuales" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={closeMenu}>Manuales</NavLink>
           <NavLink to="/quienes-somos" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={closeMenu}>Nosotros</NavLink>
           <NavLink to="/reservar" className={({ isActive }) => `nav-link nav-highlight ${isActive ? 'active' : ''}`} onClick={closeMenu}>Reservar Guía</NavLink>
           <NavLink to="/contacto" className={({ isActive }) => `nav-link nav-cta ${isActive ? 'active' : ''}`} onClick={closeMenu}>Contacto</NavLink>
