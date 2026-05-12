@@ -629,6 +629,10 @@
 /* ============================================= */
 /*  7. MODALIDAD COMERCIAL                       */
 /* ============================================= */
+.section-modalidad-comercial {
+  background-color: #f2f7f5; /* Verde suave y elegante */
+}
+
 .commercial-model-panel {
   background: linear-gradient(135deg, var(--c-surface), var(--b2b-bg));
   border: 1px solid var(--b2b-border);

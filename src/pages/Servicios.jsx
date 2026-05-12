@@ -451,7 +451,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 7. MODALIDAD COMERCIAL                     */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-white">
+      <section className="b2b-section section-modalidad-comercial">
         <div className="container">
           <div className="commercial-model-panel">
             <h3>Modelo transparente de facturación</h3>
@@ -464,8 +464,8 @@ const Servicios = () => {
               <div className="commercial-plus">+</div>
               <div className="commercial-item accent">
                 <Zap size={40} />
-                <h4>Fee Operativo</h4>
-                <p>Guía a la Carta factura a la empresa un fee por el servicio de búsqueda, perfilamiento, articulación logística y respaldo operativo.</p>
+                <h4>Facturación Operativa</h4>
+                <p>Guía a la Carta factura a la empresa por el servicio de búsqueda, perfilamiento, articulación logística y respaldo operativo.</p>
               </div>
             </div>
           </div>
