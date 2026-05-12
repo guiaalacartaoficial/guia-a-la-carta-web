@@ -562,15 +562,30 @@
   min-height: 100vh; display: flex; align-items: center;
   padding: var(--s-10) 0; background-color: #F8FAF6;
 }
-.estandares-grid { display: flex; flex-wrap: wrap; gap: var(--s-5); justify-content: center; max-width: 1000px; margin: 0 auto; }
+.estandares-grid { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 1.2rem; 
+  justify-content: center; 
+  max-width: 1250px; 
+  margin: 0 auto; 
+}
 .estandar-box {
-  width: 200px; text-align: center; padding: var(--s-5);
+  flex: 1;
+  min-width: 180px;
+  max-width: 240px;
+  text-align: center; 
+  padding: 2.5rem 1.5rem;
   background: white; border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm); border-bottom: 3px solid var(--c-accent);
   transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .estandar-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-.estandar-box h5 { font-size: 0.95rem; color: var(--c-text-main); margin: 0; line-height: 1.5; font-weight: 700; }
+.estandar-box h5 { font-size: 0.9rem; color: var(--c-text-main); margin: 0; line-height: 1.4; font-weight: 700; }
 
 /* 9. CTA Final */
 .section-cta-final {
