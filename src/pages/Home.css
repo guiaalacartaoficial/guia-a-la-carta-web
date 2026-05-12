@@ -674,35 +674,39 @@
   visibility: visible;
 }
 
-.collage-frame {
+/* CUADRÍCULA ASIMÉTRICA SEGÚN REFERENCIA */
+.custom-collage-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas para manejar proporciones de 1/3 y 2/3 */
+  grid-template-rows: repeat(2, 300px);
+  gap: 20px;
   width: 100%;
-  height: 100%;
-  border-radius: 32px;
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-  position: relative;
-  background: #eee;
 }
 
-.collage-frame img {
+.collage-item {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  background: #222;
+}
+
+.collage-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 6s ease;
+  transition: transform 0.6s ease;
 }
 
-.collage-slide.active .collage-frame img {
-  transform: scale(1.05);
+.collage-item:hover img {
+  transform: scale(1.1);
 }
 
-.collage-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 40%);
-  display: flex;
-  align-items: flex-end;
-  padding: 40px;
-}
+/* Configuración de anchos (Fila 1: 1/3 | 2/3 - Fila 2: 2/3 | 1/3) */
+.item-1 { grid-column: span 1; }
+.item-2 { grid-column: span 2; }
+.item-3 { grid-column: span 2; }
+.item-4 { grid-column: span 1; }
 
 .badge-category {
   background: var(--c-accent);

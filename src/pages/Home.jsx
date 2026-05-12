@@ -331,45 +331,56 @@ const Home = () => {
 
           <div className="collage-slider-wrapper">
             <div className="collage-slider">
-              {[1, 2, 3].map((num, index) => (
-                <div 
-                  key={num} 
-                  className={`collage-slide ${index === 0 ? 'active' : ''}`}
-                  id={`gallery-slide-${index}`}
-                >
-                  <div className="collage-frame">
-                    <img src={`/gallery/collage-${num}.png`} alt={`Experiencias Guía a la Carta ${num}`} />
-                    <div className="collage-overlay">
-                      <span className="badge-category">Operación Real</span>
-                    </div>
-                  </div>
+              {/* Slide 1 */}
+              <div className="collage-slide active">
+                <div className="custom-collage-grid">
+                  <div className="collage-item item-1"><img src="/gallery/g1.png" alt="Exp 1" /></div>
+                  <div className="collage-item item-2"><img src="/gallery/g2.png" alt="Exp 2" /></div>
+                  <div className="collage-item item-3"><img src="/gallery/g3.png" alt="Exp 3" /></div>
+                  <div className="collage-item item-4"><img src="/gallery/g4.png" alt="Exp 4" /></div>
                 </div>
-              ))}
+              </div>
+
+              {/* Slide 2 */}
+              <div className="collage-slide">
+                <div className="custom-collage-grid">
+                  <div className="collage-item item-1"><img src="/gallery/g5.png" alt="Exp 5" /></div>
+                  <div className="collage-item item-2"><img src="/gallery/g6.png" alt="Exp 6" /></div>
+                  <div className="collage-item item-3"><img src="/gallery/g7.png" alt="Exp 7" /></div>
+                  <div className="collage-item item-4"><img src="/gallery/g8.png" alt="Exp 8" /></div>
+                </div>
+              </div>
             </div>
 
             <div className="slider-controls">
               <button className="slider-btn prev" onClick={() => {
                 const slides = document.querySelectorAll('.collage-slide');
+                const dots = document.querySelectorAll('.dot');
                 let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
                 slides[activeIdx].classList.remove('active');
+                dots[activeIdx].classList.remove('active');
                 let nextIdx = (activeIdx - 1 + slides.length) % slides.length;
                 slides[nextIdx].classList.add('active');
+                dots[nextIdx].classList.add('active');
               }}>
                 <ChevronLeft size={32} />
               </button>
               <button className="slider-btn next" onClick={() => {
                 const slides = document.querySelectorAll('.collage-slide');
+                const dots = document.querySelectorAll('.dot');
                 let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
                 slides[activeIdx].classList.remove('active');
+                dots[activeIdx].classList.remove('active');
                 let nextIdx = (activeIdx + 1) % slides.length;
                 slides[nextIdx].classList.add('active');
+                dots[nextIdx].classList.add('active');
               }}>
                 <ChevronRight size={32} />
               </button>
             </div>
 
             <div className="slider-dots">
-              {[0, 1, 2].map((i) => (
+              {[0, 1].map((i) => (
                 <span key={i} className={`dot ${i === 0 ? 'active' : ''}`} onClick={() => {
                   const slides = document.querySelectorAll('.collage-slide');
                   const dots = document.querySelectorAll('.dot');
