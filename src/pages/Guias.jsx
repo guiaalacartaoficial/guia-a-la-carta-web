@@ -3,12 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import GuideCredential from '../components/GuideCredential';
-import SelloModal from '../components/SelloModal';
 import './Guias.css';
 
 const Guias = () => {
   const [selectedGuide, setSelectedGuide] = useState(null);
-  const [isSelloOpen, setIsSelloOpen] = useState(false);
   const [guiasActivos, setGuiasActivos] = useState([]);
   const [guiasJunior, setGuiasJunior] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -205,27 +203,7 @@ const Guias = () => {
         </div>
       </section>
 
-      <div className="footer-accent-bar" />
 
-      {/* Sección Sello Guía a la Carta - Revertida a Centrada */}
-      <section className="section-sello">
-        <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
-          <div className="sello-glass-container text-center">
-            <span className="sello-pre-title-simple">Estándar de Calidad</span>
-            <h2>Sello Guía a la Carta</h2>
-            <p className="sello-subtitle-simple">Certificación profesional para experiencias seguras</p>
-
-            <div className="sello-badge-wrapper">
-              <div className="sello-glow-effect"></div>
-              <img src="/sello-verificado.png?v=5" alt="Sello Guía a la Carta Verificado" className="sello-logo-custom" />
-            </div>
-
-            <button onClick={() => setIsSelloOpen(true)} className="btn btn-hero">Explorar Estándar</button>
-          </div>
-        </div>
-      </section>
-
-      <div className="footer-accent-bar" />
 
       {/* SECCIÓN RED DE GUÍAS JUNIOR */}
       <section className="junior-section">
@@ -274,8 +252,6 @@ const Guias = () => {
           onClose={() => setSelectedGuide(null)}
         />
       )}
-      {/* MODAL DEL SELLO */}
-      <SelloModal isOpen={isSelloOpen} onClose={() => setIsSelloOpen(false)} />
     </div>
   );
 };
