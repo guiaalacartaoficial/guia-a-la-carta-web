@@ -102,7 +102,7 @@ const respaldoItems = [
   },
   {
     icon: <BadgeCheck size={26} />,
-    img: '/sello-verificado.png', // Logo de Verificado
+    img: '/sello-verificado.png?v=5', // Logo de Verificado
     title: 'Red de guías con validación documental',
     desc: 'Cada guía de nuestra red pasa por un proceso de verificación de certificaciones, antecedentes y competencias.'
   },

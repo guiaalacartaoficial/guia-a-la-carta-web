@@ -64,7 +64,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
       // 1. PRE-CARGA ABSOLUTA (Cero Red durante la captura)
       const images = {
         logo: await fetchToBase64('/logo.png'),
-        verified: await fetchToBase64('/sello-verificado.png'),
+        verified: await fetchToBase64('/sello-verificado.png?v=5'),
         flagChile: await fetchToBase64(getFlagUrl('Chile')),
         iconVoz: await fetchToBase64('/icono-voz.png'),
         profile: await fetchToBase64(guia.imagen),
@@ -171,7 +171,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
               <img src="/logo.png" alt="Guia a la Carta" crossOrigin="anonymous" />
             </div>
             <div className="logo-circle-v2 verified">
-              <img src="/sello-verificado.png" alt="Verificado" crossOrigin="anonymous" />
+              <img src="/sello-verificado.png?v=5" alt="Verificado" crossOrigin="anonymous" />
             </div>
           </div>
           
