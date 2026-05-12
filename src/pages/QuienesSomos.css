@@ -591,10 +591,10 @@
 }
 
 .ns-respaldo-card-img-box {
-  width: 90px;
-  height: 90px;
-  background: rgba(255, 255, 255, 0.05); /* Fondo sutil para dar volumen sin ocultar el logo */
-  border: 2px solid var(--c-accent); /* Marco verde claro */
+  width: 100px; /* Un poco más grande para dar espacio */
+  height: 100px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--c-accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -607,17 +607,32 @@
 .ns-respaldo-custom-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Por defecto para fotos (como la 4ta) */
 }
 
-/* Logos con fondo transparente: Sernatur, Marca Chile, Verificado */
-.ns-respaldo-card:nth-child(1) .ns-respaldo-custom-img,
-.ns-respaldo-card:nth-child(2) .ns-respaldo-custom-img,
+/* Ajustes individuales para logos con formas distintas */
+.ns-respaldo-card:nth-child(1) .ns-respaldo-custom-img {
+  object-fit: contain;
+  width: 85%; /* Sernatur es redondo, puede ser más grande */
+  height: 85%;
+}
+
+.ns-respaldo-card:nth-child(2) .ns-respaldo-custom-img {
+  object-fit: contain;
+  width: 60%; /* Marca Chile es cuadrado, necesita espacio para las esquinas */
+  height: 60%;
+  border-radius: 4px; /* Un toque de redondeado al cuadrado rojo */
+}
+
 .ns-respaldo-card:nth-child(3) .ns-respaldo-custom-img {
   object-fit: contain;
-  width: 75%;
-  height: 75%;
-  filter: brightness(1.1); /* Ligero realce para logos oscuros */
+  width: 70%; /* Verificado es un escudo */
+  height: 70%;
+}
+
+.ns-respaldo-card:nth-child(4) .ns-respaldo-custom-img {
+  object-fit: cover; /* Foto de oficina llena el círculo */
+  transform: scale(1.1); /* Zoom ligero para centrar mejor */
 }
 
 .ns-respaldo-card-placeholder {
