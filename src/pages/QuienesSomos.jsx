@@ -90,21 +90,25 @@ const enfoqueItems = [
 const respaldoItems = [
   {
     icon: <ShieldCheck size={26} />,
+    img: null, // Espacio para logo futuro
     title: 'Empresa registrada en SERNATUR',
     desc: 'Cumplimos con los requisitos formales del Servicio Nacional de Turismo para operar en el sector.'
   },
   {
     icon: <Globe size={26} />,
+    img: null, // Espacio para logo futuro
     title: 'Vinculación con Marca Chile',
     desc: 'Contamos con vinculación o autorización asociada a Marca Chile, reforzando nuestro compromiso con un turismo de alto estándar.'
   },
   {
     icon: <BadgeCheck size={26} />,
+    img: null, // Espacio para logo futuro
     title: 'Red de guías con validación documental',
     desc: 'Cada guía de nuestra red pasa por un proceso de verificación de certificaciones, antecedentes y competencias.'
   },
   {
     icon: <Star size={26} />,
+    img: null, // Espacio para logo futuro
     title: 'Compromiso con calidad operativa',
     desc: 'Trabajamos bajo procesos claros de coordinación, seguimiento y mejora continua del servicio.'
   }
@@ -333,7 +337,13 @@ const QuienesSomos = () => {
                   className={`ns-respaldo-card ns-animate ns-animate-delay-${idx + 1}`}
                   key={idx}
                 >
-                  <div className="ns-respaldo-seal">{item.icon}</div>
+                  <div className="ns-respaldo-seal">
+                    {item.img ? (
+                      <img src={item.img} alt={item.title} className="ns-respaldo-img" />
+                    ) : (
+                      item.icon
+                    )}
+                  </div>
                   <div className="ns-respaldo-text">
                     <h4>{item.title}</h4>
                     <p>{item.desc}</p>
