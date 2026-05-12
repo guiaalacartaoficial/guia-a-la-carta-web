@@ -392,9 +392,9 @@
 /* ============================================= */
 .ns-enfoque-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  max-width: 1100px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -402,10 +402,10 @@
   background: var(--c-surface);
   border: 1px solid var(--ns-border);
   border-radius: var(--radius-lg);
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.2rem;
   display: flex;
   flex-direction: column; /* Alineación vertical para más orden */
-  gap: 1.5rem;
+  gap: 1.2rem;
   align-items: center; /* Centrar icono */
   text-align: center; /* Centrar texto */
   transition: all 0.3s ease;
@@ -415,18 +415,8 @@
 /* Centrar tarjetas en la última fila si hay huecos */
 @media (min-width: 1025px) {
   .ns-enfoque-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     justify-content: center;
-  }
-  
-  /* Centrar los últimos 2 elementos si son 5 en total */
-  .ns-enfoque-card:nth-child(4) {
-    grid-column: 1 / 2;
-    margin-left: 50%;
-  }
-  .ns-enfoque-card:nth-child(5) {
-    grid-column: 2 / 3;
-    margin-left: 50%;
   }
 }
 
@@ -723,8 +713,8 @@
   }
 
   .ns-enfoque-grid {
-    grid-template-columns: 1fr;
-    max-width: 540px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    max-width: 900px;
     margin: 0 auto;
   }
 
