@@ -50,10 +50,10 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       
-      // 2. SOLUCIÓN FINAL: html2canvas dibuja el DOM directamente sin usar SVG (el problema de Safari)
+      // 2. SOLUCIÓN FINAL: html2canvas dibuja el DOM directamente sin usar SVG
       const canvas = await html2canvas(captureNode, {
-        scale: isMobile ? 2 : 3, // Alta calidad sin saturar memoria en móvil
-        useCORS: true,           // Fundamental para cargar las fotos de Supabase
+        scale: isMobile ? 1.5 : 2, // Escala 1.5x en móvil para evitar límite estricto de memoria RAM en Safari iOS
+        useCORS: true,
         allowTaint: false,
         backgroundColor: levelInfo.color,
         logging: false,
@@ -62,12 +62,35 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         }
       });
       
-      const dataUrl = canvas.toDataURL('image/png', 1.0);
-      download(dataUrl, `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`);
+      // 3. Convertir a Blob en lugar de DataURL (DataURL enorme causa crash en Safari)
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error("El navegador no pudo procesar la imagen final.");
+
+      const filename = `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`;
+      
+      // 4. Experiencia nativa para móviles (Compartir directo a WhatsApp, Fotos, etc.)
+      if (isMobile && navigator.canShare) {
+        const file = new File([blob], filename, { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: `Credencial ${guia.nombre}`
+            });
+            return; // Termina con éxito si se comparte
+          } catch (shareErr) {
+            console.log('El usuario canceló el compartir o hubo error:', shareErr);
+            // Si falla, continúa al fallback de descarga
+          }
+        }
+      }
+      
+      // 5. Fallback estándar (Descarga directa)
+      download(blob, filename, "image/png");
       
     } catch (err) {
       console.error('Error generating image:', err);
-      alert('Hubo un error al generar la imagen. Por favor intenta de nuevo.');
+      alert(`Hubo un error en Safari: ${err.message || 'Desconocido'}. Intenta de nuevo.`);
     } finally {
       setIsGenerating(false);
       setIsExportMode(false); // Restaura el tamaño móvil
