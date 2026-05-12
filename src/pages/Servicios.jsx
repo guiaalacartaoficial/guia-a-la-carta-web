@@ -79,7 +79,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 2. QUÉ RESOLVEMOS                          */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-light">
+      <section className="b2b-section section-respaldo-operativo">
         <div className="container">
           <div className="b2b-section-header">
             <h2>El respaldo operativo que tu empresa necesita</h2>

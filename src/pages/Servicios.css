@@ -123,53 +123,94 @@
 .bg-b2b-white { background-color: var(--c-surface); }
 
 /* ============================================= */
-/*  2. QUÉ RESOLVEMOS (PAIN POINTS)             */
-/* ============================================= */
+/* 2. QUÉ RESOLVEMOS (PAIN POINTS) - REDESIGN */
+.section-respaldo-operativo {
+  background-color: var(--c-primary-dark);
+  color: white;
+}
+
+.section-respaldo-operativo .b2b-section-header h2 {
+  color: white !important;
+}
+
+.section-respaldo-operativo .b2b-section-header p {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
 .pain-points-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 }
 
 .pain-point-card {
-  background: var(--c-surface);
-  border: 1px solid var(--b2b-border);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px; /* Más cuadradas */
+  padding: 2.5rem 1.5rem;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: flex;
-  gap: 1.25rem;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  min-height: 320px;
+  justify-content: center;
 }
 
 .pain-point-card:hover {
-  border-color: var(--c-primary);
-  box-shadow: 0 8px 24px rgba(14, 91, 76, 0.08);
-  transform: translateY(-3px);
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--c-accent);
+  box-shadow: 0 0 20px rgba(159, 192, 90, 0.2), 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
 .pain-icon {
-  background: var(--b2b-primary-light);
-  color: var(--c-primary);
-  min-width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
+  background: rgba(159, 192, 90, 0.15);
+  color: var(--c-accent);
+  min-width: 64px;
+  height: 64px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.pain-point-card:hover .pain-icon {
+  background: var(--c-accent);
+  color: var(--c-primary-dark);
+  transform: scale(1.1);
 }
 
 .pain-content h4 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: var(--c-primary-dark);
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  color: white !important;
+  font-weight: 800;
 }
 
 .pain-content p {
-  font-size: 0.95rem;
-  color: var(--b2b-text-muted);
-  line-height: 1.55;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85) !important;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .pain-points-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .pain-points-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ============================================= */
