@@ -5,15 +5,50 @@
 
 /* Header */
 .guias-header {
+  position: relative;
   background-color: var(--c-primary-dark);
   color: white;
   padding: 120px 0 5.5rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.guias-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0E5B4C 0%, #0A3B31 100%);
+  z-index: 1;
+}
+
+.guias-hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.8;
+}
+
+.guias-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(159, 192, 90, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(159, 192, 90, 0.05) 0%, transparent 70%);
+}
+
+.guias-header .container {
+  position: relative;
+  z-index: 2;
 }
 
 .guias-header h1 {
   color: white;
   margin-bottom: var(--s-3);
-  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
 }
 
 .guias-header p {

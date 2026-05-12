@@ -76,6 +76,7 @@ const Guias = () => {
   return (
     <div className="guias-page">
       <section className="guias-header">
+        <div className="guias-hero-bg"></div>
         <div className="container text-center">
           <h1>Directorio de Guías Profesionales</h1>
           <p>Encuentra al experto perfecto para tu próxima aventura. Todos nuestros profesionales cuentan con certificación y vasta experiencia.</p>
