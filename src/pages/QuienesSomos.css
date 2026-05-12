@@ -791,10 +791,25 @@
 
 .ns-cta-actions {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
   position: relative;
+}
+
+.ns-cta-final .btn-secondary,
+.ns-cta-final .btn-whatsapp {
+  background-color: #CDE0CC !important;
+  color: var(--c-primary-dark) !important;
+  font-weight: 700;
+  border: none;
+}
+
+.ns-cta-final .btn-secondary:hover,
+.ns-cta-final .btn-whatsapp:hover {
+  background-color: white !important;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 /* ============================================= */
