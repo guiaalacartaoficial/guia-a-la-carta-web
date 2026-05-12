@@ -663,13 +663,18 @@
   padding: 2.5rem 2rem;
   background: var(--c-surface);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(14, 91, 76, 0.1);
+  border: 3px solid var(--c-accent); /* Marco decorativo notable */
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+.commercial-item:hover {
+  transform: scale(1.03);
 }
 .commercial-item.accent {
-  border-color: var(--c-accent);
+  border-color: var(--b2b-gold); /* Marco dorado para la facturación operativa */
   background: white;
   color: var(--c-text-main);
 }
