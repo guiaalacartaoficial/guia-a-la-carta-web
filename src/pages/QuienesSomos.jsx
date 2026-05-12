@@ -108,7 +108,7 @@ const respaldoItems = [
   },
   {
     icon: <Star size={26} />,
-    img: '/logo-guia.png', // Nuevo Logo Guía a la Carta Circular
+    img: '/logo-guia-circular-v2.png', // Nuevo Logo Guía a la Carta Circular
     title: 'Compromiso con calidad operativa',
     desc: 'Trabajamos bajo procesos claros de coordinación, seguimiento y mejora continua del servicio.'
   }
@@ -345,7 +345,7 @@ const QuienesSomos = () => {
       {/* =========================================== */}
       {/* 7. RESPALDO Y FORMALIDAD                   */}
       {/* =========================================== */}
-      <section className="ns-section bg-ns-light" id="respaldo-formalidad">
+      <section className="ns-section bg-ns-medium" id="respaldo-formalidad">
         <div className="container">
           <div className="ns-section-header">
             <span className="ns-section-label"><ShieldCheck size={14} /> Respaldo</span>

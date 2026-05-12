@@ -152,6 +152,7 @@
 }
 
 .bg-ns-light { background-color: var(--ns-bg); }
+.bg-ns-medium { background-color: #CDE0CC; } /* Tono verde medio más alineado a la marca */
 .bg-ns-white { background-color: var(--c-surface); }
 .bg-ns-green-premium { 
   background-color: var(--c-primary-dark); 
@@ -649,8 +650,9 @@
 }
 
 .ns-respaldo-card:nth-child(4) .ns-respaldo-custom-img {
-  object-fit: cover; /* Foto de oficina llena el círculo */
-  transform: scale(1.1); /* Zoom ligero para centrar mejor */
+  object-fit: contain;
+  width: 90%; 
+  height: 90%;
 }
 
 .ns-respaldo-card-placeholder {
