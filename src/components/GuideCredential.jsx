@@ -130,13 +130,13 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   const getFlagUrl = (idioma) => {
     const flags = {
-      'Español': 'https://flagcdn.com/es.svg',
-      'Inglés': 'https://flagcdn.com/us.svg',
-      'Portugués': 'https://flagcdn.com/br.svg',
-      'Alemán': 'https://flagcdn.com/de.svg',
-      'Francés': 'https://flagcdn.com/fr.svg',
-      'Italiano': 'https://flagcdn.com/it.svg',
-      'Chile': 'https://flagcdn.com/cl.svg'
+      'Español': 'https://flagcdn.com/w80/es.png',
+      'Inglés': 'https://flagcdn.com/w80/us.png',
+      'Portugués': 'https://flagcdn.com/w80/br.png',
+      'Alemán': 'https://flagcdn.com/w80/de.png',
+      'Francés': 'https://flagcdn.com/w80/fr.png',
+      'Italiano': 'https://flagcdn.com/w80/it.png',
+      'Chile': 'https://flagcdn.com/w80/cl.png'
     };
     return flags[idioma] || '';
   };
