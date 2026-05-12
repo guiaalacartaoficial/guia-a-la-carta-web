@@ -129,34 +129,24 @@ ul, ol { list-style: none; }
 .bajada-resalte { font-size: 1.1rem; color: var(--c-primary-dark); }
 .bg-light { background-color: #F8FAF6; }
 
-/* SEPARADOR DE SECCIONES PREMIUM (SEGÚN REFERENCIA) */
+/* SEPARADOR DE SECCIONES SUTIL Y ELEGANTE */
 .section-divider {
-  height: 40px; /* Altura de la franja */
-  background: #0a2e23; /* Verde muy oscuro de fondo */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(0,0,0,0.2);
-}
-
-.section-divider::before {
-  content: '';
-  position: absolute;
+  height: 1px;
   width: 100%;
-  height: 2px;
-  background: var(--c-accent); /* Línea verde lima brillante */
-  box-shadow: 0 0 15px var(--c-accent); /* Brillo de la línea */
-  opacity: 0.8;
+  background: linear-gradient(90deg, transparent 0%, var(--c-accent) 50%, transparent 100%);
+  margin: 0;
+  opacity: 0.4;
+  position: relative;
+  z-index: 5;
 }
 
-/* Efecto de degradado lateral para que la línea se funda con los bordes */
 .section-divider::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, #0a2e23 0%, transparent 15%, transparent 85%, #0a2e23 100%);
-  z-index: 2;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: 1px;
+  box-shadow: 0 0 8px var(--c-accent);
+  opacity: 0.6;
 }
