@@ -1,4 +1,4 @@
-import { MapPin, Star, Shield, Award, CheckCircle, Clock } from 'lucide-react';
+import { MapPin, Star, Shield, Award, CheckCircle, Clock, Settings, Zap, Users } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
@@ -79,6 +79,44 @@ const Guias = () => {
         <div className="container text-center">
           <h1>Directorio de Guías Profesionales</h1>
           <p>Encuentra al experto perfecto para tu próxima aventura. Todos nuestros profesionales cuentan con certificación y vasta experiencia.</p>
+        </div>
+      </section>
+
+      <section className="estandares-section">
+        <div className="container">
+          <h2 className="estandares-title">Trabajamos con estándares claros</h2>
+          <div className="estandares-grid">
+            <div className="estandar-card">
+              <div className="estandar-icon-box">
+                <CheckCircle size={32} />
+              </div>
+              <p>Guías registrados en SERNATUR</p>
+            </div>
+            <div className="estandar-card">
+              <div className="estandar-icon-box">
+                <Star size={32} />
+              </div>
+              <p>Perfiles evaluados</p>
+            </div>
+            <div className="estandar-card">
+              <div className="estandar-icon-box">
+                <Settings size={32} />
+              </div>
+              <p>Coordinación previa al servicio</p>
+            </div>
+            <div className="estandar-card">
+              <div className="estandar-icon-box">
+                <Zap size={32} />
+              </div>
+              <p>Respuesta flexible según disponibilidad</p>
+            </div>
+            <div className="estandar-card">
+              <div className="estandar-icon-box">
+                <Users size={32} />
+              </div>
+              <p>Posibilidad de reemplazo operativo</p>
+            </div>
+          </div>
         </div>
       </section>
 
