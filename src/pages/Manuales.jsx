@@ -29,10 +29,12 @@ const Manuales = () => {
     }
   };
 
-  const filteredManuales = manuales.filter(m => 
-    m.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.destino.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredManuales = manuales.filter(m => {
+    const titleMatch = (m.titulo || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const destinationMatch = (m.destino || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const categoryMatch = (m.categoria || '').toLowerCase().includes(searchTerm.toLowerCase());
+    return titleMatch || destinationMatch || categoryMatch;
+  });
 
   return (
     <div className="manuales-page">
