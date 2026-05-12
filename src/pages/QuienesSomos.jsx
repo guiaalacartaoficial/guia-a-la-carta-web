@@ -164,12 +164,17 @@ const QuienesSomos = () => {
               <div className="ns-accent-line"></div>
               <h2>Quiénes somos</h2>
               <p>
-                Guía a la Carta es una empresa chilena enfocada en entregar soluciones operativas para empresas
-                de turismo, conectándolas con guías turísticos certificados y perfiles adecuados para cada tipo de servicio.
+                Guía a la Carta es una empresa chilena especializada en soluciones operativas para la industria del turismo. 
+                Conectamos empresas turísticas con guías certificados y personal capacitado, seleccionando el perfil adecuado 
+                según el tipo de servicio, experiencia y público objetivo.
               </p>
               <p>
-                Trabajamos para reducir la improvisación en la operación turística, facilitando el acceso a guías
-                confiables, disponibles y preparados para representar con profesionalismo cada experiencia.
+                Trabajamos para optimizar la operación turística, reduciendo la improvisación y facilitando el acceso a equipos 
+                confiables, disponibles y preparados para representar cada marca con profesionalismo, puntualidad y altos estándares de atención.
+              </p>
+              <p>
+                Nuestro enfoque combina coordinación operativa, flexibilidad y una red de profesionales del turismo, 
+                permitiendo a agencias, operadores y empresas del rubro fortalecer sus servicios y operar de manera más eficiente y escalable.
               </p>
             </div>
           </div>
