@@ -36,19 +36,12 @@ const Manuales = () => {
 
   return (
     <div className="manuales-page">
-      {/* Hero Section */}
       <section className="manuales-hero">
         <div className="container">
           <h1>Manuales de Experiencia</h1>
           <p>Documentación técnica y estándares operativos para cada uno de nuestros servicios en terreno.</p>
-        </div>
-      </section>
-
-      <div className="footer-accent-bar" />
-
-      {/* Search & Filter */}
-      <section className="manuales-filters">
-        <div className="container">
+          
+          {/* Search Bar integrated into Hero */}
           <div className="search-wrapper">
             <Search className="search-icon" size={20} />
             <input 
