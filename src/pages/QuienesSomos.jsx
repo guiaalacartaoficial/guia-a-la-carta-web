@@ -284,7 +284,7 @@ const QuienesSomos = () => {
       {/* =========================================== */}
       {/* 6. NUESTRO EQUIPO                          */}
       {/* =========================================== */}
-      <section className="ns-section bg-ns-white" id="nuestro-equipo">
+      <section className="ns-section bg-ns-green-premium" id="nuestro-equipo">
         <div className="container">
           <div className="ns-section-header">
             <span className="ns-section-label"><Users size={14} /> Equipo</span>

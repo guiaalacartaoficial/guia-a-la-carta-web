@@ -153,6 +153,19 @@
 
 .bg-ns-light { background-color: var(--ns-bg); }
 .bg-ns-white { background-color: var(--c-surface); }
+.bg-ns-green-premium { 
+  background-color: var(--c-primary-dark); 
+  background-image: radial-gradient(circle at 15% 15%, rgba(159, 192, 90, 0.08), transparent 40%),
+                    radial-gradient(circle at 85% 85%, rgba(159, 192, 90, 0.05), transparent 40%);
+  color: white;
+}
+
+.bg-ns-green-premium .ns-section-header h2 { color: white; }
+.bg-ns-green-premium .ns-section-header p { color: rgba(255, 255, 255, 0.7); }
+.bg-ns-green-premium .ns-section-label { 
+  background: rgba(159, 192, 90, 0.15); 
+  color: var(--c-accent); 
+}
 
 /* ============================================= */
 /*  2. QUIÉNES SOMOS — SPOTLIGHT                 */
@@ -471,6 +484,11 @@
   transition: all 0.35s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.bg-ns-green-premium .ns-team-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ns-team-card:hover {
