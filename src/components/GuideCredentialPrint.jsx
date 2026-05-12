@@ -49,12 +49,15 @@ const GuideCredentialPrint = ({ guia, images, levelInfo, innerRef }) => {
           flexDirection: 'column',
           justifyContent: 'center'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '5px' }}>
-            <h1 style={{ fontFamily: '"Outfit", sans-serif', fontSize: '2.8rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-              {guia.nombre} | {guia.edad} años
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '8px', marginBottom: '15px' }}>
+            <h1 style={{ fontFamily: '"Outfit", sans-serif', fontSize: '2.8rem', fontWeight: 800, margin: 0, color: '#ffffff', lineHeight: 1.1 }}>
+              {guia.nombre}
             </h1>
+            <div style={{ fontSize: '1.6rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+              {guia.edad} años
+            </div>
             {images.flagChile && (
-              <img src={images.flagChile} style={{ height: '32px', borderRadius: '4px' }} alt="Chile" />
+              <img src={images.flagChile} style={{ height: '32px', width: '48px', borderRadius: '4px', objectFit: 'cover' }} alt="Chile" />
             )}
           </div>
 

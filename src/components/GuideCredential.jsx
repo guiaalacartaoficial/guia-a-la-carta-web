@@ -176,10 +176,11 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
           </div>
           
           <div className="v2-header-info-block">
-            <div className="v2-title-row">
+            <div className="v2-title-column">
               <h1 className="v2-guide-name">
-                {guia.nombre} | {guia.edad} años 
+                {guia.nombre}
               </h1>
+              <div className="v2-guide-age">{guia.edad} años</div>
               <img src={getFlagUrl('Chile')} alt="Chile" className="v2-main-flag" crossOrigin="anonymous" />
             </div>
             
