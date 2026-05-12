@@ -186,7 +186,7 @@ const QuienesSomos = () => {
       {/* =========================================== */}
       {/* 3. CÓMO NACIMOS                            */}
       {/* =========================================== */}
-      <section className="ns-section bg-ns-light" id="como-nacimos">
+      <section className="ns-section bg-ns-dark" id="como-nacimos">
         <div className="container">
           <div className="ns-origin-card ns-animate">
             <div className="ns-origin-content">
@@ -278,7 +278,7 @@ const QuienesSomos = () => {
       {/* =========================================== */}
       {/* 5. NUESTRO ENFOQUE                         */}
       {/* =========================================== */}
-      <section className="ns-section bg-ns-light" id="nuestro-enfoque">
+      <section className="ns-section bg-ns-dark" id="nuestro-enfoque">
         <div className="container">
           <div className="ns-section-header">
             <span className="ns-section-label"><Compass size={14} /> Enfoque</span>
@@ -345,7 +345,7 @@ const QuienesSomos = () => {
       {/* =========================================== */}
       {/* 7. RESPALDO Y FORMALIDAD                   */}
       {/* =========================================== */}
-      <section className="ns-section bg-ns-medium" id="respaldo-formalidad">
+      <section className="ns-section bg-ns-dark" id="respaldo-formalidad">
         <div className="container">
           <div className="ns-section-header">
             <span className="ns-section-label"><ShieldCheck size={14} /> Respaldo</span>

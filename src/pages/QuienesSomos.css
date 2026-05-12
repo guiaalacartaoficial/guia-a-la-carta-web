@@ -154,12 +154,22 @@
 .bg-ns-light { background-color: #CDE0CC; }
 .bg-ns-medium { background-color: #CDE0CC; } 
 .bg-ns-white { background-color: #CDE0CC; }
-.bg-ns-green-premium { 
-  background-color: #CDE0CC; 
-  /* Eliminamos el gradiente oscuro para mantener la estética clara solicitada */
-  color: var(--c-primary-dark);
+
+.bg-ns-dark { 
+  background-color: var(--c-primary-dark); 
+  color: white;
+}
+.bg-ns-dark .ns-section-header h2 { color: white; }
+.bg-ns-dark .ns-section-header p { color: rgba(255, 255, 255, 0.7); }
+.bg-ns-dark .ns-section-label { 
+  background: rgba(159, 192, 90, 0.15); 
+  color: var(--c-accent); 
 }
 
+.bg-ns-green-premium { 
+  background-color: #CDE0CC; 
+  color: var(--c-primary-dark);
+}
 .bg-ns-green-premium .ns-section-header h2 { color: var(--c-primary-dark); }
 .bg-ns-green-premium .ns-section-header p { color: var(--ns-text-muted); }
 .bg-ns-green-premium .ns-section-label { 
@@ -245,6 +255,37 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.bg-ns-dark .ns-origin-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.bg-ns-dark .ns-origin-icon-block {
+  background: rgba(159, 192, 90, 0.15);
+  color: var(--c-accent);
+}
+
+.bg-ns-dark .ns-origin-text h3 {
+  color: white;
+}
+
+.bg-ns-dark .ns-origin-text p {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.bg-ns-dark .ns-origin-stat .stat-number {
+  color: var(--c-accent);
+}
+
+.bg-ns-dark .ns-origin-stat .stat-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.bg-ns-dark .ns-origin-highlight {
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 .ns-origin-card::before {
@@ -464,6 +505,31 @@
   line-height: 1.6;
 }
 
+/* Dark background overrides for enfoque cards */
+.bg-ns-dark .ns-enfoque-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bg-ns-dark .ns-enfoque-card:hover {
+  border-color: var(--c-accent);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bg-ns-dark .ns-enfoque-icon {
+  background: rgba(159, 192, 90, 0.2);
+  color: var(--c-accent);
+}
+
+.bg-ns-dark .ns-enfoque-content h4 {
+  color: white;
+}
+
+.bg-ns-dark .ns-enfoque-content p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* ============================================= */
 /*  6. NUESTRO EQUIPO                            */
 /* ============================================= */
@@ -570,6 +636,10 @@
   line-height: 1.75;
 }
 
+.bg-ns-dark .ns-respaldo-intro {
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .ns-respaldo-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -577,8 +647,8 @@
 }
 
 .ns-respaldo-card {
-  background: var(--c-primary-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: white;
+  border: 1px solid var(--ns-border);
   border-radius: var(--radius-lg);
   padding: 2rem 1.5rem;
   display: flex;
@@ -589,24 +659,36 @@
   height: 100%;
 }
 
-.ns-respaldo-card:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  transform: translateY(-8px);
+.bg-ns-dark .ns-respaldo-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bg-ns-dark .ns-respaldo-card:hover {
+  background: rgba(255, 255, 255, 0.1);
   border-color: var(--c-accent);
 }
 
 .ns-respaldo-card-top h4 {
-  color: var(--c-accent);
+  color: var(--c-primary);
   font-size: 1.15rem;
   margin-bottom: 0.75rem;
   font-weight: 800;
 }
 
+.bg-ns-dark .ns-respaldo-card-top h4 {
+  color: var(--c-accent);
+}
+
 .ns-respaldo-card-top p {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--ns-text-muted);
   font-size: 0.9rem;
   line-height: 1.5;
   margin-bottom: 2rem;
+}
+
+.bg-ns-dark .ns-respaldo-card-top p {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .ns-respaldo-card-img-box {
