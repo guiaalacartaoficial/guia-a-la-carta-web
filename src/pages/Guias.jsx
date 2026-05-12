@@ -88,7 +88,7 @@ const Guias = () => {
           <p className="bajada" style={{marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto', color: 'var(--c-text-light)', fontSize: '1.1rem'}}>Cada servicio requiere un nivel distinto de experiencia, autonomía y representación.</p>
           
           <div className="niveles-cards-grid">
-            <div className="nivel-detail-card">
+            <div className="nivel-detail-card junior-card">
               <div className="nivel-head">
                 <h3>Guía Junior</h3>
               </div>
@@ -109,7 +109,7 @@ const Guias = () => {
               </div>
             </div>
             
-            <div className="nivel-detail-card destacado">
+            <div className="nivel-detail-card destacado full-card">
               <div className="destacado-ribbon">MÁS SOLICITADO</div>
               <div className="nivel-head">
                 <h3>Guía Full</h3>
@@ -131,7 +131,7 @@ const Guias = () => {
               </div>
             </div>
             
-            <div className="nivel-detail-card">
+            <div className="nivel-detail-card senior-card">
               <div className="nivel-head">
                 <h3>Guía Senior</h3>
               </div>

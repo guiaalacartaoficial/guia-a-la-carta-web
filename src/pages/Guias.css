@@ -178,19 +178,22 @@
   transform: translateY(-4px);
 }
 
-.nivel-detail-card:first-child {
-  border: 2px solid var(--c-primary);
+.nivel-detail-card.junior-card {
+  border: 2px solid var(--c-primary) !important;
 }
 
 .nivel-detail-card.destacado {
-  border: 2px solid var(--c-accent);
   transform: scale(1.05);
   z-index: 2;
   box-shadow: var(--shadow-lg);
 }
 
-.nivel-detail-card:last-child {
-  border: 2px solid #D4AF37; /* Marco Dorado Senior */
+.nivel-detail-card.full-card {
+  border: 2px solid var(--c-accent) !important;
+}
+
+.nivel-detail-card.senior-card {
+  border: 2px solid #D4AF37 !important; /* Marco Dorado Senior */
 }
 
 .destacado-ribbon {
@@ -268,9 +271,9 @@
   color: var(--c-text-main);
 }
 
-.nivel-detail-card:first-child .ideal-box li svg { color: var(--c-primary); }
-.nivel-detail-card.destacado .ideal-box li svg { color: var(--c-accent); }
-.nivel-detail-card:last-child .ideal-box li svg { color: #D4AF37; }
+.nivel-detail-card.junior-card .ideal-box li svg { color: var(--c-primary); }
+.nivel-detail-card.full-card .ideal-box li svg { color: var(--c-accent); }
+.nivel-detail-card.senior-card .ideal-box li svg { color: #D4AF37; }
 
 .precio-box {
   border-top: 1px solid rgba(0,0,0,0.06);
