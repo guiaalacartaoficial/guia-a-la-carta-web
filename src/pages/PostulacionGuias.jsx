@@ -27,6 +27,7 @@ const PostulacionGuias = () => {
     nacionalidad: '',
     edad: '',
     ciudad_residencia: '',
+    region: '',
     ciudad_trabajo: '',
     localidades_extra: '',
     biografia: '',
@@ -293,6 +294,34 @@ const PostulacionGuias = () => {
                     <input type="text" name="ciudad_residencia" className="form-control" placeholder="Ej: Santiago" onChange={handleInputChange} />
                   </div>
                 </div>
+                <div className="form-group">
+                  <label className="form-label">Región de Residencia (Para el Mapa Nacional)</label>
+                  <div className="input-icon-wrapper">
+                    <MapPin className="input-icon" size={18} />
+                    <select name="region" className="form-select" onChange={handleInputChange} required>
+                      <option value="">Selecciona una región</option>
+                      <option value="Arica y Parinacota">Arica y Parinacota</option>
+                      <option value="Tarapacá">Tarapacá</option>
+                      <option value="Antofagasta">Antofagasta</option>
+                      <option value="Atacama">Atacama</option>
+                      <option value="Coquimbo">Coquimbo</option>
+                      <option value="Valparaíso">Valparaíso</option>
+                      <option value="Metropolitana">Metropolitana</option>
+                      <option value="O'Higgins">O'Higgins</option>
+                      <option value="Maule">Maule</option>
+                      <option value="Ñuble">Ñuble</option>
+                      <option value="Biobío">Biobío</option>
+                      <option value="Araucanía">Araucanía</option>
+                      <option value="Los Ríos">Los Ríos</option>
+                      <option value="Los Lagos">Los Lagos</option>
+                      <option value="Aysén">Aysén</option>
+                      <option value="Magallanes">Magallanes</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-grid">
                 <div className="form-group">
                   <label className="form-label">Ciudad Central de Trabajo</label>
                   <div className="input-icon-wrapper">

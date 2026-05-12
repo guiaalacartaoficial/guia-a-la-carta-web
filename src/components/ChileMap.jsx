@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { supabase } from '../services/supabase';
 import 'leaflet/dist/leaflet.css';
 import './ChileMap.css';
 
@@ -33,7 +34,40 @@ const regionesChile = [
 ];
 
 const ChileMap = () => {
+  const [regiones, setRegiones] = useState(regionesChile);
   const chileCenter = [-35.6751, -71.543]; // Center of Chile
+
+  useEffect(() => {
+    const fetchRealData = async () => {
+      try {
+        // Obtenemos todos los guías y estudiantes aprobados
+        const { data: guias, error: errG } = await supabase.from('postulaciones_guias').select('region').eq('estado', 'aprobado');
+        const { data: ests, error: errE } = await supabase.from('postulaciones_estudiantes').select('region').eq('estado', 'aprobado');
+
+        if (errG || errE) throw errG || errE;
+
+        const allRecords = [...(guias || []), ...(ests || [])];
+        
+        // Contamos por región
+        const counts = allRecords.reduce((acc, curr) => {
+          if (curr.region) {
+            acc[curr.region] = (acc[curr.region] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+        // Actualizamos el estado con los datos reales
+        setRegiones(prev => prev.map(r => ({
+          ...r,
+          guias: counts[r.nombre] || 0
+        })));
+      } catch (error) {
+        console.error("Error cargando datos del mapa:", error);
+      }
+    };
+
+    fetchRealData();
+  }, []);
   
   return (
     <section className="chile-map-section">
@@ -56,7 +90,7 @@ const ChileMap = () => {
               url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
             />
             
-            {regionesChile.map((region) => (
+            {regiones.map((region) => (
               <Marker 
                 key={region.id} 
                 position={[region.lat, region.lng]} 

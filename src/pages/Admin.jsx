@@ -413,6 +413,27 @@ const AdminDashboard = () => {
                                   <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Ciudad Residencia</label><input name="ciudad_residencia" value={editData.ciudad_residencia} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Región (Para el Mapa)</label>
+                                    <select name="region" value={editData.region || ''} onChange={handleEditChange} className="form-control">
+                                      <option value="">Selecciona una región</option>
+                                      <option value="Arica y Parinacota">Arica y Parinacota</option>
+                                      <option value="Tarapacá">Tarapacá</option>
+                                      <option value="Antofagasta">Antofagasta</option>
+                                      <option value="Atacama">Atacama</option>
+                                      <option value="Coquimbo">Coquimbo</option>
+                                      <option value="Valparaíso">Valparaíso</option>
+                                      <option value="Metropolitana">Metropolitana</option>
+                                      <option value="O'Higgins">O'Higgins</option>
+                                      <option value="Maule">Maule</option>
+                                      <option value="Ñuble">Ñuble</option>
+                                      <option value="Biobío">Biobío</option>
+                                      <option value="Araucanía">Araucanía</option>
+                                      <option value="Los Ríos">Los Ríos</option>
+                                      <option value="Los Lagos">Los Lagos</option>
+                                      <option value="Aysén">Aysén</option>
+                                      <option value="Magallanes">Magallanes</option>
+                                    </select>
+                                  </div>
                                   <div className="form-group"><label>Ciudad Trabajo</label><input name="ciudad_trabajo" value={editData.ciudad_trabajo} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group">
                                     <label>Estado del Perfil</label>
@@ -525,6 +546,27 @@ const AdminDashboard = () => {
                                 <div className="edit-form-grid">
                                   <div className="form-group"><label>Nombres</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Apellidos</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Región (Para el Mapa)</label>
+                                    <select name="region" value={editData.region || ''} onChange={handleEditChange} className="form-control">
+                                      <option value="">Selecciona una región</option>
+                                      <option value="Arica y Parinacota">Arica y Parinacota</option>
+                                      <option value="Tarapacá">Tarapacá</option>
+                                      <option value="Antofagasta">Antofagasta</option>
+                                      <option value="Atacama">Atacama</option>
+                                      <option value="Coquimbo">Coquimbo</option>
+                                      <option value="Valparaíso">Valparaíso</option>
+                                      <option value="Metropolitana">Metropolitana</option>
+                                      <option value="O'Higgins">O'Higgins</option>
+                                      <option value="Maule">Maule</option>
+                                      <option value="Ñuble">Ñuble</option>
+                                      <option value="Biobío">Biobío</option>
+                                      <option value="Araucanía">Araucanía</option>
+                                      <option value="Los Ríos">Los Ríos</option>
+                                      <option value="Los Lagos">Los Lagos</option>
+                                      <option value="Aysén">Aysén</option>
+                                      <option value="Magallanes">Magallanes</option>
+                                    </select>
+                                  </div>
                                   <div className="edit-actions">
                                     <button onClick={() => handleUpdateRecord('postulaciones_estudiantes', est.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
                                     <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
