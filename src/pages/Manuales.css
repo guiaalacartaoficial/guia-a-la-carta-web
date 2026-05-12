@@ -1,21 +1,23 @@
 .manuales-page {
-  padding-top: 80px; /* Espacio para el navbar */
   min-height: 100vh;
   background-color: #f8fafc;
 }
 
 /* HERO SECTION */
 .manuales-hero {
-  background: linear-gradient(135deg, var(--c-primary-dark), #1e293b);
+  background: linear-gradient(135deg, #0e2a24, #1e293b); /* Verde ultra oscuro a azul noche */
   color: white;
-  padding: 5rem 0;
+  padding: 8rem 0 5rem; /* Padding superior para compensar el navbar */
   text-align: center;
 }
 
 .manuales-hero h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  margin-bottom: 1rem;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  color: #ffffff !important;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  letter-spacing: -1px;
 }
 
 .manuales-hero p {
