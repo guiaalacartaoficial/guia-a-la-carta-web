@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { X, Check, MessageSquare, Mail, Download, Phone, Loader2, Star, Award, ShieldCheck } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import { toBlob } from 'html-to-image';
 import download from 'downloadjs';
 import './GuideCredential.css';
 
@@ -45,30 +45,30 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     setIsExportMode(true); // Activa el layout de escritorio
     
     try {
-      // 1. Pequeña pausa para que React aplique las clases y el navegador dibuje
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // 1. Pausa para que React aplique clases y el navegador renderice en el viewport activo
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       
-      // 2. SOLUCIÓN FINAL: html2canvas dibuja el DOM directamente sin usar SVG
-      const canvas = await html2canvas(captureNode, {
-        scale: isMobile ? 1.5 : 2, // Escala 1.5x en móvil para evitar límite estricto de memoria RAM en Safari iOS
+      // 2. Usar html-to-image sobre el nodo VISIBLE. 
+      // Safari bloqueaba el renderizado en nodos ocultos, pero funciona perfecto si el nodo está en pantalla.
+      const blob = await toBlob(captureNode, {
+        cacheBust: true,
+        pixelRatio: isMobile ? 1.5 : 3, // Límite de memoria en iOS
         useCORS: true,
-        allowTaint: false,
         backgroundColor: levelInfo.color,
-        logging: false,
-        ignoreElements: (node) => {
-          return node.classList && node.classList.contains('no-export');
+        style: { transform: 'none' },
+        filter: (node) => {
+          if (node.classList && node.classList.contains('no-export')) return false;
+          return true;
         }
       });
       
-      // 3. Convertir a Blob en lugar de DataURL (DataURL enorme causa crash en Safari)
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      if (!blob) throw new Error("El navegador no pudo procesar la imagen final.");
+      if (!blob) throw new Error("El navegador no pudo procesar la imagen.");
 
       const filename = `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`;
       
-      // 4. Experiencia nativa para móviles (Compartir directo a WhatsApp, Fotos, etc.)
+      // 3. Compartir nativo para iOS/Móvil
       if (isMobile && navigator.canShare) {
         const file = new File([blob], filename, { type: 'image/png' });
         if (navigator.canShare({ files: [file] })) {
@@ -77,23 +77,22 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
               files: [file],
               title: `Credencial ${guia.nombre}`
             });
-            return; // Termina con éxito si se comparte
+            return;
           } catch (shareErr) {
-            console.log('El usuario canceló el compartir o hubo error:', shareErr);
-            // Si falla, continúa al fallback de descarga
+            console.log('El usuario canceló el compartir:', shareErr);
           }
         }
       }
       
-      // 5. Fallback estándar (Descarga directa)
+      // 4. Fallback descarga tradicional
       download(blob, filename, "image/png");
       
     } catch (err) {
       console.error('Error generating image:', err);
-      alert(`Hubo un error en Safari: ${err.message || 'Desconocido'}. Intenta de nuevo.`);
+      alert(`Hubo un error en la captura: ${err.message || 'Error Desconocido'}. Intenta nuevamente.`);
     } finally {
       setIsGenerating(false);
-      setIsExportMode(false); // Restaura el tamaño móvil
+      setIsExportMode(false);
     }
   };
 
