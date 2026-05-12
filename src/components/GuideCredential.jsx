@@ -1,13 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { X, Check, MessageSquare, Mail, Download, Phone, Loader2, Star, Award, ShieldCheck } from 'lucide-react';
-import { toBlob } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import download from 'downloadjs';
+import GuideCredentialPrint from './GuideCredentialPrint';
 import './GuideCredential.css';
 
 const GuideCredential = ({ guia, onClose, isExample = false }) => {
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isExportMode, setIsExportMode] = useState(false);
   
   // Referencia para la exportación perfecta en alta resolución
   const exportRef = useRef(null);
@@ -37,62 +37,96 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     document.body.removeChild(link);
   };
 
+  const [exportData, setExportData] = useState(null);
+
+  // Función para pre-cargar cualquier imagen como Base64
+  const fetchToBase64 = async (url) => {
+    if (!url) return null;
+    try {
+      const fetchUrl = new URL(url, window.location.href);
+      fetchUrl.searchParams.append('cb', new Date().getTime());
+      const response = await fetch(fetchUrl.toString(), { mode: 'cors', cache: 'no-cache' });
+      if (!response.ok) return null;
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+    } catch {
+      return null;
+    }
+  };
+
   const handleGenerate = async () => {
-    const captureNode = document.getElementById('credential-to-view');
-    if (!captureNode) return;
-    
     setIsGenerating(true);
-    setIsExportMode(true); // Activa el layout de escritorio
     
     try {
-      // 1. Pausa para que React aplique clases y el navegador renderice en el viewport activo
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // 1. PRE-CARGA ABSOLUTA (Cero Red durante la captura)
+      const images = {
+        logo: await fetchToBase64('/logo.png'),
+        verified: await fetchToBase64('/sello-verificado.png'),
+        flagChile: await fetchToBase64(getFlagUrl('Chile')),
+        iconVoz: await fetchToBase64('/icono-voz.png'),
+        profile: await fetchToBase64(guia.imagen),
+        sernatur: await fetchToBase64('/sernatur.png'),
+        wfr: await fetchToBase64('/wfr.png'),
+        wafa: await fetchToBase64('/wafa.png')
+      };
+      
+      if (guia.idiomas) {
+        for (const lang of guia.idiomas) {
+          images[`flag_${lang}`] = await fetchToBase64(getFlagUrl(lang));
+        }
+      }
+
+      setExportData(images);
+
+      // 2. Dar tiempo a React para inyectar el componente oculto con las imágenes cargadas
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const captureNode = document.getElementById('credential-print-node');
+      if (!captureNode) throw new Error("No se encontró la plantilla de exportación");
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       
-      // 2. Usar html-to-image sobre el nodo VISIBLE. 
-      // Safari bloqueaba el renderizado en nodos ocultos, pero funciona perfecto si el nodo está en pantalla.
-      const blob = await toBlob(captureNode, {
-        cacheBust: true,
-        pixelRatio: isMobile ? 1.5 : 3, // Límite de memoria en iOS
+      // 3. Captura Limpia (html2canvas ya no se bloquea porque las imágenes son texto)
+      const canvas = await html2canvas(captureNode, {
+        scale: isMobile ? 1.5 : 2, 
         useCORS: true,
+        allowTaint: false,
         backgroundColor: levelInfo.color,
-        style: { transform: 'none' },
-        filter: (node) => {
-          if (node.classList && node.classList.contains('no-export')) return false;
-          return true;
-        }
+        logging: false
       });
       
-      if (!blob) throw new Error("El navegador no pudo procesar la imagen.");
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error("Fallo en la creación final del archivo.");
 
       const filename = `Credencial_${guia.nombre.replace(/ /g, '_')}_GaC.png`;
       
-      // 3. Compartir nativo para iOS/Móvil
+      // 4. Compartir Nativo (iOS/Móviles)
       if (isMobile && navigator.canShare) {
         const file = new File([blob], filename, { type: 'image/png' });
         if (navigator.canShare({ files: [file] })) {
           try {
-            await navigator.share({
-              files: [file],
-              title: `Credencial ${guia.nombre}`
-            });
+            await navigator.share({ files: [file], title: `Credencial ${guia.nombre}` });
             return;
           } catch (shareErr) {
-            console.log('El usuario canceló el compartir:', shareErr);
+            console.log('Cancelado:', shareErr);
           }
         }
       }
       
-      // 4. Fallback descarga tradicional
+      // Fallback
       download(blob, filename, "image/png");
       
     } catch (err) {
-      console.error('Error generating image:', err);
-      alert(`Hubo un error en la captura: ${err.message || 'Error Desconocido'}. Intenta nuevamente.`);
+      console.error(err);
+      alert(`Error en Safari: ${err.message || 'Desconocido'}`);
     } finally {
       setIsGenerating(false);
-      setIsExportMode(false);
+      setExportData(null);
     }
   };
 
@@ -119,13 +153,12 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   const levelInfo = getLevelInfo(guia.nivel);
 
-  // Subcomponente de la tarjeta
-  const CredentialCard = ({ isExport = false }) => {
+  // Subcomponente de la tarjeta (La vista interactiva que SÍ ve el usuario)
+  const CredentialCard = () => {
     return (
       <div 
-        id="credential-to-view"
-        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${isExport ? 'is-export' : ''} ${levelInfo.colorClass}`} 
-        onClick={(e) => (!isExample && !isExport) && e.stopPropagation()}
+        className={`credential-card-v2 ${isExample ? 'is-example' : ''} ${levelInfo.colorClass}`} 
+        onClick={(e) => (!isExample) && e.stopPropagation()}
       >
         {(!isExample) && (
           <button className="credential-close-v2 no-export" onClick={onClose}>
@@ -237,9 +270,9 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
           </div>
         </div>
 
-        {/* ACTIONS (solo en visualización real) */}
-        {(!isExample && !isExport) && (
-          <div className="v2-credential-actions no-export">
+        {/* ACTIONS */}
+        {(!isExample) && (
+          <div className="v2-credential-actions">
             <div className="v2-main-actions">
               <div className="v2-request-container">
                 <button 
@@ -279,26 +312,35 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
   return (
     <>
-      {/* VISTA PRINCIPAL (Se adapta para la exportación temporalmente) */}
+      {/* VISTA PRINCIPAL */}
       {isExample ? (
         <CredentialCard />
       ) : (
         <div className="credential-overlay" onClick={onClose}>
           
-          {/* Pantalla de carga que cubre la deformación temporal en móviles */}
-          {isExportMode && (
+          {/* Pantalla de carga superpuesta mientras se descargan recursos en segundo plano */}
+          {exportData === null && isGenerating && (
             <div style={{
               position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-              backgroundColor: '#1c4c44', zIndex: 99999, display: 'flex', 
+              backgroundColor: 'rgba(28, 76, 68, 0.95)', zIndex: 99999, display: 'flex', 
               flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#fff'
             }}>
               <Loader2 className="animate-spin" size={60} color="#9FC05A" />
-              <h2 style={{marginTop: '25px', fontFamily: 'var(--font-heading)', color: '#9FC05A'}}>Generando Credencial HD...</h2>
-              <p style={{marginTop: '10px', fontSize: '1.1rem', opacity: 0.8}}>Por favor espera, optimizando imágenes para Safari.</p>
+              <h2 style={{marginTop: '25px', fontFamily: 'var(--font-heading)', color: '#9FC05A'}}>Generando Credencial...</h2>
+              <p style={{marginTop: '10px', fontSize: '1.1rem', opacity: 0.8}}>Procesando diseño gráfico nativo</p>
             </div>
           )}
 
-          <CredentialCard isExport={isExportMode} />
+          <CredentialCard />
+        </div>
+      )}
+
+      {/* COMPONENTE MAESTRO DE IMPRESIÓN (Oculto en flujo absoluto) */}
+      {exportData && (
+        <div style={{ position: 'absolute', top: '-15000px', left: '-15000px' }}>
+          <div id="credential-print-node">
+            <GuideCredentialPrint guia={guia} images={exportData} levelInfo={levelInfo} />
+          </div>
         </div>
       )}
     </>
