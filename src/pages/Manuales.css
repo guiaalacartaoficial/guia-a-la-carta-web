@@ -1,6 +1,12 @@
 .manuales-page {
   min-height: 100vh;
-  background-color: #CDE0CC;
+  background-color: #CDE0CC !important;
+}
+
+.manuales-grid-section {
+  background-color: #CDE0CC !important;
+  padding-top: 4rem;
+  padding-bottom: 5rem;
 }
 
 /* HERO SECTION */
