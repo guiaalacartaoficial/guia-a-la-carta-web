@@ -666,8 +666,15 @@
   align-items: center;
 }
 .commercial-item.accent {
-  border-color: var(--c-primary);
-  background: var(--b2b-primary-light);
+  border-color: var(--c-primary-dark);
+  background: var(--c-primary-dark);
+  color: white;
+}
+
+.commercial-item.accent h4, 
+.commercial-item.accent p,
+.commercial-item.accent svg {
+  color: white !important;
 }
 .commercial-item svg {
   margin-bottom: 1rem;
