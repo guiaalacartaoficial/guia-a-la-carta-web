@@ -401,7 +401,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 6. COBERTURA OPERATIVA                     */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-light">
+      <section className="b2b-section section-cobertura-operativa">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Red Operativa en Chile</h2>
