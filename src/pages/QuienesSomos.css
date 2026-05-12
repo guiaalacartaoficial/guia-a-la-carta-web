@@ -591,22 +591,32 @@
 }
 
 .ns-respaldo-card-img-box {
-  width: 100%;
-  height: 120px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px dashed rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
+  width: 90px;
+  height: 90px;
+  background: white; /* Fondo blanco para resaltar el logo circular */
+  border: 3px solid var(--c-accent); /* Marco verde claro */
+  border-radius: 50%; /* Marco redondeado total */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: auto;
+  margin: 0 auto;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .ns-respaldo-custom-img {
-  max-width: 85%;
-  max-height: 85%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Para que la foto de oficina llene el circulo */
+}
+
+/* Si es un logo con fondo transparente como el de Sernatur o Marca Chile, usar contain */
+.ns-respaldo-card:nth-child(1) .ns-respaldo-custom-img,
+.ns-respaldo-card:nth-child(2) .ns-respaldo-custom-img,
+.ns-respaldo-card:nth-child(3) .ns-respaldo-custom-img {
   object-fit: contain;
+  width: 80%;
+  height: 80%;
 }
 
 .ns-respaldo-card-placeholder {

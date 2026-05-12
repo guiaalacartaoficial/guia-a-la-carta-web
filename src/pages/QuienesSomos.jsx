@@ -102,13 +102,13 @@ const respaldoItems = [
   },
   {
     icon: <BadgeCheck size={26} />,
-    img: null, // Espacio para logo futuro
+    img: '/sello-verificado.png', // Logo de Verificado
     title: 'Red de guías con validación documental',
     desc: 'Cada guía de nuestra red pasa por un proceso de verificación de certificaciones, antecedentes y competencias.'
   },
   {
     icon: <Star size={26} />,
-    img: null, // Espacio para logo futuro
+    img: '/AdobeExpressPhotos_e6381cd102714e09862dca262a563dbb_CopyEdited.png', // Foto de Calidad Operativa
     title: 'Compromiso con calidad operativa',
     desc: 'Trabajamos bajo procesos claros de coordinación, seguimiento y mejora continua del servicio.'
   }
