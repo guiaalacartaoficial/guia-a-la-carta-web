@@ -124,7 +124,7 @@ const Relatos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       <section className="relatos-grid-section">
         <div className="container">
@@ -172,7 +172,7 @@ const Relatos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       <section className="relatos-cta">
         <div className="container text-center">
@@ -184,7 +184,7 @@ const Relatos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN COLABORADOR */}
       <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#fff', borderBottom: '1px solid #eaeaea' }}>
@@ -205,7 +205,7 @@ const Relatos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* MODAL FORMULARIO DE RELATO */}
       {isFormOpen && (

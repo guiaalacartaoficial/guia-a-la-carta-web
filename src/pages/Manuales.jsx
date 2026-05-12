@@ -44,7 +44,7 @@ const Manuales = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* Search & Filter */}
       <section className="manuales-filters">
@@ -61,7 +61,7 @@ const Manuales = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* Content Grid */}
       <section className="manuales-grid-section">

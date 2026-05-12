@@ -63,7 +63,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 2: QUÉ PROBLEMA RESOLVEMOS */}
       <section className="section-problema">
@@ -125,7 +125,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 3: NUESTRA SOLUCIÓN */}
       <section className="section-solucion">
@@ -171,7 +171,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 4: SERVICIOS DESTACADOS */}
       <section className="section-servicios">
@@ -213,7 +213,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 6: NIVELES DE GUÍA */}
       <section className="section-niveles-home">
@@ -278,7 +278,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 7: COBERTURA */}
       <section className="section-cobertura">
@@ -298,7 +298,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 8: CONFIANZA / RESPALDO */}
       <section className="section-confianza">
@@ -330,12 +330,12 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: MAPA INTERACTIVO */}
       <ChileMap />
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (COLLAGE SLIDER) */}
       <section className="section-gallery bg-b2b-light">

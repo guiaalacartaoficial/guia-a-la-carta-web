@@ -11,7 +11,7 @@ const Contacto = () => {
         </p>
       </div>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       <div className="container contacto-grid">
         

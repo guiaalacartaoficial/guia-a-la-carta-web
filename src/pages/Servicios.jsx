@@ -75,7 +75,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 2. QUÉ RESOLVEMOS                          */}
       {/* =========================================== */}
@@ -118,7 +118,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 3. SERVICIOS PRINCIPALES                   */}
       {/* =========================================== */}
@@ -255,7 +255,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 4. PERFILES DE GUÍA                        */}
       {/* =========================================== */}
@@ -340,7 +340,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 5. CÓMO FUNCIONA                           */}
       {/* =========================================== */}
@@ -397,7 +397,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 6. COBERTURA OPERATIVA                     */}
       {/* =========================================== */}
@@ -447,7 +447,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 7. MODALIDAD COMERCIAL                     */}
       {/* =========================================== */}
@@ -471,7 +471,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 8. ¿POR QUÉ TRABAJAR CON NOSOTROS?        */}
       {/* =========================================== */}
@@ -516,7 +516,7 @@ const Servicios = () => {
           </div>
         </div>
       </section>
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
       {/* =========================================== */}
       {/* 9. FAQ                                     */}
       {/* =========================================== */}

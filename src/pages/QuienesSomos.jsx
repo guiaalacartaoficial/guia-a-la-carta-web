@@ -146,7 +146,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 2. QUIÉNES SOMOS                           */}
@@ -176,7 +176,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 3. CÓMO NACIMOS                            */}
@@ -219,7 +219,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 4. MISIÓN Y VISIÓN                         */}
@@ -257,7 +257,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 5. NUESTRO ENFOQUE                         */}
@@ -289,7 +289,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 6. NUESTRO EQUIPO                          */}
@@ -324,7 +324,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 7. RESPALDO Y FORMALIDAD                   */}
@@ -371,7 +371,7 @@ const QuienesSomos = () => {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <div className="footer-accent-bar" />
 
       {/* =========================================== */}
       {/* 8. CTA FINAL                               */}
