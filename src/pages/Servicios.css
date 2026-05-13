@@ -630,8 +630,16 @@
 }
 
 .profile-tier-card.tier-junior {
-  background-color: #CDE0CC !important;
-  border: 4px solid var(--c-primary-dark) !important;
+  background-color: var(--c-primary-dark) !important;
+  border: 4px solid var(--c-accent) !important;
+}
+
+.profile-tier-card.tier-junior h4,
+.profile-tier-card.tier-junior p,
+.profile-tier-card.tier-junior li,
+.profile-tier-card.tier-junior .tier-price,
+.profile-tier-card.tier-junior .tier-price span {
+  color: white !important;
 }
 
 .profile-tier-card.tier-full {
@@ -658,8 +666,16 @@
 }
 
 .profile-tier-card.tier-senior {
-  background-color: white !important;
-  border: 4px solid var(--b2b-gold) !important;
+  background-color: var(--b2b-gold) !important;
+  border: 4px solid white !important;
+}
+
+.profile-tier-card.tier-senior h4,
+.profile-tier-card.tier-senior p,
+.profile-tier-card.tier-senior li,
+.profile-tier-card.tier-senior .tier-price,
+.profile-tier-card.tier-senior .tier-price span {
+  color: var(--c-primary-dark) !important;
 }
 
 .profile-tier-badge {
