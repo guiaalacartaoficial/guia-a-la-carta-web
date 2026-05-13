@@ -51,9 +51,9 @@ const teamMembers = [
   },
   {
     name: 'Camilo',
-    role: 'Administrador de Equipo de Guías',
-    photo: '/team-camilo.png',
-    description: 'Responsable de la gestión, organización y seguimiento del equipo de guías, asegurando orden operativo y alineación con los estándares del servicio.'
+    role: 'Jefe de Operaciones',
+    photo: '/foto-perfil-camilo.PNG',
+    description: 'Responsable de coordinar y supervisar toda la logística de nuestros tours, asegurando que cada experiencia se desarrolle de manera eficiente, segura y con altos estándares de calidad. Gestiona al equipo de guías y supervisión de servicios.'
   }
 ];
 
