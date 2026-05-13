@@ -260,33 +260,35 @@
   display: none;
 }
 
-/* Estilos para el CTA Final - Fondo Oscuro + Contenido Lima */
+/* Estilos para el CTA Final - Fondo Oscuro + Contenido Lima/Blanco */
 .b2b-cta-final {
   background: var(--c-primary-dark) !important;
-  color: #BEF264 !important;
-  border: 1px solid rgba(190, 242, 100, 0.2);
+  color: white !important; /* Texto base en blanco para máxima legibilidad */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 .b2b-cta-final h2 {
-  color: #BEF264 !important;
+  color: #BEF264 !important; /* Título en Verde Lima para destacar */
 }
 
 .b2b-cta-final p {
-  color: rgba(190, 242, 100, 0.9) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .b2b-cta-final .btn-secondary,
 .b2b-cta-final .btn-whatsapp {
-  background-color: #BEF264 !important;
+  background-color: #BEF264 !important; /* Botones en Verde Lima */
   color: var(--c-primary-dark) !important;
   font-weight: 700 !important;
+  border: none !important;
 }
 
 .b2b-cta-final .btn-secondary:hover,
 .b2b-cta-final .btn-whatsapp:hover {
   background-color: #A3E635 !important;
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(163, 230, 53, 0.3) !important;
 }
 
 .b2b-theme-dark {
