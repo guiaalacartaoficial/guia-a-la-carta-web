@@ -243,17 +243,3 @@ const Guias = () => {
               <p style={{ color: '#64748b' }}>Aún no hay estudiantes certificados en la red Junior.</p>
             </div>
           )}
-        </div>
-      </section>
-      {/* MODAL DE CREDENCIAL */}
-      {selectedGuide && (
-        <GuideCredential
-          guia={selectedGuide}
-          onClose={() => setSelectedGuide(null)}
-        />
-      )}
-    </div>
-  );
-};
-
-export default Guias;
