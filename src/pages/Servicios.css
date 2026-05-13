@@ -942,7 +942,7 @@
 }
 .commercial-item svg {
   margin-bottom: 1rem;
-  color: var(--c-primary);
+  color: #BEF264; /* Verde Lima para alto contraste */
 }
 .commercial-item h4 {
   margin-bottom: 1rem;
