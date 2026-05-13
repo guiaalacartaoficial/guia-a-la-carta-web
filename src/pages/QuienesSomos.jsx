@@ -46,8 +46,8 @@ const teamMembers = [
   {
     name: 'Gabriel',
     role: 'Co-Fundador / Plataforma y Área Legal',
-    photo: '/team-gabriel.png',
-    description: 'Encargado del desarrollo de la estructura digital del proyecto y del ordenamiento legal necesario para su crecimiento.'
+    photo: '/foto-perfil-gabriel.jpeg',
+    description: 'Encargado de la estructura operativa, tecnológica y legal de Guía a la Carta, asegurando orden interno, escalabilidad y funcionamiento eficiente de los procesos y sistemas de la empresa.'
   },
   {
     name: 'Camilo',
