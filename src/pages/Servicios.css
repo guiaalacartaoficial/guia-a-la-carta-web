@@ -260,19 +260,30 @@
   display: none;
 }
 
-/* Forzar color de los dos botones finales a verde oscuro corporativo */
+/* Sección CTA con fondo blanco puro */
+.section-cta-white {
+  background-color: white !important;
+  background-image: none !important;
+}
+
+.section-cta-white h2 {
+  color: #8EAD52 !important; /* Verde Lima legible para el texto */
+}
+
+/* Forzar color de los dos botones finales a verde lima para contraste sobre blanco */
 .b2b-theme-light .b2b-cta-actions .btn-secondary,
 .b2b-theme-light .b2b-cta-actions .btn-whatsapp {
-  background-color: var(--c-primary-dark) !important;
-  color: white !important;
+  background-color: #BEF264 !important; /* Verde Lima vibrante */
+  color: var(--c-primary-dark) !important;
   border: none !important;
+  font-weight: 700 !important;
 }
 
 .b2b-theme-light .b2b-cta-actions .btn-secondary:hover,
 .b2b-theme-light .b2b-cta-actions .btn-whatsapp:hover {
-  background-color: var(--c-primary) !important;
+  background-color: #A3E635 !important; /* Un poco más oscuro al hover */
   transform: translateY(-2px);
-  color: white !important;
+  box-shadow: 0 5px 15px rgba(163, 230, 53, 0.3) !important;
 }
 
 .b2b-theme-dark {
