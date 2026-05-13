@@ -666,7 +666,7 @@
 }
 
 .profile-tier-card.tier-senior {
-  background-color: #CDE0CC !important;
+  background-color: var(--c-primary-dark) !important;
   border: 4px solid var(--b2b-gold) !important;
 }
 
