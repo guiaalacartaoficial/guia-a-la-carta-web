@@ -39,9 +39,9 @@ const useScrollAnimation = () => {
 const teamMembers = [
   {
     name: 'Benjamín Meneses',
-    role: 'Fundador / Coordinación General',
-    photo: '/team-benjamin.png',
-    description: 'Responsable de la visión del proyecto, la coordinación general y el desarrollo operativo y comercial de Guía a la Carta.'
+    role: 'Fundador & CEO / Director General y Estratégico',
+    photo: '/foto-perfil-benjamin.jpeg',
+    description: 'Fundador y líder de Guía a la Carta, responsable de la visión estratégica, desarrollo comercial, expansión y posicionamiento de la empresa, impulsando un modelo turístico escalable, profesional y orientado a experiencias de alto valor.'
   },
   {
     name: 'Gabriel',
