@@ -122,6 +122,218 @@
 .bg-b2b-white { background-color: var(--c-surface); }
 
 /* ============================================= */
+/* THEME OVERRIDES (Intercalado de secciones)    */
+/* ============================================= */
+.b2b-theme-light {
+  background-color: #CDE0CC !important;
+  background-image: none !important;
+}
+.b2b-theme-light.section-respaldo-operativo .b2b-section-header h2,
+.b2b-theme-light.section-niveles-especializacion .b2b-section-header h2,
+.b2b-theme-light.section-cobertura-operativa .b2b-section-header h2,
+.b2b-theme-light.bg-b2b-white .b2b-section-header h2,
+.b2b-theme-light.bg-b2b-light .b2b-section-header h2,
+.b2b-theme-light .b2b-section-header h2 { 
+  color: var(--c-primary-dark) !important; 
+}
+
+.b2b-theme-light.section-respaldo-operativo .b2b-section-header p,
+.b2b-theme-light.section-niveles-especializacion .b2b-section-header p,
+.b2b-theme-light.section-cobertura-operativa .b2b-section-header p,
+.b2b-theme-light.bg-b2b-white .b2b-section-header p,
+.b2b-theme-light.bg-b2b-light .b2b-section-header p,
+.b2b-theme-light .b2b-section-header p { 
+  color: var(--c-primary-dark) !important; 
+  opacity: 1 !important;
+}
+
+.b2b-theme-light h2, 
+.b2b-theme-light h3, 
+.b2b-theme-light h4, 
+.b2b-theme-light p, 
+.b2b-theme-light span, 
+.b2b-theme-light li, 
+.b2b-theme-light .feature-item,
+.b2b-theme-light .pricing-note {
+  color: var(--c-primary-dark) !important;
+}
+
+/* Light Theme Cards & Elements */
+.b2b-theme-light .service-b2b-card,
+.b2b-theme-light .profile-tier-card,
+.b2b-theme-light .timeline-content,
+.b2b-theme-light .commercial-item,
+.b2b-theme-light .commercial-model-panel,
+.b2b-theme-light .faq-item {
+  background: white !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: var(--c-primary-dark) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
+}
+
+.b2b-theme-light .pricing-note {
+  background: rgba(10, 59, 49, 0.08) !important;
+  border-color: rgba(10, 59, 49, 0.15) !important;
+}
+.b2b-theme-light .pain-content h4,
+.b2b-theme-light .service-b2b-content h3,
+.b2b-theme-light .tier-header h4,
+.b2b-theme-light .timeline-content h4,
+.b2b-theme-light .coverage-box h4,
+.b2b-theme-light .coverage-box p,
+.b2b-theme-light .commercial-item h4,
+.b2b-theme-light .commercial-model-panel h3,
+.b2b-theme-light .why-card h4,
+.b2b-theme-light .why-card p,
+.b2b-theme-light .faq-question {
+  color: white !important;
+  opacity: 1 !important;
+}
+.b2b-theme-light .coverage-box {
+  background: var(--c-primary-dark) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.b2b-theme-light .coverage-box h4 svg {
+  color: var(--c-accent) !important;
+}
+.b2b-theme-light .b2b-tag {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+}
+.b2b-theme-light .why-card {
+  background: var(--c-primary-dark) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.b2b-theme-light .why-icon {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--c-accent) !important;
+}
+.b2b-theme-light .b2b-tag,
+.b2b-theme-light .pain-point-card h4,
+.b2b-theme-light .pain-point-card p {
+  color: white !important;
+}
+.b2b-theme-light .pain-point-card {
+  background: var(--c-primary-dark) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.b2b-theme-light .pain-icon {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--c-accent) !important;
+}
+.b2b-theme-light .service-b2b-content p,
+.b2b-theme-light .tier-price span,
+.b2b-theme-light .timeline-content p,
+.b2b-theme-light .commercial-item p,
+.b2b-theme-light .faq-answer p,
+.b2b-theme-light .faq-answer,
+.b2b-theme-light .feature-item,
+.b2b-theme-light li {
+  color: var(--c-primary-dark) !important;
+  opacity: 1; /* Eliminamos opacidad para máximo contraste */
+}
+.b2b-theme-light .b2b-tag {
+  background: white;
+  border-color: rgba(0,0,0,0.1);
+  color: var(--c-primary-dark);
+}
+.b2b-theme-light .commercial-plus {
+  color: var(--c-primary-dark) !important;
+}
+
+/* Ajuste para la tarjeta de CTA final cuando está en fondo claro */
+.b2b-theme-light .b2b-cta-final {
+  background: white !important;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  color: var(--c-primary-dark) !important;
+}
+.b2b-theme-light .b2b-cta-final h2 {
+  color: var(--c-primary-dark) !important;
+}
+.b2b-theme-light .b2b-cta-final p {
+  color: var(--c-primary-dark) !important;
+  opacity: 0.9;
+}
+.b2b-theme-light .b2b-cta-final::before {
+  display: none;
+}
+
+/* Forzar color de los dos botones finales a verde oscuro corporativo */
+.b2b-theme-light .b2b-cta-actions .btn-secondary,
+.b2b-theme-light .b2b-cta-actions .btn-whatsapp {
+  background-color: var(--c-primary-dark) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.b2b-theme-light .b2b-cta-actions .btn-secondary:hover,
+.b2b-theme-light .b2b-cta-actions .btn-whatsapp:hover {
+  background-color: var(--c-primary) !important;
+  transform: translateY(-2px);
+  color: white !important;
+}
+
+.b2b-theme-dark {
+  background-color: var(--c-primary-dark) !important;
+  background-image: none !important;
+}
+.b2b-theme-dark .b2b-section-header h2 { color: white !important; }
+.b2b-theme-dark .b2b-section-header p { color: rgba(255, 255, 255, 0.8) !important; }
+
+/* Dark Theme Cards & Elements */
+.b2b-theme-dark .pain-point-card,
+.b2b-theme-dark .service-b2b-card,
+.b2b-theme-dark .profile-tier-card,
+.b2b-theme-dark .timeline-content,
+.b2b-theme-dark .coverage-box,
+.b2b-theme-dark .commercial-item,
+.b2b-theme-dark .commercial-model-panel,
+.b2b-theme-dark .why-card,
+.b2b-theme-dark .faq-item {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+.b2b-theme-dark .pain-content h4,
+.b2b-theme-dark .service-b2b-content h3,
+.b2b-theme-dark .tier-header h4,
+.b2b-theme-dark .timeline-content h4,
+.b2b-theme-dark .coverage-box h4,
+.b2b-theme-dark .commercial-item h4,
+.b2b-theme-dark .commercial-model-panel h3,
+.b2b-theme-dark .why-card h4,
+.b2b-theme-dark .faq-question {
+  color: white !important;
+}
+.b2b-theme-dark .pain-content p,
+.b2b-theme-dark .service-b2b-content p,
+.b2b-theme-dark .tier-price span,
+.b2b-theme-dark .timeline-content p,
+.b2b-theme-dark .commercial-item p,
+.b2b-theme-dark .why-card p,
+.b2b-theme-dark .faq-answer {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.b2b-theme-dark .feature-item,
+.b2b-theme-dark .tier-features li {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.b2b-theme-dark .b2b-tag {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.15);
+  color: white;
+}
+.b2b-theme-dark .commercial-plus {
+  color: white !important;
+}
+
+
+/* ============================================= */
 /* 2. QUÉ RESOLVEMOS (PAIN POINTS) - REDESIGN */
 .section-respaldo-operativo {
   background-color: var(--c-primary-dark);
@@ -401,6 +613,39 @@
 .profile-tier-card.featured {
   border: 4px solid var(--b2b-gold); /* Borde dorado grueso para Senior */
   box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
+}
+
+.profile-tier-card.tier-junior {
+  background-color: #CDE0CC !important;
+  border: 4px solid var(--c-primary-dark) !important;
+}
+
+.profile-tier-card.tier-full {
+  background-color: var(--c-primary-dark) !important;
+  border-color: var(--c-accent) !important;
+}
+
+.profile-tier-card.tier-full h4,
+.profile-tier-card.tier-full p,
+.profile-tier-card.tier-full li,
+.profile-tier-card.tier-full .tier-price,
+.profile-tier-card.tier-full .tier-price span {
+  color: white !important;
+}
+
+.profile-tier-card.tier-full .profile-disclaimer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: var(--c-accent) !important;
+  color: white !important;
+}
+.profile-tier-card.tier-full .profile-disclaimer span {
+  color: white !important;
+  opacity: 1 !important;
+}
+
+.profile-tier-card.tier-senior {
+  background-color: white !important;
+  border: 4px solid var(--b2b-gold) !important;
 }
 
 .profile-tier-badge {

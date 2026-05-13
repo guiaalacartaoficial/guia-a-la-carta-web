@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import GuideCredential from '../components/GuideCredential';
+import SelloModal from '../components/SelloModal';
 import './Guias.css';
 
 const Guias = () => {
   const [selectedGuide, setSelectedGuide] = useState(null);
+  const [isSelloOpen, setIsSelloOpen] = useState(false);
   const [guiasActivos, setGuiasActivos] = useState([]);
   const [guiasJunior, setGuiasJunior] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,10 +85,10 @@ const Guias = () => {
 
       <div className="footer-accent-bar" />
 
-      <section className="section bg-light text-center" style={{ paddingBottom: '3rem', paddingTop: '4rem' }}>
+      <section className="section text-center" style={{ backgroundColor: 'var(--c-primary-dark)', paddingBottom: '3rem', paddingTop: '4rem' }}>
         <div className="container">
-          <h2 style={{ color: 'var(--c-primary-dark)', marginBottom: '1rem' }}>Niveles de guía disponibles</h2>
-          <p className="bajada" style={{ marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto', color: 'var(--c-text-light)', fontSize: '1.1rem' }}>Cada servicio requiere un nivel distinto de experiencia, autonomía y representación.</p>
+          <h2 style={{ color: 'white', marginBottom: '1rem' }}>Niveles de guía disponibles</h2>
+          <p className="bajada" style={{ marginBottom: '3rem', maxWidth: '700px', margin: '0 auto 3rem auto', color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem' }}>Cada servicio requiere un nivel distinto de experiencia, autonomía y representación.</p>
 
           <div className="niveles-cards-grid">
             <div className="nivel-detail-card junior-card">
@@ -153,14 +155,14 @@ const Guias = () => {
               </div>
             </div>
           </div>
-          <p className="mt-4" style={{ fontSize: '0.9rem', color: 'var(--c-text-light)' }}>* La categoría del guía se define según el nivel de exigencia del servicio, no solo por precio.</p>
+          <p className="mt-4" style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>* La categoría del guía se define según el nivel de exigencia del servicio, no solo por precio.</p>
         </div>
       </section>
 
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN GUÍAS ACTIVOS (FULL Y SENIOR) */}
-      <section className="section" style={{ paddingTop: '2rem' }}>
+      <section className="section" style={{ backgroundColor: '#CDE0CC', paddingTop: '2rem', paddingBottom: '4rem' }}>
         <div className="container">
           <h2 className="text-center mb-5" style={{ color: 'var(--c-primary-dark)' }}>Nuestros Guías Activos</h2>
           {loading ? (
@@ -201,9 +203,27 @@ const Guias = () => {
             </div>
           )}
         </div>
+      </section>      <div className="footer-accent-bar" />
+
+      {/* SECCIÓN SELLO DE CALIDAD */}
+      <section className="section-sello-central">
+        <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
+          <div className="sello-card-central text-center">
+            <span className="sello-pre-title-simple">Estándar de Calidad</span>
+            <h2>Sello Guía a la Carta</h2>
+            <p className="sello-subtitle-simple">Certificación profesional para experiencias seguras</p>
+
+            <div className="sello-badge-wrapper">
+              <div className="sello-glow-effect"></div>
+              <img src="/sello-verificado.png?v=5" alt="Sello Guía a la Carta Verificado" className="sello-logo-custom" />
+            </div>
+
+            <button onClick={() => setIsSelloOpen(true)} className="btn btn-hero mt-3">Explorar Estándar</button>
+          </div>
+        </div>
       </section>
 
-
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN RED DE GUÍAS JUNIOR */}
       <section className="junior-section">
@@ -252,6 +272,9 @@ const Guias = () => {
           onClose={() => setSelectedGuide(null)}
         />
       )}
+
+      {/* MODAL DEL SELLO */}
+      <SelloModal isOpen={isSelloOpen} onClose={() => setIsSelloOpen(false)} />
     </div>
   );
 };

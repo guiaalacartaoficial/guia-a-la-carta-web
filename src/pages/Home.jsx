@@ -66,7 +66,7 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN 2: QUÉ PROBLEMA RESOLVEMOS */}
-      <section className="section-problema">
+      <section className="section-problema b2b-theme-light">
         <div className="container">
           <div className="section-head text-center">
             <h2>Sabemos lo difícil que es encontrar al guía correcto en el momento correcto</h2>
@@ -174,15 +174,15 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN 4: SERVICIOS DESTACADOS */}
-      <section className="section-servicios">
+      <section className="section-servicios b2b-theme-dark">
         <div className="container text-center">
           <h2 className="mb-5">Servicios que ofrecemos</h2>
 
           <div className="servicios-grid mt-5">
             {servicesData.map((service) => (
-              <div 
-                key={service.id} 
-                className="servicio-card interactive" 
+              <div
+                key={service.id}
+                className="servicio-card interactive"
                 onClick={() => setActiveService(service)}
               >
                 <div className="servicio-icon">{service.icon}</div>
@@ -193,7 +193,7 @@ const Home = () => {
           </div>
 
           <div className="servicios-slogan mt-5">
-            <p>"Ustedes se enfocan en los pasajeros; nosotros nos encargamos de que siempre tengan al guía o coordinador correcto."</p>
+            <p>"Ustedes se enfocan en los pasajeros; nosotros nos encargamos de que siempre tengan al guía o coordinador correcto"</p>
           </div>
 
           {/* Modal Emergente de Servicio */}
@@ -216,9 +216,9 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN 6: NIVELES DE GUÍA */}
-      <section className="section-niveles-home">
+      <section className="section-niveles-home b2b-theme-light">
         <div className="container text-center">
-          <h2>Perfiles de guía según el nivel de exigencia del servicio</h2>
+          <h2 className="section-title-large">Perfiles de guía según el nivel de exigencia del servicio</h2>
 
           <div className="niveles-resumen mt-5 mb-5">
             <div className="nivel-mini">
@@ -301,9 +301,9 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN 8: CONFIANZA / RESPALDO */}
-      <section className="section-confianza">
+      <section className="section-confianza b2b-theme-dark">
         <div className="container">
-          <h2 className="text-center mb-5">Trabajamos con estándares claros</h2>
+          <h2 className="text-center mb-5 section-title-large">Trabajamos con estándares claros</h2>
 
           <div className="estandares-grid">
             <div className="estandar-box">
@@ -338,11 +338,11 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (COLLAGE SLIDER) */}
-      <section className="section-gallery bg-b2b-light">
+      <section className="section-gallery b2b-theme-light">
         <div className="container">
           <div className="section-header text-center mb-5">
-            <h2 className="display-5 fw-bold text-primary-dark">Nuestra Comunidad en Acción</h2>
-            <p className="lead text-muted">Resumen visual de las experiencias y el estándar operativo que entregamos en cada rincón de Chile.</p>
+            <h3 className="gallery-title">Nuestra Comunidad en Acción</h3>
+            <h4 className="gallery-desc">Resumen visual de las experiencias y el estándar operativo que entregamos en cada rincón de Chile.</h4>
           </div>
 
           <div className="collage-slider-wrapper">
@@ -414,15 +414,14 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN 9: LLAMADO FINAL */}
-      <section className="section-cta-final text-center">
+      <section className="section-cta-final b2b-theme-dark">
         <div className="container">
-          <div className="cta-final-box">
+          <div className="cta-card text-center">
             <h2>¿Quieres fortalecer tu operación turística esta temporada?</h2>
             <p>Conversemos y revisemos cómo Guía a la Carta puede apoyar a tu empresa con una operación más confiable, flexible y ordenada.</p>
-
-            <div className="hero-actions mt-4">
-              <Link to="/contacto" className="btn btn-hero">Agendar reunión</Link>
-              <a href="https://wa.me/56956048293?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noreferrer" className="btn btn-whatsapp border-white">Escribir por WhatsApp</a>
+            <div className="hero-actions justify-content-center mt-5">
+              <Link to="/contacto" className="btn btn-hero btn-cta-dark">Agendar reunión</Link>
+              <a href="https://wa.me/56956048293?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noreferrer" className="btn btn-whatsapp-cta">Escribir por WhatsApp</a>
             </div>
           </div>
         </div>

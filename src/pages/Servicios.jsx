@@ -79,7 +79,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 2. QUÉ RESOLVEMOS                          */}
       {/* =========================================== */}
-      <section className="b2b-section section-respaldo-operativo">
+      <section className="b2b-section b2b-theme-light section-respaldo-operativo">
         <div className="container">
           <div className="b2b-section-header">
             <h2>El respaldo operativo que tu empresa necesita</h2>
@@ -122,7 +122,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 3. SERVICIOS PRINCIPALES                   */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-white">
+      <section className="b2b-section b2b-theme-dark bg-b2b-white">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Nuestros Servicios</h2>
@@ -257,9 +257,9 @@ const Servicios = () => {
       </section>
       <div className="footer-accent-bar" />
       {/* =========================================== */}
-      {/* 4. PERFILES DE GUÍA                        */}
+      {/* 4. NIVELES DE ESPECIALIZACIÓN              */}
       {/* =========================================== */}
-      <section className="b2b-section section-niveles-especializacion">
+      <section className="b2b-section b2b-theme-light section-niveles-especializacion">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Niveles de Especialización</h2>
@@ -269,7 +269,7 @@ const Servicios = () => {
           <div className="profiles-pricing-grid">
 
             {/* Junior */}
-            <div className="profile-tier-card">
+            <div className="profile-tier-card tier-junior">
               <div className="tier-header">
                 <h4>Guía Junior / Asistente</h4>
                 <div className="tier-price"><span>desde </span>$40.000<span> CLP</span></div>
@@ -290,7 +290,7 @@ const Servicios = () => {
             </div>
 
             {/* Full */}
-            <div className="profile-tier-card">
+            <div className="profile-tier-card tier-full">
               <div className="profile-tier-badge">Recomendado</div>
               <div className="tier-header">
                 <h4>Guía Full</h4>
@@ -312,7 +312,7 @@ const Servicios = () => {
             </div>
 
             {/* Senior */}
-            <div className="profile-tier-card featured">
+            <div className="profile-tier-card featured tier-senior">
               <div className="profile-tier-badge">Premium</div>
               <div className="tier-header">
                 <h4>Guía Senior / Especializado</h4>
@@ -344,7 +344,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 5. CÓMO FUNCIONA                           */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-white">
+      <section className="b2b-section b2b-theme-dark bg-b2b-light">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Proceso de Coordinación Operativa</h2>
@@ -401,7 +401,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 6. COBERTURA OPERATIVA                     */}
       {/* =========================================== */}
-      <section className="b2b-section section-cobertura-operativa">
+      <section className="b2b-section b2b-theme-light section-cobertura-operativa">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Red Operativa en Chile</h2>
@@ -451,7 +451,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 7. MODALIDAD COMERCIAL                     */}
       {/* =========================================== */}
-      <section className="b2b-section section-modalidad-comercial">
+      <section className="b2b-section b2b-theme-dark section-modalidad-comercial">
         <div className="container">
           <div className="commercial-model-panel">
             <h3>Modelo transparente de facturación</h3>
@@ -475,7 +475,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 8. ¿POR QUÉ TRABAJAR CON NOSOTROS?        */}
       {/* =========================================== */}
-      <section className="b2b-section section-why-us">
+      <section className="b2b-section b2b-theme-light bg-b2b-white">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Hacemos que tu operación no falle</h2>
@@ -520,7 +520,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 9. FAQ                                     */}
       {/* =========================================== */}
-      <section className="b2b-section bg-b2b-white">
+      <section className="b2b-section b2b-theme-dark bg-b2b-white">
         <div className="container">
           <div className="b2b-section-header">
             <h2>Preguntas Frecuentes</h2>
@@ -555,7 +555,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 10. CTA FINAL                              */}
       {/* =========================================== */}
-      <section className="b2b-section">
+      <section className="b2b-section b2b-theme-light">
         <div className="container">
           <div className="b2b-cta-final">
             <h2>Asegura tu próxima operación hoy</h2>
