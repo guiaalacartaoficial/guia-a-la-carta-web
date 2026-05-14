@@ -22,6 +22,8 @@ const PostulacionEstudiantes = () => {
   const [formData, setFormData] = useState({
     nombres: '',
     apellidos: '',
+    nombre_visual: '',
+    apellido_visual: '',
     email: '',
     telefono: '',
     nacionalidad: '',
@@ -230,6 +232,24 @@ const PostulacionEstudiantes = () => {
                   <div className="input-icon-wrapper">
                     <User className="input-icon" size={18} />
                     <input type="text" name="apellidos" className="form-control" placeholder="Ej: Soto Gómez" onChange={handleInputChange} required />
+                  </div>
+                </div>
+              </div>
+
+              {/* NUEVA SECCIÓN: NOMBRE VISUAL */}
+              <div style={{background: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px dashed #cbd5e1', marginBottom: '20px', marginTop: '10px'}}>
+                <div style={{fontWeight: '700', marginBottom: '10px', color: 'var(--c-primary-dark)', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                  <ShieldCheck size={18} /> ¿Cómo quieres aparecer en tu Credencial Pública?
+                </div>
+                <p style={{fontSize: '0.85rem', color: '#64748b', marginBottom: '15px'}}>Por seguridad, recomendamos usar solo un nombre y una inicial (Ej: Camila S.)</p>
+                <div className="form-grid" style={{marginTop: '0'}}>
+                  <div className="form-group">
+                    <label className="form-label">Nombre en Credencial</label>
+                    <input type="text" name="nombre_visual" className="form-control" placeholder="Ej: Camila" onChange={handleInputChange} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Apellido en Credencial</label>
+                    <input type="text" name="apellido_visual" className="form-control" placeholder="Ej: S." onChange={handleInputChange} />
                   </div>
                 </div>
               </div>

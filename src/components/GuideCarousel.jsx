@@ -29,9 +29,13 @@ const GuideCarousel = () => {
           if (item.url_sernatur) certName = 'Registro SERNATUR';
           if (type === 'estudiante') certName = 'Guía Junior (Est)';
 
+          const rawN = String(item.nombres || item.nombre || 'Guía').trim();
+          const nombreVisual = (typeof item.nombre_visual === 'string') ? item.nombre_visual : rawN.split(' ')[0];
+          const apellidoVisual = (typeof item.apellido_visual === 'string') ? item.apellido_visual : "";
+
           return {
             id: item.id,
-            nombre: `${item.nombres || ''} ${item.apellidos || ''}`.trim(),
+            nombre: `${nombreVisual} ${apellidoVisual}`.trim(),
             especialidad: type === 'guia' ? 'Guía Profesional' : 'Guía Junior',
             cert: certName,
             img: item.url_foto || '/placeholder-user.png'

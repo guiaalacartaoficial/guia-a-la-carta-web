@@ -99,7 +99,6 @@ const AdminDashboard = () => {
     try {
       let finalData = { ...editData };
 
-      // Si hay archivos nuevos, subirlos
       if (editData.file_cv instanceof File) {
         finalData.url_cv = await uploadFile(editData.file_cv, 'documentos', 'cvs');
         delete finalData.file_cv;
@@ -116,17 +115,21 @@ const AdminDashboard = () => {
         finalData.url_primeros_auxilios = await uploadFile(editData.file_wfr, 'documentos', 'certificados');
         delete finalData.file_wfr;
       }
-      if (editData.file_otras) {
+      if (editData.file_otras instanceof File) {
+        finalData.url_otras_certificaciones = await uploadFile(editData.file_otras, 'documentos', 'certificados');
         delete finalData.file_otras;
+      }
+      if (editData.file_certificaciones instanceof File) {
+        finalData.url_certificaciones = await uploadFile(editData.file_certificaciones, 'documentos', 'certificados');
+        delete finalData.file_certificaciones;
       }
       if (editData.file_manual instanceof File) {
         finalData.url_archivo = await uploadFile(editData.file_manual, 'documentos', 'manuales');
         delete finalData.file_manual;
       }
 
-      // Limpiar campos que no deben ir a la DB si son objetos File que no manejamos arriba
       Object.keys(finalData).forEach(key => {
-        if (finalData[key] instanceof File) delete finalData[key];
+        if (finalData[key] instanceof File || key.startsWith('file_')) delete finalData[key];
       });
 
       if (id === 'new') {
@@ -218,6 +221,7 @@ const AdminDashboard = () => {
   const ActionButtons = ({ table, id, currentStatus, record }) => {
     const isReserva = table === 'reservas';
     const isGuia = table === 'postulaciones_guias';
+    const isEstudiante = table === 'postulaciones_estudiantes';
 
     return (
       <div className="admin-actions">
@@ -240,10 +244,17 @@ const AdminDashboard = () => {
           </>
         ) : (
           <>
+            {(isGuia || isEstudiante) && (
+              <>
+                <a href={`mailto:${record.email}?subject=Postulación Guía a la Carta&body=Hola ${record.nombres},`} className="btn-action email" title="Enviar Email"><Mail size={16}/></a>
+                <a href={`https://wa.me/${record.telefono?.replace(/\s+/g, '').replace('+', '')}`} target="_blank" rel="noreferrer" className="btn-action whatsapp" title="Contactar por WhatsApp"><MessageCircle size={16}/></a>
+              </>
+            )}
+
             {isGuia && (
               <select 
                 className="status-selector-mini level-selector" 
-                value={record.nivel || 'senior'} 
+                value={record?.nivel || 'senior'} 
                 onChange={(e) => updateField(table, id, 'nivel', e.target.value)}
                 title="Cambiar Nivel"
               >
@@ -267,22 +278,28 @@ const AdminDashboard = () => {
     );
   };
 
-  const mapToCredential = (g) => ({
-    nombre: g.nombres ? g.nombres.split(' ')[0] : 'Guía',
-    edad: g.edad || 0,
-    nivel: g.nivel || 'senior',
-    codigo: g.codigo || 'S/N',
-    idiomas: Array.isArray(g.idiomas) ? g.idiomas.map(i => i.idioma) : ['Español'],
-    imagen: g.url_foto || '/guias/placeholder.png',
-    biografia: g.biografia || 'Sin biografía',
-    formacion: g.educacion ? g.educacion.split('\n') : [],
-    experiencia: g.rutas_experiencia ? g.rutas_experiencia.split('\n') : [],
-    certificaciones: { 
-      sernatur: !!g.url_sernatur, 
-      wfr: !!g.url_primeros_auxilios,
-      otras: !!g.url_otras_certificaciones
-    }
-  });
+  const mapToCredential = (g) => {
+    if (!g) return {};
+    const rawN = String(g.nombres || g.nombre || 'Guía').trim();
+    
+    return {
+      nombre: (typeof g.nombre_visual === 'string') ? g.nombre_visual : rawN.split(' ')[0],
+      apellidos: (typeof g.apellido_visual === 'string') ? g.apellido_visual : "",
+      edad: g.edad || 0,
+      nivel: g.nivel || 'senior',
+      codigo: g.codigo || 'S/N',
+      idiomas: Array.isArray(g.idiomas) ? g.idiomas.map(i => (typeof i === 'object' ? i?.idioma : i) || 'Español') : ['Español'],
+      imagen: g.url_foto || '/guias/placeholder.png',
+      biografia: String(g.biografia || 'Sin biografía'),
+      formacion: typeof g.educacion === 'string' ? g.educacion.split('\\n') : [],
+      experiencia: typeof g.rutas_experiencia === 'string' ? g.rutas_experiencia.split('\\n') : (typeof g.experiencia_terreno === 'string' ? g.experiencia_terreno.split('\\n') : []),
+      certificaciones: { 
+        sernatur: !!g.url_sernatur, 
+        wfr: !!g.url_primeros_auxilios,
+        otras: !!g.url_otras_certificaciones
+      }
+    };
+  };
 
   if (!isAuthenticated) {
     return (
@@ -304,47 +321,57 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard-pro">
       <header className="admin-top-bar">
-        <div className="container-pro">
+        <div className="container-pro" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="admin-logo-section">
-            <ShieldCheck size={28} className="admin-icon-brand" />
+            <ShieldCheck size={32} className="admin-icon-brand" />
             <div>
               <h1>Panel Administrativo</h1>
-              <span>Guía a la Carta • Admin Suite</span>
+              <span>Guía a la Carta • Business Suite v2.0</span>
             </div>
           </div>
-          <button onClick={fetchData} className="btn-refresh" disabled={loading}>
-            <RefreshCw size={18} className={loading ? 'spin' : ''} /> Actualizar
-          </button>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <button onClick={fetchData} className="btn-refresh" disabled={loading}>
+              <RefreshCw size={18} className={loading ? 'spin' : ''} /> 
+              <span>{loading ? 'Actualizando...' : 'Actualizar'}</span>
+            </button>
+            <div className="admin-user-pill" style={{ background: 'white', padding: '5px 15px', borderRadius: '30px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '0.8rem' }}>AD</div>
+              <span style={{ fontWeight: '700', fontSize: '0.85rem' }}>Administrador</span>
+            </div>
+          </div>
         </div>
       </header>
 
       <section className="admin-stats-summary container-pro">
         <div className="stat-pro-card">
-          <div className="stat-icon res"><Calendar size={22}/></div>
           <div className="stat-info">
-            <span className="stat-label">Solicitudes de Servicios</span>
+            <span className="stat-label">Solicitudes</span>
             <span className="stat-value">{reservas.filter(r => r.estado === 'nueva').length}</span>
+            <span style={{ fontSize: '0.7rem', color: '#0369a1', fontWeight: '700', marginTop: '5px' }}>Nuevas Entrantes</span>
           </div>
+          <div className="stat-icon res"><Calendar size={28}/></div>
         </div>
         <div className="stat-pro-card">
-          <div className="stat-icon tal"><Users size={22}/></div>
           <div className="stat-info">
-            <span className="stat-label">Postulaciones Pendientes</span>
+            <span className="stat-label">Postulantes</span>
             <span className="stat-value">
               {postulacionesGuias.filter(g => g.estado === 'pendiente').length + 
                postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}
             </span>
+            <span style={{ fontSize: '0.7rem', color: '#15803d', fontWeight: '700', marginTop: '5px' }}>En Espera</span>
           </div>
+          <div className="stat-icon tal"><Users size={28}/></div>
         </div>
         <div className="stat-pro-card">
-          <div className="stat-icon com"><MessageCircle size={22}/></div>
           <div className="stat-info">
-            <span className="stat-label">Relatos Pendientes</span>
+            <span className="stat-label">Relatos</span>
             <span className="stat-value">
               {relatos.filter(r => r.estado === 'pendiente').length + 
                comentarios.filter(c => c.estado === 'pendiente').length}
             </span>
+            <span style={{ fontSize: '0.7rem', color: '#c2410c', fontWeight: '700', marginTop: '5px' }}>Por Moderar</span>
           </div>
+          <div className="stat-icon com"><MessageCircle size={28}/></div>
         </div>
       </section>
 
@@ -352,16 +379,16 @@ const AdminDashboard = () => {
         <aside className="admin-sidebar">
           <nav>
             <button className={`admin-nav-link ${activeTab === 'reservas' ? 'active' : ''}`} onClick={() => setActiveTab('reservas')}>
-              <Briefcase size={20} /> Solicitud de Servicios
+              <Briefcase size={22} /> <span>Solicitud de Servicios</span>
             </button>
             <button className={`admin-nav-link ${activeTab === 'talento' ? 'active' : ''}`} onClick={() => { setActiveTab('talento'); setSubTab('guias'); }}>
-              <Users size={20} /> Gestión de Postulantes
+              <Users size={22} /> <span>Gestión de Postulantes</span>
             </button>
             <button className={`admin-nav-link ${activeTab === 'comunidad' ? 'active' : ''}`} onClick={() => { setActiveTab('comunidad'); setSubTab('relatos'); }}>
-              <Globe size={20} /> Gestión de Relatos
+              <Globe size={22} /> <span>Gestión de Relatos</span>
             </button>
             <button className={`admin-nav-link ${activeTab === 'manuales' ? 'active' : ''}`} onClick={() => setActiveTab('manuales')}>
-              <BookOpen size={20} /> Gestión de Manuales
+              <BookOpen size={22} /> <span>Gestión de Manuales</span>
             </button>
           </nav>
         </aside>
@@ -414,12 +441,23 @@ const AdminDashboard = () => {
                                   </div>
                                 </div>
                               ) : (
-                                <div className="detail-grid">
-                                  <div><strong>Email:</strong> {res.email}</div>
-                                  <div><strong>Teléfono:</strong> {res.telefono}</div>
-                                  <div><strong>Pax:</strong> {res.pax}</div>
-                                  <div><strong>Idioma:</strong> {res.idioma}</div>
-                                  <div className="full-width"><strong>Comentarios:</strong> {res.comentarios || 'Sin comentarios'}</div>
+                                <div className="card-dashboard" style={{maxWidth:'800px'}}>
+                                  <div className="card-header-pro">
+                                    <Briefcase size={20} />
+                                    <h4>Detalles de la Solicitud</h4>
+                                  </div>
+                                  <div className="card-body-pro">
+                                    <div className="info-grid-pro">
+                                      <div className="field-pro"><span className="field-label">Email de Contacto</span><span className="field-value">{res.email}</span></div>
+                                      <div className="field-pro"><span className="field-label">Teléfono</span><span className="field-value">{res.telefono}</span></div>
+                                      <div className="field-pro"><span className="field-label">Cantidad de Pasajeros (Pax)</span><span className="field-value">{res.pax}</span></div>
+                                      <div className="field-pro"><span className="field-label">Idioma Requerido</span><span className="field-value">{res.idioma}</span></div>
+                                      <div className="full-width field-pro" style={{marginTop:'15px'}}>
+                                        <span className="field-label">Comentarios Adicionales</span>
+                                        <p style={{fontSize:'1rem', color:'var(--text-main)', margin:'10px 0 0 0', lineHeight:'1.6'}}>{res.comentarios || 'Sin comentarios adicionales'}</p>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               )}
                             </div>
@@ -439,9 +477,9 @@ const AdminDashboard = () => {
                   {postulacionesGuias.map(guia => (
                     <React.Fragment key={guia.id}>
                       <tr className={expandedId === guia.id ? 'row-expanded' : ''}>
-                        <td><div className="main-text">{guia.nombres} {guia.apellidos}</div><div className="sub-text">{guia.email}</div></td>
+                        <td><div className="main-text">{String(guia.nombres || '')} {String(guia.apellidos || '')}</div><div className="sub-text">{guia.email}</div></td>
                         <td>{guia.ciudad_residencia}</td>
-                        <td>{Array.isArray(guia.idiomas) ? guia.idiomas.map(i => i.idioma).join(', ') : 'Español'}</td>
+                        <td>{Array.isArray(guia.idiomas) ? guia.idiomas.map(i => (typeof i === 'object' ? i.idioma : i)).join(', ') : 'Español'}</td>
                         <td><span className={`status-badge ${guia.estado}`}>{guia.estado}</span></td>
                         <td><ActionButtons table="postulaciones_guias" id={guia.id} currentStatus={guia.estado} record={guia} /></td>
                       </tr>
@@ -451,7 +489,10 @@ const AdminDashboard = () => {
                             <div className="detail-content">
                               {editingId === guia.id ? (
                                 <div className="edit-form-grid">
-                                  <div className="form-group"><label>Email</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width-divider">Edición de Perfil (Interno)</div>
+                                  <div className="form-group"><label>Nombres (Registro)</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Apellidos (Registro)</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Email de Contacto</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Ciudad Residencia</label><input name="ciudad_residencia" value={editData.ciudad_residencia} onChange={handleEditChange} className="form-control" /></div>
@@ -465,76 +506,144 @@ const AdminDashboard = () => {
                                     </select>
                                   </div>
                                   <div className="form-group">
-                                    <label>Fecha Caducidad de Perfil</label>
-                                    <input type="date" name="fecha_caducidad" value={editData.fecha_caducidad || ''} onChange={handleEditChange} className="form-control" />
+                                    <label>Habilitado SII</label>
+                                    <select name="habilitado_sii" value={editData.habilitado_sii} onChange={handleEditChange} className="form-control">
+                                      <option value="si">Sí</option>
+                                      <option value="no">No</option>
+                                      <option value="tramite">En trámite</option>
+                                    </select>
                                   </div>
+                                  <div className="full-width"><label>Localidades Extra</label><input name="localidades_extra" value={editData.localidades_extra} onChange={handleEditChange} className="form-control" /></div>
                                   
-                                  <div className="full-width-divider">Visual Credential Content</div>
+                                  <div className="full-width-divider">Contenido Visual Credencial (Público B2B)</div>
+                                  <div className="form-group"><label>Nombre en Credencial</label><input name="nombre_visual" value={editData.nombre_visual || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: Joaquín" /></div>
+                                  <div className="form-group"><label>Apellido en Credencial</label><input name="apellido_visual" value={editData.apellido_visual || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: G." /></div>
                                   <div className="form-group">
-                                    <label>Distintivo de Nivel (Badge)</label>
+                                    <label>Nivel Profesional</label>
                                     <select name="nivel" value={editData.nivel || 'senior'} onChange={handleEditChange} className="form-control">
                                       <option value="full">Guía Full</option>
                                       <option value="senior">Guía Senior</option>
                                       <option value="junior">Guía Junior</option>
                                     </select>
                                   </div>
-                                  <div className="form-group"><label>Nombre en Credencial</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Apellidos en Credencial</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Edad en Credencial</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Código Profesional</label><input name="codigo" value={editData.codigo} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Edad Visual</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Código de Guía</label><input name="codigo" value={editData.codigo} onChange={handleEditChange} className="form-control" /></div>
                                   
-                                  <div className="full-width"><label>Biografía (Credential)</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                  <div className="full-width"><label>Educación (Credential)</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                  <div className="full-width"><label>Rutas y Experiencia (Credential)</label><textarea name="rutas_experiencia" value={editData.rutas_experiencia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Biografía Profesional</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Educación y Títulos</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Experiencia y Rutas</label><textarea name="rutas_experiencia" value={editData.rutas_experiencia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
                                   
-                                  <div className="full-width-divider">Document Management</div>
-                                  <div className="form-group"><label>Actualizar CV (PDF)</label><input type="file" name="file_cv" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
-                                  <div className="form-group"><label>Actualizar Foto</label><input type="file" name="file_foto" onChange={handleEditChange} className="form-control" accept="image/*" /></div>
-                                  <div className="form-group"><label>Actualizar SERNATUR</label><input type="file" name="file_sernatur" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
-                                  <div className="form-group"><label>Actualizar WFR</label><input type="file" name="file_wfr" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
-                                  <div className="form-group"><label>Otras Certificaciones</label><input type="file" name="file_otras" onChange={handleEditChange} className="form-control" accept=".pdf,image/*" /></div>
+                                  <div className="full-width-divider">Archivos y Documentos</div>
+                                  <div className="edit-form-grid" style={{border:'none', padding:0, boxShadow:'none', marginTop:0}}>
+                                    <div className="form-group"><label>CV (PDF)</label><input type="file" name="file_cv" onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Foto Perfil</label><input type="file" name="file_foto" onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Sernatur</label><input type="file" name="file_sernatur" onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Primeros Aux</label><input type="file" name="file_wfr" onChange={handleEditChange} className="form-control" /></div>
+                                  </div>
 
                                   <div className="edit-actions">
-                                    <button onClick={() => handleUpdateRecord('postulaciones_guias', guia.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
-                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                    <button onClick={() => handleUpdateRecord('postulaciones_guias', guia.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
+                                    <button onClick={cancelEditing} className="btn btn-cancel">Cancelar</button>
                                   </div>
                                 </div>
                               ) : (
-                                <div className="guide-detail-wrapper">
-                                  <div className="detail-grid">
-                                    <div><strong>Teléfono:</strong> {guia.telefono}</div>
-                                    <div><strong>Edad:</strong> {guia.edad} años</div>
-                                    <div><strong>Nacionalidad:</strong> {guia.nacionalidad}</div>
-                                    <div><strong>Zonas de Trabajo:</strong> {guia.ciudad_trabajo}</div>
-                                    <div className="full-width"><strong>Localidades Extra:</strong> {guia.localidades_extra}</div>
-                                    <div className="full-width"><strong>Biografía:</strong> {guia.biografia}</div>
-                                    <div className="full-width"><strong>Educación:</strong> {guia.educacion}</div>
-                                    <div className="full-width"><strong>Rutas/Exp:</strong> {guia.rutas_experiencia}</div>
-                                    <div><strong>SII Habilitado:</strong> {guia.habilitado_sii}</div>
-                                    <div className="doc-links-large">
-                                      <strong>Documentos:</strong>
-                                      {guia.url_cv && <a href={guia.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
-                                      {guia.url_foto && <a href={guia.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
-                                      {guia.url_sernatur && <a href={guia.url_sernatur} target="_blank" rel="noreferrer" className="btn-doc"><Award size={16}/> SERNATUR</a>}
-                                      {guia.url_primeros_auxilios && <a href={guia.url_primeros_auxilios} target="_blank" rel="noreferrer" className="btn-doc"><ShieldCheck size={16}/> P. Auxilios</a>}
-                                      {guia.url_otras_certificaciones && <a href={guia.url_otras_certificaciones} target="_blank" rel="noreferrer" className="btn-doc"><BookOpen size={16}/> Otras Cert.</a>}
+                                <>
+                                  <div className="dashboard-detail-grid">
+                                    {/* LEFT COLUMN: ALL INTERNAL REGISTRATION DATA */}
+                                    <div className="detail-column-left">
+                                      <div className="card-dashboard">
+                                        <div className="card-header-pro">
+                                          <Users size={20} />
+                                          <h4>Datos Completos de Registro (Interno)</h4>
+                                        </div>
+                                        <div className="card-body-pro">
+                                          <div className="info-grid-pro">
+                                            <div className="field-pro"><span className="field-label">Nombres</span><span className="field-value">{guia.nombres}</span></div>
+                                            <div className="field-pro"><span className="field-label">Apellidos</span><span className="field-value">{guia.apellidos}</span></div>
+                                            <div className="field-pro"><span className="field-label">Email de Registro</span><span className="field-value">{guia.email}</span></div>
+                                            <div className="field-pro"><span className="field-label">Teléfono Contacto</span><span className="field-value">{guia.telefono}</span></div>
+                                            <div className="field-pro"><span className="field-label">Nacionalidad</span><span className="field-value">{guia.nacionalidad}</span></div>
+                                            <div className="field-pro"><span className="field-label">Edad Registrada</span><span className="field-value">{guia.edad} años</span></div>
+                                            <div className="field-pro"><span className="field-label">Ciudad de Residencia</span><span className="field-value">{guia.ciudad_residencia}</span></div>
+                                            <div className="field-pro"><span className="field-label">Zonas de Trabajo</span><span className="field-value">{guia.ciudad_trabajo}</span></div>
+                                            <div className="field-pro"><span className="field-label">Nivel de Guía</span><span className="field-value">{guia.nivel?.toUpperCase() || 'SENIOR'}</span></div>
+                                            <div className="field-pro"><span className="field-label">Código Profesional</span><span className="field-value">{guia.codigo || 'PENDIENTE'}</span></div>
+                                            <div className="field-pro"><span className="field-label">Habilitado SII</span><span className="field-value">{guia.habilitado_sii?.toUpperCase()}</span></div>
+                                            <div className="field-pro"><span className="field-label">Localidades Extra</span><span className="field-value">{guia.localidades_extra || 'Ninguna'}</span></div>
+                                            <div className="field-pro"><span className="field-label">Estado de Postulación</span><span className="field-value">{guia.estado?.toUpperCase()}</span></div>
+                                          </div>
+                                          
+                                          <div className="field-pro" style={{marginTop:'30px', borderTop:'1px solid var(--border)', paddingTop:'20px'}}>
+                                            <span className="field-label">Biografía Profesional (Backend)</span>
+                                            <p style={{fontSize:'1rem', color:'var(--text-main)', marginTop:'10px', lineHeight:'1.6'}}>{guia.biografia || 'Sin biografía registrada'}</p>
+                                          </div>
+                                          <div className="field-pro" style={{marginTop:'20px'}}>
+                                            <span className="field-label">Educación y Títulos</span>
+                                            <p style={{fontSize:'0.9rem', color:'var(--text-main)', marginTop:'10px', lineHeight:'1.6'}}>{guia.educacion || 'Sin datos registrados'}</p>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="full-width">
-                                      <strong>Otras Certificaciones:</strong>
-                                      <p style={{fontSize:'0.9rem', color:'#64748b'}}>Archivos adjuntos adicionales cargados por el postulante.</p>
+
+                                    {/* RIGHT COLUMN: DOCUMENTS WITH BUTTONS */}
+                                    <div className="detail-column-right">
+                                      <div className="card-dashboard">
+                                        <div className="card-header-pro">
+                                          <FileText size={20} />
+                                          <h4>Documentación Oficial</h4>
+                                        </div>
+                                        <div className="card-body-pro">
+                                          <div style={{display:'flex', flexDirection:'column', gap:'15px'}}>
+                                            {guia.url_cv && (
+                                              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
+                                                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                                                  <FileText size={20} color="#dc2626" />
+                                                  <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Curriculum Vitae</span>
+                                                </div>
+                                                <a href={guia.url_cv} target="_blank" rel="noreferrer" className="btn-view-doc">Ver Archivo</a>
+                                              </div>
+                                            )}
+                                            {guia.url_sernatur && (
+                                              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
+                                                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                                                  <Award size={20} color="#16a34a" />
+                                                  <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Registro Sernatur</span>
+                                                </div>
+                                                <a href={guia.url_sernatur} target="_blank" rel="noreferrer" className="btn-view-doc">Ver Archivo</a>
+                                              </div>
+                                            )}
+                                            {guia.url_primeros_auxilios && (
+                                              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
+                                                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                                                  <ShieldCheck size={20} color="#0369a1" />
+                                                  <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Primeros Auxilios / WFR</span>
+                                                </div>
+                                                <a href={guia.url_primeros_auxilios} target="_blank" rel="noreferrer" className="btn-view-doc">Ver Archivo</a>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                  
-                                  <div className="credential-preview-admin">
-                                    <h4>Previsualización de Credencial</h4>
-                                    <div className="credential-mini-container">
-                                      <GuideCredential 
-                                        guia={mapToCredential(editingId === guia.id ? editData : guia)} 
-                                        isExample={true} 
-                                      />
+
+                                  {/* BOTTOM SECTION: FULL WIDTH CREDENTIAL PREVIEW */}
+                                  <div className="detail-row-bottom">
+                                    <div className="card-dashboard">
+                                      <div className="card-header-pro">
+                                        <Eye size={20} />
+                                        <h4>Previsualización de Credencial Pública (Versión Idéntica)</h4>
+                                      </div>
+                                      <div className="card-body-pro" style={{background:'#f8fafc'}}>
+                                        <div className="preview-container-pro">
+                                          <div className="credential-wrapper-admin">
+                                            <GuideCredential guia={mapToCredential(guia)} isExample={true} />
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                </>
                               )}
                             </div>
                           </td>
@@ -553,7 +662,7 @@ const AdminDashboard = () => {
                   {postulacionesEstudiantes.map(est => (
                     <React.Fragment key={est.id}>
                       <tr className={expandedId === est.id ? 'row-expanded' : ''}>
-                        <td><div className="main-text">{est.nombres} {est.apellidos}</div><div className="sub-text">Junior</div></td>
+                        <td><div className="main-text">{String(est.nombres || '')} {String(est.apellidos || '')}</div><div className="sub-text">Junior</div></td>
                         <td>{est.email}</td>
                         <td>{est.ciudad_residencia}</td>
                         <td><span className={`status-badge ${est.estado}`}>{est.estado}</span></td>
@@ -565,29 +674,131 @@ const AdminDashboard = () => {
                             <div className="detail-content">
                               {editingId === est.id ? (
                                 <div className="edit-form-grid">
-                                  <div className="form-group"><label>Nombres</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Apellidos</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width-divider">Edición Estudiante (Interno)</div>
+                                  <div className="form-group"><label>Nombres (Registro)</label><input name="nombres" value={editData.nombres} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Apellidos (Registro)</label><input name="apellidos" value={editData.apellidos} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Email de Contacto</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Edad Visual</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Ciudad Residencia</label><input name="ciudad_residencia" value={editData.ciudad_residencia} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group">
+                                    <label>Habilitado SII</label>
+                                    <select name="habilitado_sii" value={editData.habilitado_sii} onChange={handleEditChange} className="form-control">
+                                      <option value="si">Sí</option>
+                                      <option value="no">No</option>
+                                      <option value="tramite">En trámite</option>
+                                    </select>
+                                  </div>
+                                  
+                                  <div className="full-width-divider">Visualización Credencial (Junior)</div>
+                                  <div className="form-group"><label>Nombre en Credencial</label><input name="nombre_visual" value={editData.nombre_visual || ''} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group"><label>Apellido en Credencial</label><input name="apellido_visual" value={editData.apellido_visual || ''} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="full-width"><label>Biografía Profesional</label><textarea name="biografia" value={editData.biografia} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Educación / Carrera</label><textarea name="educacion" value={editData.educacion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  <div className="full-width"><label>Experiencia Terreno</label><textarea name="experiencia_terreno" value={editData.experiencia_terreno} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                  
+                                  <div className="full-width-divider">Documentación</div>
+                                  <div className="edit-form-grid" style={{border:'none', padding:0, boxShadow:'none', marginTop:0}}>
+                                    <div className="form-group"><label>Actualizar CV</label><input type="file" name="file_cv" onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Foto de Perfil</label><input type="file" name="file_foto" onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Certificaciones</label><input type="file" name="file_certificaciones" onChange={handleEditChange} className="form-control" /></div>
+                                  </div>
+                                  
                                   <div className="edit-actions">
-                                    <button onClick={() => handleUpdateRecord('postulaciones_estudiantes', est.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
-                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                    <button onClick={() => handleUpdateRecord('postulaciones_estudiantes', est.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
+                                    <button onClick={cancelEditing} className="btn btn-cancel">Cancelar</button>
                                   </div>
                                 </div>
                               ) : (
-                                <div className="detail-grid">
-                                  <div><strong>Teléfono:</strong> {est.telefono}</div>
-                                  <div><strong>Edad:</strong> {est.edad} años</div>
-                                  <div><strong>Nacionalidad:</strong> {est.nacionalidad}</div>
-                                  <div className="full-width"><strong>Educación:</strong> {est.educacion}</div>
-                                  <div className="full-width"><strong>Exp. Terreno:</strong> {est.experiencia_terreno}</div>
-                                  <div className="full-width"><strong>Biografía:</strong> {est.biografia}</div>
-                                  <div><strong>SII Habilitado:</strong> {est.habilitado_sii}</div>
-                                  <div className="doc-links-large">
-                                    <strong>Documentos:</strong>
-                                    {est.url_cv && <a href={est.url_cv} target="_blank" rel="noreferrer" className="btn-doc"><FileText size={16}/> CV</a>}
-                                    {est.url_foto && <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-doc"><Eye size={16}/> Foto</a>}
-                                    {est.url_certificaciones && <a href={est.url_certificaciones} target="_blank" rel="noreferrer" className="btn-doc"><BookOpen size={16}/> Certificados</a>}
+                                <>
+                                  <div className="dashboard-detail-grid">
+                                    {/* LEFT COLUMN: ALL INTERNAL REGISTRATION DATA */}
+                                    <div className="detail-column-left">
+                                      <div className="card-dashboard">
+                                        <div className="card-header-pro">
+                                          <Users size={20} />
+                                          <h4>Datos Completos de Registro</h4>
+                                        </div>
+                                        <div className="card-body-pro">
+                                          <div className="info-grid-pro">
+                                            <div className="field-pro"><span className="field-label">Nombres</span><span className="field-value">{est.nombres}</span></div>
+                                            <div className="field-pro"><span className="field-label">Apellidos</span><span className="field-value">{est.apellidos}</span></div>
+                                            <div className="field-pro"><span className="field-label">Email de Contacto</span><span className="field-value">{est.email}</span></div>
+                                            <div className="field-pro"><span className="field-label">Teléfono</span><span className="field-value">{est.telefono}</span></div>
+                                            <div className="field-pro"><span className="field-label">Nacionalidad</span><span className="field-value">{est.nacionalidad}</span></div>
+                                            <div className="field-pro"><span className="field-label">Edad Registrada</span><span className="field-value">{est.edad} años</span></div>
+                                            <div className="field-pro"><span className="field-label">Ciudad de Residencia</span><span className="field-value">{est.ciudad_residencia}</span></div>
+                                            <div className="field-pro"><span className="field-label">Habilitado SII</span><span className="field-value">{est.habilitado_sii?.toUpperCase()}</span></div>
+                                            <div className="field-pro"><span className="field-label">Estado</span><span className="field-value">{est.estado?.toUpperCase()}</span></div>
+                                          </div>
+                                          
+                                          <div className="field-pro" style={{marginTop:'30px', borderTop:'1px solid var(--border)', paddingTop:'20px'}}>
+                                            <span className="field-label">Biografía Profesional</span>
+                                            <p style={{fontSize:'1rem', color:'var(--text-main)', marginTop:'10px', lineHeight:'1.6'}}>{est.biografia || 'Sin biografía registrada'}</p>
+                                          </div>
+                                          <div className="field-pro" style={{marginTop:'20px'}}>
+                                            <span className="field-label">Educación / Carrera</span>
+                                            <p style={{fontSize:'0.9rem', color:'var(--text-main)', marginTop:'10px', lineHeight:'1.6'}}>{est.educacion || 'Sin datos registrados'}</p>
+                                          </div>
+                                          <div className="field-pro" style={{marginTop:'20px'}}>
+                                            <span className="field-label">Experiencia en Terreno</span>
+                                            <p style={{fontSize:'0.9rem', color:'var(--text-main)', marginTop:'10px', lineHeight:'1.6'}}>{est.experiencia_terreno || 'Sin datos registrados'}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* RIGHT COLUMN: DOCUMENTS WITH BUTTONS */}
+                                    <div className="detail-column-right">
+                                      <div className="card-dashboard">
+                                        <div className="card-header-pro">
+                                          <FileText size={20} />
+                                          <h4>Documentación Adjunta</h4>
+                                        </div>
+                                        <div className="card-body-pro">
+                                          <div style={{display:'flex', flexDirection:'column', gap:'15px'}}>
+                                            {est.url_cv && (
+                                              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
+                                                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                                                  <FileText size={20} color="#dc2626" />
+                                                  <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Curriculum Vitae</span>
+                                                </div>
+                                                <a href={est.url_cv} target="_blank" rel="noreferrer" className="btn-view-doc">Ver Archivo</a>
+                                              </div>
+                                            )}
+                                            {est.url_foto && (
+                                              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
+                                                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                                                  <Eye size={20} color="#2563eb" />
+                                                  <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Foto de Perfil</span>
+                                                </div>
+                                                <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-view-doc">Ver Archivo</a>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
+
+                                  {/* BOTTOM SECTION: FULL WIDTH CREDENTIAL PREVIEW */}
+                                  <div className="detail-row-bottom">
+                                    <div className="card-dashboard">
+                                      <div className="card-header-pro">
+                                        <Eye size={20} />
+                                        <h4>Previsualización de Credencial (Versión Idéntica)</h4>
+                                      </div>
+                                      <div className="card-body-pro" style={{background:'#f8fafc'}}>
+                                        <div className="preview-container-pro">
+                                          <div className="credential-wrapper-admin">
+                                            <GuideCredential guia={mapToCredential({ ...est, nivel: 'junior' })} isExample={true} />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </>
                               )}
                             </div>
                           </td>
@@ -696,7 +907,6 @@ const AdminDashboard = () => {
                       setEditingId('new');
                       setEditData({ titulo: '', destino: '', categoria: 'Servicio', descripcion: '' });
                     }}
-                    style={{ background: '#0f172a', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
                   >
                     <Plus size={18} /> Agregar Nuevo Manual
                   </button>

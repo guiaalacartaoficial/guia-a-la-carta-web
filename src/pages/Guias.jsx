@@ -22,9 +22,13 @@ const Guias = () => {
 
         const formatGuide = (item, type) => {
           try {
+            const rawN = String(item.nombres || item.nombre || 'Guía').trim();
+            const nombreVisual = (typeof item.nombre_visual === 'string') ? item.nombre_visual : rawN.split(' ')[0];
+            const apellidoVisual = (typeof item.apellido_visual === 'string') ? item.apellido_visual : "";
+            
             return {
               id: item.id || Math.random().toString(),
-              nombre: `${item.nombres || ''} ${item.apellidos || ''}`.trim(),
+              nombre: `${nombreVisual} ${apellidoVisual}`.trim(),
               edad: item.edad || 'N/A',
               codigo: item.id ? (type === 'guia' ? `PRO:${String(item.id).substring(0, 5).toUpperCase()}` : `EST:${String(item.id).substring(0, 5).toUpperCase()}`) : 'N/A',
               idiomas: Array.isArray(item.idiomas) ? item.idiomas.map(i => i.idioma || i) : [],
