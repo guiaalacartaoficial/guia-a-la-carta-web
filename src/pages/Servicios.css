@@ -1160,12 +1160,12 @@
 
   .services-b2b-grid { gap: 4rem; }
 
-  .pain-points-grid { grid-template-columns: 1fr; }
+  .pain-points-grid { grid-template-columns: 1fr; gap: 2.5rem; }
 
   .service-b2b-content { padding: 2rem; }
   .service-b2b-content h3 { font-size: 1.5rem; }
   .service-b2b-features { grid-template-columns: 1fr; }
-  .services-compact-grid { grid-template-columns: 1fr; }
+  .services-compact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
 
   .b2b-timeline::before { left: 20px; }
   .timeline-number { min-width: 42px; height: 42px; font-size: 1rem; }

@@ -193,19 +193,27 @@
   }
 
   .nav-dropdown-menu {
-    position: static; opacity: 1; visibility: visible;
-    transform: none; box-shadow: none;
-    background: transparent; padding-left: var(--s-3);
-    max-height: 0; overflow: hidden;
+    position: static !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    left: auto !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding-left: 1.5rem !important; /* Sangría para subitems */
+    max-height: 0;
+    overflow: hidden;
     transition: max-height 0.4s ease-in-out;
-    border-top: none; /* por si acaso */
-    margin-top: 0;
+    border: none !important;
+    margin: 0 !important;
   }
   
   .nav-dropdown-menu.show { 
     max-height: 400px; 
-    margin-top: 10px;
-    transform: none; /* Previene que se desplace a la izquierda */
+    margin-top: 10px !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   
   .dropdown-item { 
