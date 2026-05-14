@@ -163,9 +163,18 @@ const Guias = () => {
         <div className="container">
           <h2 className="text-center mb-5" style={{ color: 'var(--c-primary-dark)' }}>Nuestros Guías Activos</h2>
           {loading ? (
-            <div className="text-center" style={{ padding: '3rem', color: 'var(--c-text-light)' }}>
-              <Clock className="spin" size={32} style={{ marginBottom: '1rem', color: 'var(--c-primary)' }} />
-              <p>Cargando directorio de guías profesionales...</p>
+            <div className="guias-grid">
+              {[1, 2, 3].map(n => (
+                <div key={n} className="skeleton-loader">
+                  <div className="skeleton-img"></div>
+                  <div className="skeleton-content">
+                    <div className="skeleton-line title"></div>
+                    <div className="skeleton-line subtitle"></div>
+                    <div className="skeleton-line text"></div>
+                    <div className="skeleton-line text short"></div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : guiasActivos.length > 0 ? (
             <div className="guias-grid">

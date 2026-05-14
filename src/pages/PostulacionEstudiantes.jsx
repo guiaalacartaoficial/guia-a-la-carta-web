@@ -188,7 +188,7 @@ const PostulacionEstudiantes = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={{ opacity: loading ? 0.6 : 1, pointerEvents: loading ? 'none' : 'auto', transition: 'opacity 0.3s' }}>
             {/* INTRODUCCION A LA CREDENCIAL (BOTON DESPLEGABLE) */}
             <div className="example-credential-wrapper">
               <h4>Visualiza tu Futura Credencial de Estudiante</h4>

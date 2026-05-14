@@ -130,9 +130,18 @@ const Relatos = () => {
       <section className="relatos-grid-section">
         <div className="container">
           {loading ? (
-            <div className="loading-state text-center" style={{ padding: '4rem' }}>
-              <Clock className="spin" size={32} style={{ color: 'var(--c-primary)', marginBottom: '1rem' }} />
-              <p>Cargando historias...</p>
+            <div className="relatos-grid">
+              {[1, 2, 3].map(n => (
+                <div key={n} className="skeleton-loader">
+                  <div className="skeleton-img"></div>
+                  <div className="skeleton-content">
+                    <div className="skeleton-line title"></div>
+                    <div className="skeleton-line subtitle"></div>
+                    <div className="skeleton-line text"></div>
+                    <div className="skeleton-line text short"></div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : relatos.length > 0 ? (
             <div className="relatos-grid">
@@ -221,7 +230,7 @@ const Relatos = () => {
               <h2>Compartir mi Historia</h2>
               <p>Tu relato será revisado por nuestro equipo antes de ser publicado.</p>
             </div>
-            <form onSubmit={handleSumbitRelato} className="relato-form">
+            <form onSubmit={handleSumbitRelato} className="relato-form" style={{ opacity: submitting ? 0.6 : 1, pointerEvents: submitting ? 'none' : 'auto', transition: 'opacity 0.3s' }}>
               <div className="form-grid">
                 <div className="form-group">
                   <label>Título del Relato</label>
