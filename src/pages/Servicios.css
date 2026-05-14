@@ -431,7 +431,7 @@
 /* ============================================= */
 
 /* --- Featured Services (split layout) --- */
-.services-b2b-grid {
+.services-b2b-list {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -1143,9 +1143,9 @@
   .b2b-hero h1 { font-size: 2.8rem; }
   .service-b2b-card, .service-b2b-card.reverse { flex-direction: column; }
   .service-b2b-visual { min-height: 240px; }
-  .b2b-coverage-grid { grid-template-columns: 1fr; }
-  .profiles-pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
-  .why-us-grid { grid-template-columns: repeat(2, 1fr); }
+  .b2b-coverage-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .profiles-pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; gap: 2.5rem; }
+  .why-us-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .commercial-flex { flex-direction: column; gap: 1.5rem; }
   .commercial-plus { justify-content: center; }
 }
@@ -1158,7 +1158,7 @@
   .b2b-section-header { margin-bottom: 2.5rem; }
   .b2b-section-header h2 { font-size: 1.9rem; }
 
-  .services-b2b-grid { gap: 4rem; }
+  .services-b2b-list { gap: 4.5rem; }
 
   .pain-points-grid { grid-template-columns: 1fr; gap: 2.5rem; }
 
@@ -1172,12 +1172,12 @@
   .timeline-step { gap: 1.25rem; }
   .timeline-content { padding: 1.25rem; }
 
-  .why-us-grid { grid-template-columns: 1fr; }
+  .why-us-grid { grid-template-columns: 1fr; gap: 2rem; }
 
   .b2b-cta-final { padding: 3.5rem 1.5rem; border-radius: var(--radius-md); }
   .b2b-cta-final h2 { font-size: 1.9rem; }
 
-  .b2b-hero-actions { flex-direction: column; align-items: center; }
+  .b2b-hero-actions { flex-direction: column; align-items: center; gap: 1.5rem; }
   .b2b-hero-actions .btn { width: 100%; max-width: 320px; }
 
   .b2b-trust-badges { gap: 1rem; }
