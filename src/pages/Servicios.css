@@ -242,23 +242,6 @@
   color: var(--c-primary-dark) !important;
 }
 
-/* Ajuste para la tarjeta de CTA final cuando está en fondo claro */
-.b2b-theme-light .b2b-cta-final {
-  background: white !important;
-  border: 1px solid rgba(0,0,0,0.1);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-  color: var(--c-primary-dark) !important;
-}
-.b2b-theme-light .b2b-cta-final h2 {
-  color: var(--c-primary-dark) !important;
-}
-.b2b-theme-light .b2b-cta-final p {
-  color: var(--c-primary-dark) !important;
-  opacity: 0.9;
-}
-.b2b-theme-light .b2b-cta-final::before {
-  display: none;
-}
 
 /* Estilos para el CTA Final - Fondo Oscuro + Contenido Lima/Blanco */
 .b2b-cta-final {
