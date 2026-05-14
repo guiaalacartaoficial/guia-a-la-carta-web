@@ -1,11 +1,21 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "guiaalacarta.cl"
+        }
+      ],
+      "destination": "https://www.guiaalacarta.cl/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
-
-  
-  
 }

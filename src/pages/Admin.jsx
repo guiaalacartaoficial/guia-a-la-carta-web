@@ -80,6 +80,20 @@ const AdminDashboard = () => {
     }
   };
 
+  const updateField = async (table, id, field, value) => {
+    try {
+      const { data, error } = await supabase.from(table).update({ [field]: value }).eq('id', id).select();
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error("El registro no se actualizó.");
+      }
+      fetchData();
+    } catch (error) {
+      console.error("Error updateField:", error);
+      alert('Error al actualizar: ' + error.message);
+    }
+  };
+
   const handleUpdateRecord = async (table, id) => {
     setLoading(true);
     try {
@@ -203,6 +217,7 @@ const AdminDashboard = () => {
 
   const ActionButtons = ({ table, id, currentStatus, record }) => {
     const isReserva = table === 'reservas';
+    const isGuia = table === 'postulaciones_guias';
 
     return (
       <div className="admin-actions">
@@ -224,12 +239,27 @@ const AdminDashboard = () => {
             </select>
           </>
         ) : (
-          (currentStatus === 'pendiente' || currentStatus === 'nueva') && (
-            <>
-              <button onClick={() => updateStatus(table, id, 'aprobado')} className="btn-action approve" title="Aprobar"><Check size={16}/></button>
-              <button onClick={() => updateStatus(table, id, 'rechazado')} className="btn-action reject" title="Rechazar"><XCircle size={16}/></button>
-            </>
-          )
+          <>
+            {isGuia && (
+              <select 
+                className="status-selector-mini level-selector" 
+                value={record.nivel || 'senior'} 
+                onChange={(e) => updateField(table, id, 'nivel', e.target.value)}
+                title="Cambiar Nivel"
+              >
+                <option value="junior">Junior</option>
+                <option value="full">Full</option>
+                <option value="senior">Senior</option>
+              </select>
+            )}
+            
+            {(currentStatus === 'pendiente' || currentStatus === 'nueva') && (
+              <>
+                <button onClick={() => updateStatus(table, id, 'aprobado')} className="btn-action approve" title="Aprobar"><Check size={16}/></button>
+                <button onClick={() => updateStatus(table, id, 'rechazado')} className="btn-action reject" title="Rechazar"><XCircle size={16}/></button>
+              </>
+            )}
+          </>
         )}
         
         <button onClick={() => handleDelete(table, id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>

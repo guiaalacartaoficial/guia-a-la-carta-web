@@ -325,6 +325,16 @@
   color: #0f172a;
 }
 
+.level-selector {
+  border-color: #e2e8f0;
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.level-selector:hover {
+  background-color: #e2e8f0;
+}
+
 /* EXPANDED DETAILS */
 .row-expanded {
   background-color: #f8fafc;
