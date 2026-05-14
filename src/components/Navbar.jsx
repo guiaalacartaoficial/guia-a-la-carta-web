@@ -44,7 +44,7 @@ const Navbar = () => {
           <NavLink to="/guias" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={closeMenu}>Nuestros Guías</NavLink>
           <NavLink to="/relatos" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={closeMenu}>Relatos</NavLink>
           
-          <div className="nav-dropdown" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
+          <div className="nav-dropdown">
             <button className="nav-link nav-dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
               Únete a la Red <ChevronDown size={16} className={`chevron ${dropdownOpen ? 'open' : ''}`} />
             </button>
