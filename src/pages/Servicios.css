@@ -258,7 +258,8 @@
 }
 
 .b2b-cta-final p {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #BEF264 !important;
+  opacity: 0.9;
 }
 
 .b2b-cta-final .btn-secondary,
