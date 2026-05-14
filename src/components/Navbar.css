@@ -205,6 +205,7 @@
   .nav-dropdown-menu.show { 
     max-height: 400px; 
     margin-top: 10px;
+    transform: none; /* Previene que se desplace a la izquierda */
   }
   
   .dropdown-item { 
