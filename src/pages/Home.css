@@ -722,6 +722,9 @@
   .hero-content h1 { font-size: 2rem; }
   .destino-tag { font-size: 0.9rem; padding: 10px 18px; }
   .estandar-box { width: 160px; padding: var(--s-4); }
+  
+  .servicios-grid { gap: 1.5rem; }
+  .servicio-card.interactive { flex: 1 1 100%; min-height: auto; padding: 2rem 1.5rem; }
 }
 
 /* ============================================= */
@@ -883,7 +886,19 @@
 
 @media (max-width: 768px) {
   .section-gallery { padding: 4rem 0; }
-  .collage-slider { height: 380px; }
+  
+  .custom-collage-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 12px;
+  }
+  .item-1, .item-2, .item-3, .item-4 { grid-column: span 1; }
+  
+  .collage-slider { height: 420px; }
   .collage-frame { border-radius: 20px; }
   .collage-overlay { padding: 20px; }
+  
+  .slider-controls {
+    bottom: -60px;
+  }
 }

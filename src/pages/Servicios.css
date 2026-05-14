@@ -1158,6 +1158,8 @@
   .b2b-section-header { margin-bottom: 2.5rem; }
   .b2b-section-header h2 { font-size: 1.9rem; }
 
+  .services-b2b-grid { gap: 4rem; }
+
   .pain-points-grid { grid-template-columns: 1fr; }
 
   .service-b2b-content { padding: 2rem; }

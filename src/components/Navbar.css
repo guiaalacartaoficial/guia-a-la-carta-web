@@ -192,7 +192,7 @@
     max-height: 0; overflow: hidden;
     transition: max-height 0.3s ease;
   }
-  .nav-dropdown-menu.show { max-height: 200px; }
+  .nav-dropdown-menu.show { max-height: 500px; padding-bottom: 10px; }
   .dropdown-item { color: rgba(255,255,255,0.7); border-left-color: transparent; }
   .dropdown-item:hover { background: transparent; color: var(--c-accent); }
 }

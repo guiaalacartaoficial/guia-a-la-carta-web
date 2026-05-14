@@ -59,9 +59,9 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-  .footer-main { grid-template-columns: 1fr 1fr; }
+  .footer-main { grid-template-columns: 1fr 1fr; padding: var(--s-8) 1.5rem; }
   .footer-brand { grid-column: 1 / -1; }
 }
 @media (max-width: 600px) {
-  .footer-main { grid-template-columns: 1fr; gap: var(--s-5); }
+  .footer-main { grid-template-columns: 1fr; gap: var(--s-5); padding: var(--s-6) 1.5rem; }
 }
