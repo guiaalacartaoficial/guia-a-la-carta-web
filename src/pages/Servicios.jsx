@@ -555,7 +555,7 @@ const Servicios = () => {
       {/* =========================================== */}
       {/* 10. CTA FINAL                              */}
       {/* =========================================== */}
-      <section className="b2b-section b2b-theme-light">
+      <section className="b2b-section b2b-theme-dark">
         <div className="container">
           <div className="b2b-cta-final">
             <h2>Asegura tu próxima operación hoy</h2>

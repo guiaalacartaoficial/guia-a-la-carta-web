@@ -246,9 +246,11 @@
 /* Estilos para el CTA Final - Fondo Oscuro + Contenido Lima/Blanco */
 .b2b-cta-final {
   background: var(--c-primary-dark) !important;
-  color: white !important; /* Texto base en blanco para máxima legibilidad */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  padding: 4rem 2rem;
+  border-radius: 24px;
 }
 
 .b2b-cta-final h2 {
