@@ -111,7 +111,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
             await navigator.share({ files: [file], title: `Credencial ${guia.nombre}` });
             return;
           } catch (shareErr) {
-            console.log('Cancelado:', shareErr);
+            // Cancelado
           }
         }
       }

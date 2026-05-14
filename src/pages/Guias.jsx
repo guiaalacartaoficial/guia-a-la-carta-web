@@ -20,9 +20,6 @@ const Guias = () => {
         const { data: pros, error: errPros } = await supabase.from('postulaciones_guias').select('*').eq('estado', 'aprobado');
         const { data: ests, error: errEsts } = await supabase.from('postulaciones_estudiantes').select('*').eq('estado', 'aprobado');
 
-        console.log("Supabase Pros:", pros, "Error:", errPros);
-        console.log("Supabase Ests:", ests, "Error:", errEsts);
-
         const formatGuide = (item, type) => {
           try {
             return {

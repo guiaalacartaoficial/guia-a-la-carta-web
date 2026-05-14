@@ -103,9 +103,7 @@ const PostulacionGuias = () => {
           estado: 'pendiente'
       };
       
-      // Solo agregamos url_otras_certificaciones si existe para no perder la variable,
-      // PERO como la base de datos lanza error al no encontrar la columna, se deja comentado.
-      // Cuando agregues la columna 'url_otras_certificaciones' (tipo text) en Supabase, descomenta la siguiente línea:
+      // Solo agregamos url_otras_certificaciones si existe para no perder la variable
       // insertData.url_otras_certificaciones = url_otras_certificaciones;
 
       const { error } = await supabase
@@ -406,7 +404,7 @@ const PostulacionGuias = () => {
                 <div className="form-group">
                   <label className="form-label">Certificado de Registro Nacional de Guías (SERNATUR)</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => { console.log('File selected:', e.target.files[0]); handleFileChange(e, 'sernatur'); }} required />
+                    <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => { handleFileChange(e, 'sernatur'); }} required />
                     <span className="file-upload-info"><Award size={14} style={{display:'inline', marginBottom:'-2px'}}/> Adjunta el comprobante o carnet vigente.</span>
                   </div>
                 </div>
@@ -414,7 +412,7 @@ const PostulacionGuias = () => {
                 <div className="form-group">
                   <label className="form-label">Certificación de Primeros Auxilios (WFA / WAFA / WFR)</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => { console.log('File selected:', e.target.files[0]); handleFileChange(e, 'primeros_auxilios'); }} required />
+                    <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => { handleFileChange(e, 'primeros_auxilios'); }} required />
                     <span className="file-upload-info"><CheckSquare size={14} style={{display:'inline', marginBottom:'-2px'}}/> Debe estar vigente al momento de la postulación.</span>
                   </div>
                 </div>

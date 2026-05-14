@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabase';
 import { 
   Users, FileText, Calendar, CheckCircle, XCircle, 
-  Clock, ExternalLink, Eye, Trash2, Check, ArrowLeft,
+  Eye, Trash2, Check,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
   ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download
 } from 'lucide-react';
@@ -28,7 +28,6 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    console.log("Fetching admin data...");
     try {
       const { data: resData } = await supabase.from('reservas').select('*').order('created_at', { ascending: false });
       const { data: guiasData } = await supabase.from('postulaciones_guias').select('*').order('created_at', { ascending: false });
@@ -43,7 +42,6 @@ const AdminDashboard = () => {
       setRelatos(relatoData || []);
       setComentarios(comData || []);
       setManuales(manualesData || []);
-      console.log("Data fetched successfully.");
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
@@ -69,7 +67,6 @@ const AdminDashboard = () => {
   };
 
   const updateStatus = async (table, id, newStatus) => {
-    console.log(`Updating ${table} ID: ${id} to Status: ${newStatus}`);
     try {
       const { data, error } = await supabase.from(table).update({ estado: newStatus }).eq('id', id).select();
       if (error) throw error;
@@ -106,7 +103,6 @@ const AdminDashboard = () => {
         delete finalData.file_wfr;
       }
       if (editData.file_otras) {
-        // finalData.url_otras_certificaciones = await uploadFile(editData.file_otras, 'documentos', 'certificados');
         delete finalData.file_otras;
       }
       if (editData.file_manual instanceof File) {
