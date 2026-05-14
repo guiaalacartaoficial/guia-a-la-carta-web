@@ -19,6 +19,12 @@
   color: var(--c-text-invert);
   padding: 120px 0 5.5rem; /* Standardized top padding to clear Navbar */
   overflow: hidden;
+  animation: b2bHeroFadeIn 1.2s ease-out;
+}
+
+@keyframes b2bHeroFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .b2b-hero-bg {
