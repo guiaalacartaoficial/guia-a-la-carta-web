@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, CheckSquare, UploadCloud, GraduationCap, Plus, X } from 'lucide-react';
+import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, CheckSquare, UploadCloud, GraduationCap, Plus, X, ShieldCheck } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
 import './Postulacion.css';
 import { supabase } from '../services/supabase';
