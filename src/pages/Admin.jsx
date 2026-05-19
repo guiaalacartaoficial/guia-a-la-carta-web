@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabase';
 import { 
   Users, FileText, Calendar, CheckCircle, XCircle, 
-  Eye, Trash2, Check,
+  Eye, Trash2, Check, Crop,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
   ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download
 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
+import CropperModal from '../components/CropperModal';
 import './Admin.css';
 
 const AdminDashboard = () => {
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
   const [expandedId, setExpandedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
+  const [cropModalData, setCropModalData] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -91,6 +93,35 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error("Error updateField:", error);
       alert('Error al actualizar: ' + error.message);
+    }
+  };
+
+  const handleSaveCrop = async (croppedBlob) => {
+    setLoading(true);
+    try {
+      const { table, record } = cropModalData;
+      const bucket = table === 'postulaciones_guias' ? 'documentos_guias' : 'documentos_estudiantes';
+      const fileExt = 'jpg';
+      const fileName = `${record.id}-cropped-${Math.random()}.${fileExt}`;
+      const filePath = `fotos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, croppedBlob);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+      const newUrl = data.publicUrl;
+
+      await updateField(table, record.id, 'url_foto', newUrl);
+      alert('Foto recortada y actualizada con éxito.');
+    } catch (e) {
+      console.error(e);
+      alert('Error al guardar la foto recortada');
+    } finally {
+      setLoading(false);
+      setCropModalData(null);
     }
   };
 
@@ -615,6 +646,18 @@ const AdminDashboard = () => {
                                         </div>
                                         <div className="card-body-pro">
                                           <div style={{display:'flex', flexDirection:'column', gap:'15px'}}>
+                                            {guia.url_foto && (
+                                              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
+                                                <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                                                  <Eye size={20} color="#2563eb" />
+                                                  <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Foto de Perfil</span>
+                                                </div>
+                                                <div style={{display:'flex', gap:'10px'}}>
+                                                  <a href={guia.url_foto} target="_blank" rel="noreferrer" className="btn-view-doc">Ver</a>
+                                                  <button onClick={() => setCropModalData({ table: 'postulaciones_guias', record: guia })} className="btn-view-doc" style={{background:'var(--c-primary)', color:'white', border:'none', cursor:'pointer'}}><Crop size={14} style={{display:'inline', marginBottom:'-2px'}}/> Recortar</button>
+                                                </div>
+                                              </div>
+                                            )}
                                             {guia.url_cv && (
                                               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px', background:'#f8fafc', borderRadius:'12px', border:'1px solid var(--border)'}}>
                                                 <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
@@ -815,7 +858,10 @@ const AdminDashboard = () => {
                                                   <Eye size={20} color="#2563eb" />
                                                   <span style={{fontWeight:'700', fontSize:'0.9rem'}}>Foto de Perfil</span>
                                                 </div>
-                                                <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-view-doc">Ver Archivo</a>
+                                                <div style={{display:'flex', gap:'10px'}}>
+                                                  <a href={est.url_foto} target="_blank" rel="noreferrer" className="btn-view-doc">Ver</a>
+                                                  <button onClick={() => setCropModalData({ table: 'postulaciones_estudiantes', record: est })} className="btn-view-doc" style={{background:'var(--c-primary)', color:'white', border:'none', cursor:'pointer'}}><Crop size={14} style={{display:'inline', marginBottom:'-2px'}}/> Recortar</button>
+                                                </div>
                                               </div>
                                             )}
                                           </div>
@@ -1032,6 +1078,14 @@ const AdminDashboard = () => {
           </div>
         </div>
       </main>
+
+      {cropModalData && (
+        <CropperModal
+          imageSrc={cropModalData.record.url_foto}
+          onSave={handleSaveCrop}
+          onClose={() => setCropModalData(null)}
+        />
+      )}
     </div>
   );
 };
