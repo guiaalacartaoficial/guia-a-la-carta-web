@@ -291,8 +291,8 @@ const AdminDashboard = () => {
       idiomas: Array.isArray(g.idiomas) ? g.idiomas.map(i => (typeof i === 'object' ? i?.idioma : i) || 'Español') : ['Español'],
       imagen: g.url_foto || '/guias/placeholder.png',
       biografia: String(g.biografia || 'Sin biografía'),
-      formacion: typeof g.educacion === 'string' ? g.educacion.split('\\n') : [],
-      experiencia: typeof g.rutas_experiencia === 'string' ? g.rutas_experiencia.split('\\n') : (typeof g.experiencia_terreno === 'string' ? g.experiencia_terreno.split('\\n') : []),
+      formacion: typeof g.educacion === 'string' ? g.educacion.split('\n') : [],
+      experiencia: typeof g.rutas_experiencia === 'string' ? g.rutas_experiencia.split('\n') : (typeof g.experiencia_terreno === 'string' ? g.experiencia_terreno.split('\n') : []),
       certificaciones: { 
         sernatur: !!g.url_sernatur, 
         wfr: !!g.url_primeros_auxilios,
