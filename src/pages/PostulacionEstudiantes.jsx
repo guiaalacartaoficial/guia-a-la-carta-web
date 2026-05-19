@@ -117,6 +117,7 @@ const PostulacionEstudiantes = () => {
         .from('postulaciones_estudiantes')
         .insert([{
           ...formData,
+          edad: formData.edad ? parseInt(formData.edad, 10) : null,
           idiomas: idiomasList,
           codigo: autoCode,
           url_cv,

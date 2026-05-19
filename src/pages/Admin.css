@@ -1,4 +1,6 @@
 /* === ADMIN DASHBOARD ULTIMATE PREMIUM === */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
 :root {
   --admin-bg: #f0f4f3;
   --panel-bg: #ffffff;
@@ -25,7 +27,6 @@
   --grad-accent: linear-gradient(135deg, #9FC05A 0%, #89ab47 100%);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 .admin-dashboard-pro {
   background-color: var(--admin-bg);

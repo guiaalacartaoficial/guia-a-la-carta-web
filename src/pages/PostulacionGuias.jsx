@@ -41,7 +41,8 @@ const PostulacionGuias = () => {
     cv: null,
     foto: null,
     sernatur: null,
-    primeros_auxilios: null
+    primeros_auxilios: null,
+    otras_certificaciones: null
   });
 
   const handleInputChange = (e) => {
@@ -122,6 +123,7 @@ const PostulacionGuias = () => {
       // 2. Guardar en DB
       const insertData = {
           ...formData,
+          edad: formData.edad ? parseInt(formData.edad, 10) : null,
           idiomas: idiomasList,
           codigo: autoCode,
           url_cv,
