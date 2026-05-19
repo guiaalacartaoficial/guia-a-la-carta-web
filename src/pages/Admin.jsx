@@ -100,7 +100,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const { table, record } = cropModalData;
-      const bucket = table === 'postulaciones_guias' ? 'documentos_guias' : 'documentos_estudiantes';
+      const bucket = 'documentos';
       const fileExt = 'jpg';
       const fileName = `${record.id}-cropped-${Math.random()}.${fileExt}`;
       const filePath = `fotos/${fileName}`;
