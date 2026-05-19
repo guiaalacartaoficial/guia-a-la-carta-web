@@ -1,4 +1,4 @@
-import { MapPin, Star, Shield, Award, CheckCircle, Clock } from 'lucide-react';
+import { MapPin, Star, Shield, Award, CheckCircle, Clock, Search, Filter } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
@@ -12,6 +12,27 @@ const Guias = () => {
   const [guiasActivos, setGuiasActivos] = useState([]);
   const [guiasJunior, setGuiasJunior] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Filtros
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
+
+  const filterGuias = (guiasList) => {
+    return guiasList.filter(guia => {
+      const searchLower = searchTerm.toLowerCase();
+      const matchSearch = searchTerm === '' || 
+        guia.nombre.toLowerCase().includes(searchLower) || 
+        (guia.especialidad && guia.especialidad.toLowerCase().includes(searchLower)) ||
+        (guia.idiomas && guia.idiomas.some(i => i.toLowerCase().includes(searchLower)));
+        
+      const matchRegion = selectedRegion === '' || guia.ubicacion === selectedRegion;
+      
+      return matchSearch && matchRegion;
+    });
+  };
+
+  const filteredGuiasActivos = filterGuias(guiasActivos);
+  const filteredGuiasJunior = filterGuias(guiasJunior);
 
   useEffect(() => {
     const fetchApprovedGuides = async () => {
@@ -166,6 +187,47 @@ const Guias = () => {
       <section className="section" style={{ backgroundColor: '#CDE0CC', paddingTop: '2rem', paddingBottom: '4rem' }}>
         <div className="container">
           <h2 className="text-center mb-5" style={{ color: 'var(--c-primary-dark)' }}>Nuestros Guías Activos</h2>
+          
+          <div className="filtros-container mb-5">
+            <div className="filtros-wrapper">
+              <div className="search-box">
+                <Search size={18} className="search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar por nombre, especialidad o idioma..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="filtro-input"
+                />
+              </div>
+              <div className="select-box">
+                <MapPin size={18} className="select-icon" />
+                <select 
+                  value={selectedRegion} 
+                  onChange={(e) => setSelectedRegion(e.target.value)}
+                  className="filtro-select"
+                >
+                  <option value="">Todas las Regiones</option>
+                  <option value="Arica y Parinacota">Arica y Parinacota</option>
+                  <option value="Tarapacá">Tarapacá</option>
+                  <option value="Antofagasta">Antofagasta</option>
+                  <option value="Atacama">Atacama</option>
+                  <option value="Coquimbo">Coquimbo</option>
+                  <option value="Valparaíso">Valparaíso</option>
+                  <option value="Metropolitana">Metropolitana</option>
+                  <option value="O'Higgins">O'Higgins</option>
+                  <option value="Maule">Maule</option>
+                  <option value="Ñuble">Ñuble</option>
+                  <option value="Biobío">Biobío</option>
+                  <option value="Araucanía">Araucanía</option>
+                  <option value="Los Ríos">Los Ríos</option>
+                  <option value="Los Lagos">Los Lagos</option>
+                  <option value="Aysén">Aysén</option>
+                  <option value="Magallanes">Magallanes</option>
+                </select>
+              </div>
+            </div>
+          </div>
           {loading ? (
             <div className="guias-grid">
               {[1, 2, 3].map(n => (
@@ -180,9 +242,9 @@ const Guias = () => {
                 </div>
               ))}
             </div>
-          ) : guiasActivos.length > 0 ? (
+          ) : filteredGuiasActivos.length > 0 ? (
             <div className="guias-grid">
-              {guiasActivos.map(guia => (
+              {filteredGuiasActivos.map(guia => (
                 <div
                   className={`guia-card ${guia.nivel}`}
                   key={guia.id}
@@ -243,9 +305,9 @@ const Guias = () => {
             <div className="text-center" style={{ padding: '2rem', color: 'var(--c-text-light)' }}>
               <Clock className="spin" size={24} style={{ marginBottom: '1rem' }} />
             </div>
-          ) : guiasJunior.length > 0 ? (
+          ) : filteredGuiasJunior.length > 0 ? (
             <div className="guias-grid">
-              {guiasJunior.map(guia => (
+              {filteredGuiasJunior.map(guia => (
                 <div
                   className={`guia-card ${guia.nivel}`}
                   key={guia.id}
