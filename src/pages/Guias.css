@@ -439,7 +439,7 @@
 /* Filtros Buscador */
 .filtros-container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 0 auto 3rem auto;
 }
 
 .filtros-wrapper {
