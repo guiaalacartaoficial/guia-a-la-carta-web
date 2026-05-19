@@ -301,6 +301,47 @@ const Guias = () => {
       <section className="junior-section">
         <div className="container">
           <h2>Red de Guías Junior</h2>
+          
+          <div className="filtros-container mb-5">
+            <div className="filtros-wrapper">
+              <div className="search-box">
+                <Search size={18} className="search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar por nombre, especialidad o idioma..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="filtro-input"
+                />
+              </div>
+              <div className="select-box">
+                <MapPin size={18} className="select-icon" />
+                <select 
+                  value={selectedRegion} 
+                  onChange={(e) => setSelectedRegion(e.target.value)}
+                  className="filtro-select"
+                >
+                  <option value="">Todas las Regiones</option>
+                  <option value="Arica y Parinacota">Arica y Parinacota</option>
+                  <option value="Tarapacá">Tarapacá</option>
+                  <option value="Antofagasta">Antofagasta</option>
+                  <option value="Atacama">Atacama</option>
+                  <option value="Coquimbo">Coquimbo</option>
+                  <option value="Valparaíso">Valparaíso</option>
+                  <option value="Metropolitana">Metropolitana</option>
+                  <option value="O'Higgins">O'Higgins</option>
+                  <option value="Maule">Maule</option>
+                  <option value="Ñuble">Ñuble</option>
+                  <option value="Biobío">Biobío</option>
+                  <option value="Araucanía">Araucanía</option>
+                  <option value="Los Ríos">Los Ríos</option>
+                  <option value="Los Lagos">Los Lagos</option>
+                  <option value="Aysén">Aysén</option>
+                  <option value="Magallanes">Magallanes</option>
+                </select>
+              </div>
+            </div>
+          </div>
           {loading ? (
             <div className="text-center" style={{ padding: '2rem', color: 'var(--c-text-light)' }}>
               <Clock className="spin" size={24} style={{ marginBottom: '1rem' }} />
