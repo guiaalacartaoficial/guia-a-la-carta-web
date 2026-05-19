@@ -495,7 +495,28 @@ const AdminDashboard = () => {
                                   <div className="form-group"><label>Email de Contacto</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Ciudad Residencia</label><input name="ciudad_residencia" value={editData.ciudad_residencia} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group">
+                                    <label>Región de Residencia</label>
+                                    <select name="ciudad_residencia" value={editData.ciudad_residencia || ''} onChange={handleEditChange} className="form-control">
+                                      <option value="" disabled>Seleccione una región</option>
+                                      <option value="Arica y Parinacota">Arica y Parinacota</option>
+                                      <option value="Tarapacá">Tarapacá</option>
+                                      <option value="Antofagasta">Antofagasta</option>
+                                      <option value="Atacama">Atacama</option>
+                                      <option value="Coquimbo">Coquimbo</option>
+                                      <option value="Valparaíso">Valparaíso</option>
+                                      <option value="Metropolitana">Metropolitana</option>
+                                      <option value="O'Higgins">O'Higgins</option>
+                                      <option value="Maule">Maule</option>
+                                      <option value="Ñuble">Ñuble</option>
+                                      <option value="Biobío">Biobío</option>
+                                      <option value="Araucanía">Araucanía</option>
+                                      <option value="Los Ríos">Los Ríos</option>
+                                      <option value="Los Lagos">Los Lagos</option>
+                                      <option value="Aysén">Aysén</option>
+                                      <option value="Magallanes">Magallanes</option>
+                                    </select>
+                                  </div>
                                   <div className="form-group"><label>Ciudad Trabajo</label><input name="ciudad_trabajo" value={editData.ciudad_trabajo} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group">
                                     <label>Estado del Perfil</label>
@@ -564,7 +585,7 @@ const AdminDashboard = () => {
                                             <div className="field-pro"><span className="field-label">Teléfono Contacto</span><span className="field-value">{guia.telefono}</span></div>
                                             <div className="field-pro"><span className="field-label">Nacionalidad</span><span className="field-value">{guia.nacionalidad}</span></div>
                                             <div className="field-pro"><span className="field-label">Edad Registrada</span><span className="field-value">{guia.edad} años</span></div>
-                                            <div className="field-pro"><span className="field-label">Ciudad de Residencia</span><span className="field-value">{guia.ciudad_residencia}</span></div>
+                                            <div className="field-pro"><span className="field-label">Región de Residencia</span><span className="field-value">{guia.ciudad_residencia}</span></div>
                                             <div className="field-pro"><span className="field-label">Zonas de Trabajo</span><span className="field-value">{guia.ciudad_trabajo}</span></div>
                                             <div className="field-pro"><span className="field-label">Nivel de Guía</span><span className="field-value">{guia.nivel?.toUpperCase() || 'SENIOR'}</span></div>
                                             <div className="field-pro"><span className="field-label">Código Profesional</span><span className="field-value">{guia.codigo || 'PENDIENTE'}</span></div>
@@ -681,7 +702,28 @@ const AdminDashboard = () => {
                                   <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Edad Visual</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Ciudad Residencia</label><input name="ciudad_residencia" value={editData.ciudad_residencia} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group">
+                                    <label>Región de Residencia</label>
+                                    <select name="ciudad_residencia" value={editData.ciudad_residencia || ''} onChange={handleEditChange} className="form-control">
+                                      <option value="" disabled>Seleccione una región</option>
+                                      <option value="Arica y Parinacota">Arica y Parinacota</option>
+                                      <option value="Tarapacá">Tarapacá</option>
+                                      <option value="Antofagasta">Antofagasta</option>
+                                      <option value="Atacama">Atacama</option>
+                                      <option value="Coquimbo">Coquimbo</option>
+                                      <option value="Valparaíso">Valparaíso</option>
+                                      <option value="Metropolitana">Metropolitana</option>
+                                      <option value="O'Higgins">O'Higgins</option>
+                                      <option value="Maule">Maule</option>
+                                      <option value="Ñuble">Ñuble</option>
+                                      <option value="Biobío">Biobío</option>
+                                      <option value="Araucanía">Araucanía</option>
+                                      <option value="Los Ríos">Los Ríos</option>
+                                      <option value="Los Lagos">Los Lagos</option>
+                                      <option value="Aysén">Aysén</option>
+                                      <option value="Magallanes">Magallanes</option>
+                                    </select>
+                                  </div>
                                   <div className="form-group">
                                     <label>Habilitado SII</label>
                                     <select name="habilitado_sii" value={editData.habilitado_sii} onChange={handleEditChange} className="form-control">
@@ -728,7 +770,7 @@ const AdminDashboard = () => {
                                             <div className="field-pro"><span className="field-label">Teléfono</span><span className="field-value">{est.telefono}</span></div>
                                             <div className="field-pro"><span className="field-label">Nacionalidad</span><span className="field-value">{est.nacionalidad}</span></div>
                                             <div className="field-pro"><span className="field-label">Edad Registrada</span><span className="field-value">{est.edad} años</span></div>
-                                            <div className="field-pro"><span className="field-label">Ciudad de Residencia</span><span className="field-value">{est.ciudad_residencia}</span></div>
+                                            <div className="field-pro"><span className="field-label">Región de Residencia</span><span className="field-value">{est.ciudad_residencia}</span></div>
                                             <div className="field-pro"><span className="field-label">Habilitado SII</span><span className="field-value">{est.habilitado_sii?.toUpperCase()}</span></div>
                                             <div className="field-pro"><span className="field-label">Estado</span><span className="field-value">{est.estado?.toUpperCase()}</span></div>
                                           </div>

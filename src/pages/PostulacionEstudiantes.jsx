@@ -290,10 +290,28 @@ const PostulacionEstudiantes = () => {
 
               <div className="form-grid">
                 <div className="form-group">
-                  <label className="form-label">Ciudad de Residencia</label>
+                  <label className="form-label">Región de Residencia</label>
                   <div className="input-icon-wrapper">
                     <MapPin className="input-icon" size={18} />
-                    <input type="text" name="ciudad_residencia" className="form-control" placeholder="Ej: Santiago" onChange={handleInputChange} required />
+                    <select name="ciudad_residencia" className="form-control" onChange={handleInputChange} required defaultValue="">
+                      <option value="" disabled>Seleccione una región</option>
+                      <option value="Arica y Parinacota">Arica y Parinacota</option>
+                      <option value="Tarapacá">Tarapacá</option>
+                      <option value="Antofagasta">Antofagasta</option>
+                      <option value="Atacama">Atacama</option>
+                      <option value="Coquimbo">Coquimbo</option>
+                      <option value="Valparaíso">Valparaíso</option>
+                      <option value="Metropolitana">Metropolitana</option>
+                      <option value="O'Higgins">O'Higgins</option>
+                      <option value="Maule">Maule</option>
+                      <option value="Ñuble">Ñuble</option>
+                      <option value="Biobío">Biobío</option>
+                      <option value="Araucanía">Araucanía</option>
+                      <option value="Los Ríos">Los Ríos</option>
+                      <option value="Los Lagos">Los Lagos</option>
+                      <option value="Aysén">Aysén</option>
+                      <option value="Magallanes">Magallanes</option>
+                    </select>
                   </div>
                 </div>
               </div>

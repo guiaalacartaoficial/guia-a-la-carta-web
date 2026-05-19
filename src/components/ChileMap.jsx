@@ -33,39 +33,6 @@ const regionesChile = [
   { id: 16, nombre: 'Magallanes', lat: -53.1638, lng: -70.9171, guias: 33 },
 ];
 
-// Función para normalizar texto (quitar acentos y pasar a minúsculas)
-const normalizeText = (text) => {
-  if (!text) return "";
-  return text.toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-};
-
-// Mapeo robusto de ciudad a región
-const getRegionFromCity = (city) => {
-  if (!city) return null;
-  const c = normalizeText(city);
-  
-  if (c.includes('santiago') || c.includes('metropol') || c.includes('puente alto') || c.includes('maipu') || c.includes('la florida') || c.includes('san bernardo') || c.includes('independencia') || c.includes('providencia')) return 'Metropolitana';
-  if (c.includes('valparaiso') || c.includes('vina') || c.includes('concon') || c.includes('quilpue') || c.includes('villa alemana') || c.includes('san antonio')) return 'Valparaíso';
-  if (c.includes('arica') || c.includes('parinacota')) return 'Arica y Parinacota';
-  if (c.includes('tarapaca') || c.includes('iquique')) return 'Tarapacá';
-  if (c.includes('antofagasta') || c.includes('calama') || c.includes('san pedro')) return 'Antofagasta';
-  if (c.includes('atacama') || c.includes('copiapo') || c.includes('vallenar')) return 'Atacama';
-  if (c.includes('coquimbo') || c.includes('la serena') || c.includes('ovalle')) return 'Coquimbo';
-  if (c.includes('ohiggins') || c.includes('rancagua') || c.includes('san fernando') || c.includes('machali')) return 'O\'Higgins';
-  if (c.includes('maule') || c.includes('talca') || c.includes('curico') || c.includes('linares')) return 'Maule';
-  if (c.includes('nuble') || c.includes('chillan')) return 'Ñuble';
-  if (c.includes('biobio') || c.includes('concepcion') || c.includes('talcahuano') || c.includes('los angeles')) return 'Biobío';
-  if (c.includes('araucania') || c.includes('temuco') || c.includes('pucon') || c.includes('villarrica')) return 'Araucanía';
-  if (c.includes('rios') || c.includes('valdivia')) return 'Los Ríos';
-  if (c.includes('lagos') || c.includes('puerto montt') || c.includes('castro') || c.includes('chiloe') || c.includes('puerto varas')) return 'Los Lagos';
-  if (c.includes('aysen') || c.includes('coyhaique')) return 'Aysén';
-  if (c.includes('magallanes') || c.includes('punta arenas') || c.includes('puerto natales')) return 'Magallanes';
-  
-  return null;
-};
-
 const ChileMap = () => {
   const [regiones, setRegiones] = useState(regionesChile);
   const chileCenter = [-35.6751, -71.543]; // Center of Chile
@@ -83,9 +50,9 @@ const ChileMap = () => {
         
 
 
-        // Contamos por región inferida
+        // Contamos por región
         const counts = allRecords.reduce((acc, curr) => {
-          const regionName = getRegionFromCity(curr.ciudad_residencia);
+          const regionName = curr.ciudad_residencia;
           if (regionName) {
             acc[regionName] = (acc[regionName] || 0) + 1;
           }
