@@ -49,7 +49,11 @@ const PostulacionGuias = () => {
   };
 
   const handleFileChange = (e, field) => {
-    setFiles({ ...files, [field]: e.target.files[0] });
+    if (e.target.multiple) {
+      setFiles({ ...files, [field]: Array.from(e.target.files) });
+    } else {
+      setFiles({ ...files, [field]: e.target.files[0] });
+    }
   };
 
   const handleAddIdioma = (e) => {
@@ -62,20 +66,42 @@ const PostulacionGuias = () => {
     setIdiomasList(idiomasList.filter(i => i.idioma !== idiomaToRemove));
   };
 
-  const uploadFile = async (file, bucket, path) => {
-    if (!file) return null;
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `${path}/${fileName}`;
+  const uploadFile = async (fileOrFiles, bucket, path) => {
+    if (!fileOrFiles) return null;
 
-    const { error: uploadError } = await supabase.storage
-      .from(bucket)
-      .upload(filePath, file);
+    if (Array.isArray(fileOrFiles)) {
+      if (fileOrFiles.length === 0) return null;
+      const urls = [];
+      for (const file of fileOrFiles) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${path}/${fileName}`;
 
-    if (uploadError) throw uploadError;
+        const { error: uploadError } = await supabase.storage
+          .from(bucket)
+          .upload(filePath, file);
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-    return data.publicUrl;
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+        urls.push(data.publicUrl);
+      }
+      return urls.join(', ');
+    } else {
+      const file = fileOrFiles;
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${path}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+      return data.publicUrl;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -105,8 +131,9 @@ const PostulacionGuias = () => {
           estado: 'pendiente'
       };
       
-      // Solo agregamos url_otras_certificaciones si existe para no perder la variable
-      // insertData.url_otras_certificaciones = url_otras_certificaciones;
+      if (url_otras_certificaciones) {
+        insertData.url_otras_certificaciones = url_otras_certificaciones;
+      }
 
       const { error } = await supabase
         .from('postulaciones_guias')
@@ -443,8 +470,8 @@ const PostulacionGuias = () => {
               <div className="form-group">
                 <label className="form-label">Otras Certificaciones (Opcional)</label>
                 <div className="file-upload-block">
-                  <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => handleFileChange(e, 'otras_certificaciones')} />
-                  <span className="file-upload-info"><GraduationCap size={14} style={{display:'inline', marginBottom:'-2px'}}/> Leave No Trace, Rescate Acuático, Avalanchas, Licencia Clase A.</span>
+                  <input type="file" className="form-control-file" accept=".pdf, image/*" multiple onChange={(e) => handleFileChange(e, 'otras_certificaciones')} />
+                  <span className="file-upload-info"><GraduationCap size={14} style={{display:'inline', marginBottom:'-2px'}}/> Leave No Trace, Rescate Acuático, Avalanchas, Licencia Clase A. Permite subir múltiples.</span>
                 </div>
               </div>
 

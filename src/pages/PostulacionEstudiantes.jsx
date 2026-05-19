@@ -46,7 +46,11 @@ const PostulacionEstudiantes = () => {
   };
 
   const handleFileChange = (e, field) => {
-    setFiles({ ...files, [field]: e.target.files[0] });
+    if (e.target.multiple) {
+      setFiles({ ...files, [field]: Array.from(e.target.files) });
+    } else {
+      setFiles({ ...files, [field]: e.target.files[0] });
+    }
   };
 
   const handleAddIdioma = (e) => {
@@ -59,20 +63,42 @@ const PostulacionEstudiantes = () => {
     setIdiomasList(idiomasList.filter(i => i.idioma !== idiomaToRemove));
   };
 
-  const uploadFile = async (file, bucket, path) => {
-    if (!file) return null;
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `${path}/${fileName}`;
+  const uploadFile = async (fileOrFiles, bucket, path) => {
+    if (!fileOrFiles) return null;
 
-    const { error: uploadError } = await supabase.storage
-      .from(bucket)
-      .upload(filePath, file);
+    if (Array.isArray(fileOrFiles)) {
+      if (fileOrFiles.length === 0) return null;
+      const urls = [];
+      for (const file of fileOrFiles) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${path}/${fileName}`;
 
-    if (uploadError) throw uploadError;
+        const { error: uploadError } = await supabase.storage
+          .from(bucket)
+          .upload(filePath, file);
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-    return data.publicUrl;
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+        urls.push(data.publicUrl);
+      }
+      return urls.join(', ');
+    } else {
+      const file = fileOrFiles;
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${path}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
+      return data.publicUrl;
+    }
   };
 
   const handleSubmit = async (e) => {
