@@ -73,12 +73,12 @@ const AdminDashboard = () => {
       const { data, error } = await supabase.from(table).update({ estado: newStatus }).eq('id', id).select();
       if (error) throw error;
       if (!data || data.length === 0) {
-        throw new Error("El registro no se actualizó. Revisa las políticas de seguridad (RLS) en Supabase.");
+        throw new Error("El registro no se actualizó. Por favor, intenta nuevamente.");
       }
       fetchData();
     } catch (error) {
       console.error("Error updateStatus:", error);
-      alert('Error al actualizar: ' + error.message);
+      alert('Hubo un problema al actualizar. Por favor, intenta nuevamente.');
     }
   };
 
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
       fetchData();
     } catch (error) {
       console.error("Error updateField:", error);
-      alert('Error al actualizar: ' + error.message);
+      alert('Hubo un problema al actualizar. Por favor, intenta nuevamente.');
     }
   };
 
@@ -181,7 +181,7 @@ const AdminDashboard = () => {
       setEditingId(null);
       fetchData();
     } catch (error) {
-      alert("Error al actualizar: " + error.message);
+      alert("Hubo un problema al actualizar. Por favor, intenta nuevamente.");
     } finally {
       setLoading(false);
     }
@@ -213,13 +213,13 @@ const AdminDashboard = () => {
         throw error;
       }
       if (!data || data.length === 0) {
-        throw new Error("El registro no se eliminó. Revisa las políticas de seguridad (RLS) para la acción DELETE en Supabase.");
+        throw new Error("El registro no se pudo eliminar en este momento. Por favor, intenta nuevamente.");
       }
       alert('Registro eliminado correctamente');
       fetchData();
     } catch (error) {
       console.error('Error al eliminar:', error);
-      alert('Error al eliminar: ' + (error.message || 'Error desconocido'));
+      alert('Hubo un problema al eliminar. Por favor, intenta nuevamente.');
     } finally {
       setLoading(false);
     }

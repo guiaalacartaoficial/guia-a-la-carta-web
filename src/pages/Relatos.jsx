@@ -108,7 +108,7 @@ const Relatos = () => {
       setGalleryFiles([]);
     } catch (error) {
       console.error("Error submitting relato:", error);
-      alert("Hubo un error al enviar tu relato. Por favor intenta de nuevo. Revisa que el bucket 'documentos' sea público en Supabase.");
+      alert("Hubo un problema al enviar tu relato. Por favor, intenta nuevamente.");
     } finally {
       setSubmitting(false);
     }

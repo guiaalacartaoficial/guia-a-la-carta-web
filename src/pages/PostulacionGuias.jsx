@@ -164,7 +164,7 @@ const PostulacionGuias = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error detallado al postular:', error);
-      alert(`Error al enviar postulación: ${error.message || 'Error desconocido'}. Revisa que el bucket "documentos" exista en Supabase Storage y sea público.`);
+      alert("Hubo un problema al enviar tu postulación. Por favor, intenta nuevamente.");
     } finally {
       setLoading(false);
     }

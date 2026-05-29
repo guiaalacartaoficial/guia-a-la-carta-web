@@ -149,7 +149,7 @@ const PostulacionEstudiantes = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error detallado al postular estudiante:', error);
-      alert(`Error al enviar postulación: ${error.message || 'Error desconocido'}. Revisa que el bucket "documentos" exista en Supabase Storage.`);
+      alert("Hubo un problema al enviar tu postulación. Por favor, intenta nuevamente.");
     } finally {
       setLoading(false);
     }
