@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 import { supabase } from '../services/supabase';
 import { 
   Users, FileText, Calendar, CheckCircle, XCircle, 
@@ -9,6 +10,28 @@ import {
 import GuideCredential from '../components/GuideCredential';
 import CropperModal from '../components/CropperModal';
 import './Admin.css';
+
+const exportarAprobados = (lista, nombreArchivo) => {
+  const aprobados = lista
+    .filter(g => g.estado === 'aprobado')
+    .map(g => ({
+      'Nombres': g.nombres || '',
+      'Apellidos': g.apellidos || '',
+      'Correo': g.email || '',
+      'Teléfono': g.telefono || ''
+    }));
+
+  if (aprobados.length === 0) {
+    alert('No hay guías aprobados para exportar.');
+    return;
+  }
+
+  const hoja = XLSX.utils.json_to_sheet(aprobados);
+  const libro = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(libro, hoja, 'Aprobados');
+  const fecha = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(libro, `${nombreArchivo}_${fecha}.xlsx`);
+};
 
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -503,11 +526,14 @@ const AdminDashboard = () => {
 
             {activeTab === 'talento' && subTab === 'guias' && (
               <div className="talento-tab-content">
-                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   <span><strong>Total Registrados:</strong> {postulacionesGuias.length}</span>
                   <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesGuias.filter(g => g.estado === 'pendiente').length}</span>
                   <span style={{ color: '#dc2626' }}><strong>Rechazados:</strong> {postulacionesGuias.filter(g => g.estado === 'rechazado').length}</span>
                   <span style={{ color: '#16a34a' }}><strong>Aprobados:</strong> {postulacionesGuias.filter(g => g.estado === 'aprobado').length}</span>
+                  <button onClick={() => exportarAprobados(postulacionesGuias, 'Guias_Senior_Aprobados')} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>
+                    <Download size={15} /> Exportar Aprobados (.xlsx)
+                  </button>
                 </div>
                 <table className="pro-table">
                   <thead><tr><th>Postulante</th><th>Ubicación</th><th>Idiomas</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
@@ -732,11 +758,14 @@ const AdminDashboard = () => {
 
             {activeTab === 'talento' && subTab === 'estudiantes' && (
               <div className="talento-tab-content">
-                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   <span><strong>Total Registrados:</strong> {postulacionesEstudiantes.length}</span>
                   <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}</span>
                   <span style={{ color: '#dc2626' }}><strong>Rechazados:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'rechazado').length}</span>
                   <span style={{ color: '#16a34a' }}><strong>Aprobados:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'aprobado').length}</span>
+                  <button onClick={() => exportarAprobados(postulacionesEstudiantes, 'Guias_Junior_Aprobados')} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>
+                    <Download size={15} /> Exportar Aprobados (.xlsx)
+                  </button>
                 </div>
                 <table className="pro-table">
                   <thead><tr><th>Estudiante</th><th>Contacto</th><th>Residencia</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
