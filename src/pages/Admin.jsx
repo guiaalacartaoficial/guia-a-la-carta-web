@@ -502,10 +502,20 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === 'talento' && subTab === 'guias' && (
-              <table className="pro-table">
-                <thead><tr><th>Postulante</th><th>Ubicación</th><th>Idiomas</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
-                <tbody>
-                  {postulacionesGuias.map(guia => (
+              <>
+                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                  <span><strong>Total Registrados:</strong> {postulacionesGuias.length}</span>
+                  <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesGuias.filter(g => g.estado === 'pendiente').length}</span>
+                  <span style={{ color: '#dc2626' }}><strong>Rechazados:</strong> {postulacionesGuias.filter(g => g.estado === 'rechazado').length}</span>
+                  <span style={{ color: '#16a34a' }}><strong>Aprobados:</strong> {postulacionesGuias.filter(g => g.estado === 'aprobado').length}</span>
+                </div>
+                <table className="pro-table">
+                  <thead><tr><th>Postulante</th><th>Ubicación</th><th>Idiomas</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
+                  <tbody>
+                    {[...postulacionesGuias].sort((a,b) => {
+                      const orden = { pendiente: 1, rechazado: 2, aprobado: 3 };
+                      return (orden[a.estado] || 4) - (orden[b.estado] || 4);
+                    }).map(guia => (
                     <React.Fragment key={guia.id}>
                       <tr className={expandedId === guia.id ? 'row-expanded' : ''}>
                         <td><div className="main-text">{String(guia.nombres || '')} {String(guia.apellidos || '')}</div><div className="sub-text">{guia.email}</div></td>
@@ -717,13 +727,24 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
+              </>
             )}
 
             {activeTab === 'talento' && subTab === 'estudiantes' && (
-              <table className="pro-table">
-                <thead><tr><th>Estudiante</th><th>Contacto</th><th>Residencia</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
-                <tbody>
-                  {postulacionesEstudiantes.map(est => (
+              <>
+                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                  <span><strong>Total Registrados:</strong> {postulacionesEstudiantes.length}</span>
+                  <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}</span>
+                  <span style={{ color: '#dc2626' }}><strong>Rechazados:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'rechazado').length}</span>
+                  <span style={{ color: '#16a34a' }}><strong>Aprobados:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'aprobado').length}</span>
+                </div>
+                <table className="pro-table">
+                  <thead><tr><th>Estudiante</th><th>Contacto</th><th>Residencia</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
+                  <tbody>
+                    {[...postulacionesEstudiantes].sort((a,b) => {
+                      const orden = { pendiente: 1, rechazado: 2, aprobado: 3 };
+                      return (orden[a.estado] || 4) - (orden[b.estado] || 4);
+                    }).map(est => (
                     <React.Fragment key={est.id}>
                       <tr className={expandedId === est.id ? 'row-expanded' : ''}>
                         <td><div className="main-text">{String(est.nombres || '')} {String(est.apellidos || '')}</div><div className="sub-text">Junior</div></td>
@@ -896,6 +917,7 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
+              </>
             )}
 
             {activeTab === 'comunidad' && subTab === 'relatos' && (
