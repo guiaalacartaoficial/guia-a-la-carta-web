@@ -502,7 +502,7 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === 'talento' && subTab === 'guias' && (
-              <>
+              <div className="talento-tab-content">
                 <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
                   <span><strong>Total Registrados:</strong> {postulacionesGuias.length}</span>
                   <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesGuias.filter(g => g.estado === 'pendiente').length}</span>
@@ -727,11 +727,11 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
-              </>
+              </div>
             )}
 
             {activeTab === 'talento' && subTab === 'estudiantes' && (
-              <>
+              <div className="talento-tab-content">
                 <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
                   <span><strong>Total Registrados:</strong> {postulacionesEstudiantes.length}</span>
                   <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}</span>
@@ -917,7 +917,7 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
-              </>
+              </div>
             )}
 
             {activeTab === 'comunidad' && subTab === 'relatos' && (
