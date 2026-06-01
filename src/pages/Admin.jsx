@@ -153,6 +153,11 @@ const AdminDashboard = () => {
     try {
       let finalData = { ...editData };
 
+      if (finalData.idiomas_arr !== undefined) {
+        finalData.idiomas = finalData.idiomas_arr;
+        delete finalData.idiomas_arr;
+      }
+
       if (editData.file_cv instanceof File) {
         finalData.url_cv = await uploadFile(editData.file_cv, 'documentos', 'cvs');
         delete finalData.file_cv;
@@ -255,7 +260,13 @@ const AdminDashboard = () => {
 
   const startEditing = (record) => {
     setEditingId(record.id);
-    setEditData(record);
+    let editRec = { ...record };
+    if (Array.isArray(editRec.idiomas)) {
+      editRec.idiomas_arr = editRec.idiomas.map(i => (typeof i === 'object' ? i.idioma : i));
+    } else {
+      editRec.idiomas_arr = typeof editRec.idiomas === 'string' ? [editRec.idiomas] : ['Español'];
+    }
+    setEditData(editRec);
   };
 
   const cancelEditing = () => {
@@ -270,6 +281,23 @@ const AdminDashboard = () => {
     } else {
       setEditData({ ...editData, [name]: value });
     }
+  };
+
+  const handleAddIdioma = () => {
+    if (editData.idiomaInput && !(editData.idiomas_arr || []).includes(editData.idiomaInput)) {
+      setEditData({ 
+        ...editData, 
+        idiomas_arr: [...(editData.idiomas_arr || []), editData.idiomaInput],
+        idiomaInput: ''
+      });
+    }
+  };
+
+  const handleRemoveIdioma = (idiomaToRemove) => {
+    setEditData({
+      ...editData,
+      idiomas_arr: (editData.idiomas_arr || []).filter(i => i !== idiomaToRemove)
+    });
   };
 
   const ActionButtons = ({ table, id, currentStatus, record }) => {
@@ -563,6 +591,31 @@ const AdminDashboard = () => {
                                   <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group">
+                                    <label>Idiomas</label>
+                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                                      <select name="idiomaInput" value={editData.idiomaInput || ''} onChange={handleEditChange} className="form-control">
+                                        <option value="" disabled>Seleccionar...</option>
+                                        <option value="Español">Español</option>
+                                        <option value="Inglés">Inglés</option>
+                                        <option value="Portugués">Portugués</option>
+                                        <option value="Francés">Francés</option>
+                                        <option value="Alemán">Alemán</option>
+                                        <option value="Italiano">Italiano</option>
+                                        <option value="Chino Mandarín">Chino Mandarín</option>
+                                        <option value="Japonés">Japonés</option>
+                                      </select>
+                                      <button type="button" onClick={handleAddIdioma} className="btn-save" style={{ padding: '0 15px', whiteSpace: 'nowrap', borderRadius: '8px', border: 'none', background: '#0f172a', color: 'white', cursor: 'pointer' }}>Agregar</button>
+                                    </div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                      {(editData.idiomas_arr || []).map(idioma => (
+                                        <span key={idioma} style={{ background: '#e2e8f0', padding: '5px 10px', borderRadius: '15px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                          {idioma}
+                                          <XCircle size={14} style={{ cursor: 'pointer', color: '#dc2626' }} onClick={() => handleRemoveIdioma(idioma)} />
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className="form-group">
                                     <label>Región de Residencia</label>
                                     <select name="ciudad_residencia" value={editData.ciudad_residencia || ''} onChange={handleEditChange} className="form-control">
                                       <option value="" disabled>Seleccione una región</option>
@@ -794,6 +847,31 @@ const AdminDashboard = () => {
                                   <div className="form-group"><label>Email de Contacto</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group"><label>Nacionalidad</label><input name="nacionalidad" value={editData.nacionalidad} onChange={handleEditChange} className="form-control" /></div>
+                                  <div className="form-group">
+                                    <label>Idiomas</label>
+                                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                                      <select name="idiomaInput" value={editData.idiomaInput || ''} onChange={handleEditChange} className="form-control">
+                                        <option value="" disabled>Seleccionar...</option>
+                                        <option value="Español">Español</option>
+                                        <option value="Inglés">Inglés</option>
+                                        <option value="Portugués">Portugués</option>
+                                        <option value="Francés">Francés</option>
+                                        <option value="Alemán">Alemán</option>
+                                        <option value="Italiano">Italiano</option>
+                                        <option value="Chino Mandarín">Chino Mandarín</option>
+                                        <option value="Japonés">Japonés</option>
+                                      </select>
+                                      <button type="button" onClick={handleAddIdioma} className="btn-save" style={{ padding: '0 15px', whiteSpace: 'nowrap', borderRadius: '8px', border: 'none', background: '#0f172a', color: 'white', cursor: 'pointer' }}>Agregar</button>
+                                    </div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                      {(editData.idiomas_arr || []).map(idioma => (
+                                        <span key={idioma} style={{ background: '#e2e8f0', padding: '5px 10px', borderRadius: '15px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                          {idioma}
+                                          <XCircle size={14} style={{ cursor: 'pointer', color: '#dc2626' }} onClick={() => handleRemoveIdioma(idioma)} />
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
                                   <div className="form-group"><label>Edad Visual</label><input name="edad" value={editData.edad} onChange={handleEditChange} className="form-control" /></div>
                                   <div className="form-group">
                                     <label>Región de Residencia</label>
