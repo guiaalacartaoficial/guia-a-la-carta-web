@@ -154,8 +154,12 @@ const AdminDashboard = () => {
       let finalData = { ...editData };
 
       if (finalData.idiomas_arr !== undefined) {
-        finalData.idiomas = finalData.idiomas_arr;
+        finalData.idiomas = finalData.idiomas_arr.map(lang => ({ idioma: lang }));
         delete finalData.idiomas_arr;
+      }
+      
+      if (finalData.idiomaInput !== undefined) {
+        delete finalData.idiomaInput;
       }
 
       if (editData.file_cv instanceof File) {
