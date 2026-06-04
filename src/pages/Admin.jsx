@@ -5,10 +5,13 @@ import {
   Users, FileText, Calendar, CheckCircle, XCircle, 
   Eye, Trash2, Check, Crop,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
-  ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download
+  ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download, Star, Bell,
+  Key
 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
 import CropperModal from '../components/CropperModal';
+import ToastContainer, { useToast } from '../components/Toast';
+import emailjs from '@emailjs/browser';
 import './Admin.css';
 
 const exportarAprobados = (lista, nombreArchivo) => {
@@ -33,6 +36,104 @@ const exportarAprobados = (lista, nombreArchivo) => {
   XLSX.writeFile(libro, `${nombreArchivo}_${fecha}.xlsx`);
 };
 
+const exportarDisponibilidadExcel = (disponibilidad, postulacionesGuias, postulacionesEstudiantes, empresas = []) => {
+  if (disponibilidad.length === 0) {
+    alert('No hay disponibilidades registradas para exportar.');
+    return;
+  }
+
+  const dataExport = disponibilidad.map(d => {
+    let nombreGuia = 'Guía Desconocido';
+    let codigoGuia = '';
+    let nivel = '';
+    let idiomas = '';
+    if (d.tipo_guia === 'guia') {
+      const g = postulacionesGuias.find(x => x.id === d.guia_id);
+      if (g) {
+        nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+        codigoGuia = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+        nivel = (g.nivel || 'senior').charAt(0).toUpperCase() + (g.nivel || 'senior').slice(1);
+        idiomas = Array.isArray(g.idiomas) ? g.idiomas.map(i => (typeof i === 'object' ? i.idioma : i)).join(', ') : 'Español';
+      }
+    } else {
+      const e = postulacionesEstudiantes.find(x => x.id === d.guia_id);
+      if (e) {
+        nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+        codigoGuia = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+        nivel = 'Junior';
+        idiomas = Array.isArray(e.idiomas) ? e.idiomas.map(i => (typeof i === 'object' ? i.idioma : i)).join(', ') : 'Español';
+      }
+    }
+
+    let estadoReserva = 'Libre';
+    let empresaNombre = '';
+    if (d.estado_bloqueo === 'bloqueado') {
+      estadoReserva = 'Reservado';
+      const emp = empresas.find(x => x.id === d.bloqueado_por);
+      empresaNombre = emp ? emp.nombre_empresa : 'Empresa Asignada';
+    }
+
+    return {
+      'Nombre Guía': nombreGuia,
+      'Código Guía': codigoGuia,
+      'Nivel': nivel,
+      'Idiomas': idiomas,
+      'Fecha Disponible': new Date(d.fecha + 'T12:00:00Z').toLocaleDateString(),
+      'Estado Reserva': estadoReserva,
+      'Empresa Adjudicada': empresaNombre
+    };
+  });
+
+  const hoja = XLSX.utils.json_to_sheet(dataExport);
+  const libro = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(libro, hoja, 'Disponibilidad');
+  const fechaStr = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(libro, `Disponibilidad_Guias_${fechaStr}.xlsx`);
+};
+
+const exportarEvaluacionesExcel = (evaluaciones, postulacionesGuias, postulacionesEstudiantes, empresas = []) => {
+  if (evaluaciones.length === 0) {
+    alert('No hay evaluaciones registradas para exportar.');
+    return;
+  }
+
+  const dataExport = evaluaciones.map(ev => {
+    let nombreGuia = 'Guía Desconocido';
+    let codigoGuia = 'S/N';
+    if (ev.tipo_guia === 'guia') {
+      const g = postulacionesGuias.find(x => x.id === ev.guia_id);
+      if (g) {
+        nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+        codigoGuia = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+      }
+    } else {
+      const e = postulacionesEstudiantes.find(x => x.id === ev.guia_id);
+      if (e) {
+        nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+        codigoGuia = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+      }
+    }
+
+    const emp = empresas.find(x => x.id === ev.empresa_id);
+    const nombreEmpresa = emp ? emp.nombre_empresa : 'Empresa Desconocida';
+
+    return {
+      'Guía': nombreGuia,
+      'Código': codigoGuia,
+      'Empresa': nombreEmpresa,
+      'Estrellas': ev.estrellas,
+      'Comentario': ev.comentario || 'Sin comentarios',
+      'Fecha Evaluación': new Date(ev.created_at).toLocaleDateString('es-CL')
+    };
+  });
+
+  const hoja = XLSX.utils.json_to_sheet(dataExport);
+  const libro = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(libro, hoja, 'Evaluaciones');
+  const fechaStr = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(libro, `Evaluaciones_Guias_${fechaStr}.xlsx`);
+};
+
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
@@ -45,11 +146,85 @@ const AdminDashboard = () => {
   const [relatos, setRelatos] = useState([]);
   const [comentarios, setComentarios] = useState([]);
   const [manuales, setManuales] = useState([]);
+  const [disponibilidad, setDisponibilidad] = useState([]);
+  const [empresas, setEmpresas] = useState([]);
+  const [evaluaciones, setEvaluaciones] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
   const [cropModalData, setCropModalData] = useState(null);
+  const [notasAdmin, setNotasAdmin] = useState({}); // { [dispId]: string }
+  const [reservaFormId, setReservaFormId] = useState(null); // dispId del formulario de reserva abierto
+  const [reservaFormData, setReservaFormData] = useState({ empresa_id: '', nombre_servicio: '' });
+  const [agregarDiaGuiaId, setAgregarDiaGuiaId] = useState(null); // guia_id del formulario "agregar día" abierto
+  const [agregarDiaData, setAgregarDiaData] = useState({ fecha: '', empresa_id: '', nombre_servicio: '' });
+  const { toasts, addToast, removeToast } = useToast();
+
+  // Reservar un día LIBRE existente (UPDATE → bloqueado)
+  const handleReservarDia = async (dispRowId) => {
+    if (!reservaFormData.empresa_id) {
+      addToast('Selecciona una empresa antes de reservar.', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('disponibilidad_guias')
+        .update({
+          estado_bloqueo: 'bloqueado',
+          bloqueado_por: reservaFormData.empresa_id,
+          nombre_servicio: reservaFormData.nombre_servicio || null,
+          admin_notificado: true,
+          estado_servicio: 'pendiente'
+        })
+        .eq('id', dispRowId);
+      if (error) throw error;
+      addToast('Día reservado con éxito.', 'success');
+      setReservaFormId(null);
+      setReservaFormData({ empresa_id: '', nombre_servicio: '' });
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      addToast('Error al reservar el día.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Agregar un día NUEVO y reservarlo directamente (INSERT bloqueado)
+  const handleAgregarYReservar = async (guiaId, tipoGuia) => {
+    if (!agregarDiaData.fecha || !agregarDiaData.empresa_id) {
+      addToast('Selecciona una fecha y una empresa.', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('disponibilidad_guias')
+        .upsert({
+          guia_id: guiaId,
+          tipo_guia: tipoGuia,
+          fecha: agregarDiaData.fecha,
+          estado: 'disponible',
+          estado_bloqueo: 'bloqueado',
+          bloqueado_por: agregarDiaData.empresa_id,
+          nombre_servicio: agregarDiaData.nombre_servicio || null,
+          admin_notificado: true,
+          estado_servicio: 'pendiente'
+        }, { onConflict: 'guia_id, fecha' });
+      if (error) throw error;
+      addToast('Día agregado y reservado con éxito.', 'success');
+      setAgregarDiaGuiaId(null);
+      setAgregarDiaData({ fecha: '', empresa_id: '', nombre_servicio: '' });
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      addToast('Error al agregar y reservar el día.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -60,6 +235,38 @@ const AdminDashboard = () => {
       const { data: relatoData } = await supabase.from('relatos').select('*').order('fecha', { ascending: false });
       const { data: comData } = await supabase.from('comentarios_relatos').select('*, relatos(titulo)').order('fecha', { ascending: false });
       const { data: manualesData } = await supabase.from('manuales').select('*').order('created_at', { ascending: false });
+      const { data: empData } = await supabase.from('empresas').select('*').order('nombre_empresa', { ascending: true });
+      
+      // Auto-limpieza: eliminar SOLO fechas pasadas LIBRES (no reservadas) de la base de datos
+      const hoy = new Date().toISOString().slice(0, 10); // formato YYYY-MM-DD
+      try {
+        await supabase
+          .from('disponibilidad_guias')
+          .delete()
+          .lt('fecha', hoy)
+          .eq('estado_bloqueo', 'libre');
+      } catch (err) {
+        console.warn('Error during auto-cleanup of past libre dates:', err);
+      }
+
+      // Traer fechas de hoy en adelante O fechas que estén bloqueadas (para poder marcar como ejecutadas y calificar)
+      const { data: dispData } = await supabase
+        .from('disponibilidad_guias')
+        .select('*')
+        .or(`fecha.gte.${hoy},estado_bloqueo.eq.bloqueado`)
+        .order('fecha', { ascending: true });
+
+      // Traer evaluaciones de servicios
+      let evData = [];
+      try {
+        const { data } = await supabase
+          .from('evaluaciones_servicios')
+          .select('*')
+          .order('created_at', { ascending: false });
+        evData = data || [];
+      } catch (err) {
+        console.warn('Table evaluaciones_servicios may not exist yet:', err);
+      }
       
       setReservas(resData || []);
       setPostulacionesGuias(guiasData || []);
@@ -67,6 +274,9 @@ const AdminDashboard = () => {
       setRelatos(relatoData || []);
       setComentarios(comData || []);
       setManuales(manualesData || []);
+      setDisponibilidad(dispData || []);
+      setEmpresas(empData || []);
+      setEvaluaciones(evData);
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
@@ -79,6 +289,44 @@ const AdminDashboard = () => {
       fetchData();
     }
   }, [isAuthenticated]);
+
+  // Marcar reservas como vistas cuando el admin entra a la tab de disponibilidad
+  const marcarNotificado = async () => {
+    try {
+      await supabase
+        .from('disponibilidad_guias')
+        .update({ admin_notificado: true })
+        .eq('estado_bloqueo', 'bloqueado')
+        .eq('admin_notificado', false);
+      // Refrescar state localmente sin recargar todo
+      setDisponibilidad(prev =>
+        prev.map(d => d.estado_bloqueo === 'bloqueado' && !d.admin_notificado
+          ? { ...d, admin_notificado: true }
+          : d
+        )
+      );
+    } catch (err) {
+      console.warn('Error al marcar notificaciones:', err);
+    }
+  };
+
+  // Guardar nota interna del admin en una fecha de disponibilidad
+  const handleSaveNota = async (dispId, nota) => {
+    try {
+      const { error } = await supabase
+        .from('disponibilidad_guias')
+        .update({ nota_interna_admin: nota.trim() || null })
+        .eq('id', dispId);
+      if (error) throw error;
+      setDisponibilidad(prev =>
+        prev.map(d => d.id === dispId ? { ...d, nota_interna_admin: nota.trim() || null } : d)
+      );
+      addToast('Nota guardada correctamente.', 'success', 2500);
+    } catch (err) {
+      console.error(err);
+      addToast('Error al guardar la nota.', 'error');
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -93,15 +341,98 @@ const AdminDashboard = () => {
 
   const updateStatus = async (table, id, newStatus) => {
     try {
-      const { data, error } = await supabase.from(table).update({ estado: newStatus }).eq('id', id).select();
+      const updateData = { estado: newStatus };
+      const isGuia = table === 'postulaciones_guias';
+      const isEstudiante = table === 'postulaciones_estudiantes';
+
+      let generatedPass = null;
+      if (newStatus === 'aprobado' && (isGuia || isEstudiante)) {
+        // Consultar el registro primero para ver si ya tiene contraseña
+        const { data: currentRec } = await supabase.from(table).select('password').eq('id', id).single();
+        if (currentRec && !currentRec.password) {
+          generatedPass = 'GC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+          updateData.password = generatedPass;
+        }
+      }
+
+      const { data, error } = await supabase.from(table).update(updateData).eq('id', id).select();
       if (error) throw error;
       if (!data || data.length === 0) {
         throw new Error("El registro no se actualizó. Por favor, intenta nuevamente.");
       }
+
+      // Si se aprobó, enviar correo automático con credenciales
+      if (newStatus === 'aprobado' && (isGuia || isEstudiante)) {
+        const record = data[0];
+        const passToSend = record.password || generatedPass;
+        if (passToSend) {
+          const tipoLabel = isGuia ? 'PRO' : 'EST';
+          const guiaCode = `${tipoLabel}:${String(record.id).substring(0, 5).toUpperCase()}`;
+          const linkAcceso = 'https://www.guiaalacarta.cl/disponibilidad';
+
+          try {
+            await emailjs.send(
+              'service_ihvjiza',
+              'template_credenciales',
+              {
+                name: `${record.nombres || ''} ${record.apellidos || ''}`.trim(),
+                email: record.email,
+                message: `Hola ${record.nombres || ''},\n\n¡Tu postulación ha sido aprobada y tu perfil ya está visible en la página web!\n\nPara ingresar a registrar y actualizar tu disponibilidad en el sitio, utiliza las siguientes credenciales de acceso:\n\n- Usuario (Código): ${guiaCode}\n- Contraseña: ${passToSend}\n\nIngresa aquí para actualizar tu disponibilidad:\n${linkAcceso}\n\n¡Mucho éxito!\nEquipo Guía a la Carta`
+              },
+              '_nmx76wxhMLgNa1ic'
+            );
+            addToast('Correo de aprobación y credenciales enviado con éxito.', 'success');
+          } catch (mailErr) {
+            console.error("Error al enviar email de aprobación:", mailErr);
+            addToast('Guía aprobado, pero hubo un error al enviar el correo de credenciales.', 'warning');
+          }
+        }
+      }
+
       fetchData();
     } catch (error) {
       console.error("Error updateStatus:", error);
       alert('Hubo un problema al actualizar. Por favor, intenta nuevamente.');
+    }
+  };
+
+  const handleSendCredentials = async (table, record) => {
+    setLoading(true);
+    try {
+      let password = record.password;
+      const isGuia = table === 'postulaciones_guias';
+      
+      // Si no tiene contraseña asignada, la generamos e insertamos en Supabase
+      if (!password) {
+        password = 'GC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        const { error } = await supabase.from(table).update({ password }).eq('id', record.id);
+        if (error) throw error;
+        // Actualizar el registro local
+        record.password = password;
+      }
+
+      const tipoLabel = isGuia ? 'PRO' : 'EST';
+      const guiaCode = `${tipoLabel}:${String(record.id).substring(0, 5).toUpperCase()}`;
+      const linkAcceso = 'https://www.guiaalacarta.cl/disponibilidad';
+
+      await emailjs.send(
+        'service_ihvjiza',
+        'template_credenciales',
+        {
+          name: `${record.nombres || ''} ${record.apellidos || ''}`.trim(),
+          email: record.email,
+          message: `Hola ${record.nombres || ''},\n\nAquí tienes tus credenciales de acceso para registrar y actualizar tu disponibilidad en la página web:\n\n- Usuario (Código): ${guiaCode}\n- Contraseña: ${password}\n\nIngresa aquí para actualizar tu disponibilidad:\n${linkAcceso}\n\n¡Mucho éxito!\nEquipo Guía a la Carta`
+        },
+        '_nmx76wxhMLgNa1ic'
+      );
+
+      addToast('Credenciales enviadas correctamente por email.', 'success');
+      fetchData();
+    } catch (err) {
+      console.error("Error en handleSendCredentials:", err);
+      addToast('Error al generar o enviar las credenciales.', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -334,6 +665,9 @@ const AdminDashboard = () => {
               <>
                 <a href={`mailto:${record.email}?subject=Postulación Guía a la Carta&body=Hola ${record.nombres},`} className="btn-action email" title="Enviar Email"><Mail size={16}/></a>
                 <a href={`https://wa.me/${record.telefono?.replace(/\s+/g, '').replace('+', '')}`} target="_blank" rel="noreferrer" className="btn-action whatsapp" title="Contactar por WhatsApp"><MessageCircle size={16}/></a>
+                {currentStatus === 'aprobado' && (
+                  <button onClick={() => handleSendCredentials(table, record)} className="btn-action credentials" title="Enviar Credenciales por Email" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#475569', cursor: 'pointer', padding: '6px', borderRadius: '6px', width: '32px', height: '32px' }}><Key size={16}/></button>
+                )}
               </>
             )}
 
@@ -406,6 +740,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard-pro">
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
       <header className="admin-top-bar">
         <div className="container-pro" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="admin-logo-section">
@@ -476,6 +811,30 @@ const AdminDashboard = () => {
             <button className={`admin-nav-link ${activeTab === 'manuales' ? 'active' : ''}`} onClick={() => setActiveTab('manuales')}>
               <BookOpen size={22} /> <span>Gestión de Manuales</span>
             </button>
+            <button
+              className={`admin-nav-link ${activeTab === 'disponibilidad' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('disponibilidad'); marcarNotificado(); }}
+              style={{ position: 'relative' }}
+            >
+              <Calendar size={22} /> <span>Disponibilidad Guías</span>
+              {disponibilidad.filter(d => d.estado_bloqueo === 'bloqueado' && !d.admin_notificado).length > 0 && (
+                <span style={{
+                  position: 'absolute', top: '8px', right: '10px',
+                  background: '#ef4444', color: 'white', borderRadius: '50%',
+                  width: '18px', height: '18px', fontSize: '0.7rem', fontWeight: '800',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 2px 6px rgba(239,68,68,0.4)'
+                }}>
+                  {disponibilidad.filter(d => d.estado_bloqueo === 'bloqueado' && !d.admin_notificado).length}
+                </span>
+              )}
+            </button>
+            <button className={`admin-nav-link ${activeTab === 'empresas' ? 'active' : ''}`} onClick={() => setActiveTab('empresas')}>
+              <Briefcase size={22} /> <span>Clientes B2B</span>
+            </button>
+            <button className={`admin-nav-link ${activeTab === 'evaluaciones' ? 'active' : ''}`} onClick={() => setActiveTab('evaluaciones')}>
+              <Star size={22} /> <span>Evaluaciones B2B</span>
+            </button>
           </nav>
         </aside>
 
@@ -490,6 +849,335 @@ const AdminDashboard = () => {
             <div className="subtabs-bar">
               <button className={`subtab-btn ${subTab === 'relatos' ? 'active' : ''}`} onClick={() => setSubTab('relatos')}>Relatos</button>
               <button className={`subtab-btn ${subTab === 'comentarios' ? 'active' : ''}`} onClick={() => setSubTab('comentarios')}>Comentarios</button>
+            </div>
+          )}
+
+          {activeTab === 'disponibilidad' && (
+            <div className="table-wrapper">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'white', borderRadius: '8px', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
+                <div>
+                  <h3 style={{ margin: '0 0 0.5rem 0' }}>Calendario de Disponibilidad</h3>
+                  <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>Fechas reportadas como libres por los guías aprobados.</p>
+                </div>
+                <button 
+                  onClick={() => exportarDisponibilidadExcel(disponibilidad, postulacionesGuias, postulacionesEstudiantes, empresas)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                >
+                  <Download size={18} /> Exportar Excel
+                </button>
+              </div>
+              <table className="pro-table">
+                <thead>
+                  <tr><th>Guía</th><th>Código</th><th>Total Días Disponibles</th><th className="text-right">Acciones</th></tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const grouped = disponibilidad.reduce((acc, curr) => {
+                      if (!acc[curr.guia_id]) acc[curr.guia_id] = { tipo_guia: curr.tipo_guia, fechas: [] };
+                      acc[curr.guia_id].fechas.push(curr);
+                      return acc;
+                    }, {});
+
+                    const guiasIds = Object.keys(grouped);
+
+                    if (guiasIds.length === 0) {
+                      return (
+                        <tr>
+                          <td colSpan="4" className="text-center" style={{ padding: '2rem' }}>
+                            No hay disponibilidades registradas.
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    return guiasIds.map(guia_id => {
+                      const data = grouped[guia_id];
+                      let nombreGuia = 'Guía Desconocido';
+                      let codigoGuia = 'S/N';
+                      if (data.tipo_guia === 'guia') {
+                        const g = postulacionesGuias.find(x => x.id === guia_id);
+                        if (g) {
+                          nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+                          codigoGuia = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                        }
+                      } else {
+                        const e = postulacionesEstudiantes.find(x => x.id === guia_id);
+                        if (e) {
+                          nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+                          codigoGuia = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+                        }
+                      }
+
+                      // Handler for unblocking a date from Admin panel
+                      const handleUnblockDate = async (dispRowId) => {
+                        if (!window.confirm("¿Seguro que deseas liberar la reserva de este día para dejarlo disponible nuevamente?")) return;
+                        setLoading(true);
+                        try {
+                          const { error } = await supabase
+                            .from('disponibilidad_guias')
+                            .update({ estado_bloqueo: 'libre', bloqueado_por: null, estado_servicio: 'pendiente' })
+                            .eq('id', dispRowId);
+                          if (error) throw error;
+                          alert("Día liberado con éxito");
+                          fetchData();
+                        } catch (err) {
+                          console.error(err);
+                          alert("Error al liberar el día.");
+                        } finally {
+                          setLoading(false);
+                        }
+                      };
+
+                      // Handler for marking a service as executed
+                      const handleMarcarEjecutado = async (dispRowId) => {
+                        if (!window.confirm("¿Seguro que deseas marcar este servicio como ejecutado? Esto permitirá que la empresa lo evalúe.")) return;
+                        setLoading(true);
+                        try {
+                          const { error } = await supabase
+                            .from('disponibilidad_guias')
+                            .update({ estado_servicio: 'ejecutado' })
+                            .eq('id', dispRowId);
+                          if (error) throw error;
+                          alert("Servicio marcado como ejecutado.");
+                          fetchData();
+                        } catch (err) {
+                          console.error(err);
+                          alert("Error al actualizar el servicio.");
+                        } finally {
+                          setLoading(false);
+                        }
+                      };
+
+                      return (
+                        <React.Fragment key={guia_id}>
+                          <tr className={expandedId === guia_id ? 'row-expanded' : ''}>
+                            <td><div className="main-text">{nombreGuia}</div></td>
+                            <td><span style={{ fontWeight: '600', color: '#475569' }}>{codigoGuia}</span></td>
+                            <td><div className="main-text" style={{ fontWeight: '600' }}>{data.fechas.length} días</div></td>
+                            <td>
+                              <div className="admin-actions">
+                                <button onClick={() => toggleExpand(guia_id)} className="btn-action view" title="Ver Fechas">
+                                  <Eye size={16}/>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                          {expandedId === guia_id && (
+                            <tr className="detail-row">
+                              <td colSpan="4">
+                                <div className="detail-content" style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '8px' }}>
+                                  <h5 style={{ margin: '0 0 15px 0', color: '#334155', fontSize: '1rem' }}>Estado detallado de disponibilidad por fecha:</h5>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {[...data.fechas].sort((a,b) => a.fecha.localeCompare(b.fecha)).map(item => {
+                                      const isBlocked = item.estado_bloqueo === 'bloqueado';
+                                      const associatedCompany = isBlocked ? empresas.find(x => x.id === item.bloqueado_por) : null;
+                                      return (
+                                        <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                              <Calendar size={16} color={isBlocked ? "#ef4444" : "#16a34a"} />
+                                              <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>{new Date(item.fecha + 'T12:00:00Z').toLocaleDateString()}</span>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                              <span className={`status-badge ${isBlocked ? 'rechazado' : 'aprobado'}`} style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                                                {isBlocked ? `Reservado por: ${associatedCompany ? associatedCompany.nombre_empresa : 'Empresa B2B'}` : 'Libre / Disponible'}
+                                              </span>
+                                              {isBlocked && (
+                                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                  <span 
+                                                    className={`status-badge ${item.estado_servicio === 'ejecutado' ? 'aprobado' : ''}`}
+                                                    style={item.estado_servicio !== 'ejecutado' ? { fontSize: '0.75rem', textTransform: 'uppercase', background: '#fffbeb', color: '#d97706', border: '1px solid #fde68a' } : { fontSize: '0.75rem', textTransform: 'uppercase' }}
+                                                  >
+                                                    {item.estado_servicio === 'ejecutado' ? 'Ejecutado ✓' : 'Pendiente'}
+                                                  </span>
+                                                  {item.estado_servicio !== 'ejecutado' && (
+                                                    <button 
+                                                      onClick={() => handleMarcarEjecutado(item.id)}
+                                                      style={{ border: 'none', background: '#ecfdf5', color: '#059669', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '700' }}
+                                                      title="Marcar como Ejecutado"
+                                                    >
+                                                      Marcar Ejecutado
+                                                    </button>
+                                                  )}
+                                                  <button 
+                                                    onClick={() => handleUnblockDate(item.id)} 
+                                                    style={{ border: 'none', background: '#fef2f2', color: '#ef4444', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '700' }}
+                                                    title="Liberar día"
+                                                  >
+                                                    Liberar día
+                                                  </button>
+                                                </div>
+                                              )}
+                                              {!isBlocked && (
+                                                <button
+                                                  onClick={() => {
+                                                    setReservaFormId(reservaFormId === item.id ? null : item.id);
+                                                    setReservaFormData({ empresa_id: '', nombre_servicio: '' });
+                                                  }}
+                                                  style={{ border: 'none', background: '#eff6ff', color: '#2563eb', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '700' }}
+                                                  title="Reservar este día"
+                                                >
+                                                  Reservar
+                                                </button>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          {isBlocked && (
+                                            <div style={{ marginTop: '10px', borderTop: '1px solid #f1f5f9', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                              <div style={{ fontSize: '0.85rem', color: '#334155' }}>
+                                                <strong>Nombre del servicio (Tour):</strong> <span style={{ color: item.nombre_servicio ? '#0f172a' : '#94a3b8', fontStyle: item.nombre_servicio ? 'normal' : 'italic' }}>{item.nombre_servicio || 'Sin especificar'}</span>
+                                              </div>
+                                              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                                <label style={{ fontSize: '0.8rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase' }}>Nota Interna Admin:</label>
+                                                <div style={{ display: 'flex', gap: '10px' }}>
+                                                  <textarea
+                                                    className="form-control"
+                                                    style={{ height: '50px', resize: 'vertical', flexGrow: 1, padding: '8px', fontSize: '0.85rem' }}
+                                                    placeholder="Escribe una nota interna para este servicio..."
+                                                    value={notasAdmin[item.id] !== undefined ? notasAdmin[item.id] : (item.nota_interna_admin || '')}
+                                                    onChange={(e) => setNotasAdmin({ ...notasAdmin, [item.id]: e.target.value })}
+                                                  />
+                                                  <button
+                                                    onClick={() => handleSaveNota(item.id, notasAdmin[item.id] !== undefined ? notasAdmin[item.id] : (item.nota_interna_admin || ''))}
+                                                    style={{ padding: '0 15px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}
+                                                  >
+                                                    <Save size={14} /> Guardar
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          {/* Formulario inline de reserva para día LIBRE */}
+                                          {!isBlocked && reservaFormId === item.id && (
+                                            <div style={{ marginTop: '10px', borderTop: '1px solid #dbeafe', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px', background: '#eff6ff', padding: '12px', borderRadius: '6px' }}>
+                                              <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1e40af', textTransform: 'uppercase' }}>Reservar este día</div>
+                                              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
+                                                  <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569' }}>Empresa *</label>
+                                                  <select
+                                                    value={reservaFormData.empresa_id}
+                                                    onChange={(e) => setReservaFormData({ ...reservaFormData, empresa_id: e.target.value })}
+                                                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem', background: 'white' }}
+                                                  >
+                                                    <option value="">Seleccionar empresa...</option>
+                                                    {empresas.map(emp => (
+                                                      <option key={emp.id} value={emp.id}>{emp.nombre_empresa}</option>
+                                                    ))}
+                                                  </select>
+                                                </div>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
+                                                  <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569' }}>Nombre del Tour (opcional)</label>
+                                                  <input
+                                                    type="text"
+                                                    placeholder="Ej: Torres del Paine Full Day"
+                                                    value={reservaFormData.nombre_servicio}
+                                                    onChange={(e) => setReservaFormData({ ...reservaFormData, nombre_servicio: e.target.value })}
+                                                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                                                  />
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '6px' }}>
+                                                  <button
+                                                    onClick={() => handleReservarDia(item.id)}
+                                                    disabled={loading}
+                                                    style={{ padding: '6px 14px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem' }}
+                                                  >
+                                                    {loading ? 'Guardando...' : 'Confirmar Reserva'}
+                                                  </button>
+                                                  <button
+                                                    onClick={() => { setReservaFormId(null); setReservaFormData({ empresa_id: '', nombre_servicio: '' }); }}
+                                                    style={{ padding: '6px 14px', background: '#e2e8f0', color: '#475569', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
+                                                  >
+                                                    Cancelar
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+
+                                    {/* Botón para agregar y reservar un día nuevo */}
+                                    {agregarDiaGuiaId !== guia_id ? (
+                                      <button
+                                        onClick={() => {
+                                          setAgregarDiaGuiaId(guia_id);
+                                          setAgregarDiaData({ fecha: '', empresa_id: '', nombre_servicio: '' });
+                                        }}
+                                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', background: 'white', color: '#2563eb', border: '2px dashed #93c5fd', borderRadius: '8px', cursor: 'pointer', fontWeight: '700', fontSize: '0.85rem', width: '100%', justifyContent: 'center', transition: 'all 0.2s' }}
+                                        onMouseEnter={(e) => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.borderColor = '#2563eb'; }}
+                                        onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#93c5fd'; }}
+                                      >
+                                        <Plus size={16} /> Agregar y Reservar Día
+                                      </button>
+                                    ) : (
+                                      <div style={{ background: '#eff6ff', border: '1.5px solid #93c5fd', borderRadius: '8px', padding: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1e40af', textTransform: 'uppercase' }}>Agregar y Reservar un Día Nuevo</div>
+                                        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '0 0 170px' }}>
+                                            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569' }}>Fecha *</label>
+                                            <input
+                                              type="date"
+                                              value={agregarDiaData.fecha}
+                                              min={new Date().toISOString().slice(0, 10)}
+                                              onChange={(e) => setAgregarDiaData({ ...agregarDiaData, fecha: e.target.value })}
+                                              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                                            />
+                                          </div>
+                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
+                                            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569' }}>Empresa *</label>
+                                            <select
+                                              value={agregarDiaData.empresa_id}
+                                              onChange={(e) => setAgregarDiaData({ ...agregarDiaData, empresa_id: e.target.value })}
+                                              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem', background: 'white' }}
+                                            >
+                                              <option value="">Seleccionar empresa...</option>
+                                              {empresas.map(emp => (
+                                                <option key={emp.id} value={emp.id}>{emp.nombre_empresa}</option>
+                                              ))}
+                                            </select>
+                                          </div>
+                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
+                                            <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569' }}>Tour (opcional)</label>
+                                            <input
+                                              type="text"
+                                              placeholder="Ej: Glaciar Grey"
+                                              value={agregarDiaData.nombre_servicio}
+                                              onChange={(e) => setAgregarDiaData({ ...agregarDiaData, nombre_servicio: e.target.value })}
+                                              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                                            />
+                                          </div>
+                                          <div style={{ display: 'flex', gap: '6px' }}>
+                                            <button
+                                              onClick={() => handleAgregarYReservar(guia_id, data.tipo_guia)}
+                                              disabled={loading}
+                                              style={{ padding: '6px 14px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem' }}
+                                            >
+                                              {loading ? 'Guardando...' : 'Confirmar'}
+                                            </button>
+                                            <button
+                                              onClick={() => { setAgregarDiaGuiaId(null); setAgregarDiaData({ fecha: '', empresa_id: '', nombre_servicio: '' }); }}
+                                              style={{ padding: '6px 14px', background: '#e2e8f0', color: '#475569', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
+                                            >
+                                              Cancelar
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      );
+                    });
+                  })()}
+                </tbody>
+              </table>
             </div>
           )}
 
@@ -1206,6 +1894,328 @@ const AdminDashboard = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+
+            {activeTab === 'empresas' && (
+              <div className="empresas-admin-container">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                  <h3>Gestión de Clientes B2B (Empresas de Turismo)</h3>
+                  <button 
+                    className="btn-add-new" 
+                    onClick={() => {
+                      setEditingId('new');
+                      setEditData({ nombre_empresa: '', email: '', password: '', contacto_nombre: '', telefono: '', estado: 'activo' });
+                    }}
+                  >
+                    <Plus size={18} /> Registrar Nueva Empresa
+                  </button>
+                </div>
+
+                {editingId === 'new' && (
+                  <div className="edit-form-grid" style={{ background: '#f8fafc', padding: '2rem', borderRadius: '15px', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+                    <div className="form-group"><label>Nombre de la Empresa</label><input name="nombre_empresa" value={editData.nombre_empresa || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: Turismo Patagonia Excursiones" required /></div>
+                    <div className="form-group"><label>Correo Electrónico (Login)</label><input type="email" name="email" value={editData.email || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: correo@patagonia.com" required /></div>
+                    <div className="form-group"><label>Contraseña de Acceso</label><input type="password" name="password" value={editData.password || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: ********" required /></div>
+                    <div className="form-group"><label>Nombre del Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: Carlos Mendoza" /></div>
+                    <div className="form-group"><label>Teléfono de Contacto</label><input name="telefono" value={editData.telefono || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: +56 9 8765 4321" /></div>
+                    <div className="form-group">
+                      <label>Estado</label>
+                      <select name="estado" value={editData.estado || 'activo'} onChange={handleEditChange} className="form-control">
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                      </select>
+                    </div>
+                    <div className="edit-actions">
+                      <button onClick={() => handleUpdateRecord('empresas', 'new')} className="btn btn-save" disabled={loading}><Save size={16}/> {loading ? 'Creando...' : 'Crear Empresa'}</button>
+                      <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                    </div>
+                  </div>
+                )}
+
+                <table className="pro-table">
+                  <thead>
+                    <tr><th>Nombre Empresa</th><th>Email</th><th>Contacto</th><th>Estado</th><th className="text-right">Acciones</th></tr>
+                  </thead>
+                  <tbody>
+                    {empresas.map(emp => (
+                      <React.Fragment key={emp.id}>
+                        <tr className={expandedId === emp.id ? 'row-expanded' : ''}>
+                          <td><div className="main-text">{emp.nombre_empresa}</div></td>
+                          <td>{emp.email}</td>
+                          <td><div className="main-text">{emp.contacto_nombre || 'S/N'}</div><div className="sub-text">{emp.telefono || ''}</div></td>
+                          <td><span className={`status-badge ${emp.estado === 'activo' ? 'aprobado' : 'rechazado'}`}>{emp.estado}</span></td>
+                          <td className="text-right">
+                            <div className="admin-actions">
+                              <button onClick={() => toggleExpand(emp.id)} className="btn-action view" title="Ver Bloqueos"><Eye size={16}/></button>
+                              <button onClick={() => startEditing(emp)} className="btn-action edit" title="Editar"><Edit size={16}/></button>
+                              <button onClick={() => handleDelete('empresas', emp.id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>
+                            </div>
+                          </td>
+                        </tr>
+                        {expandedId === emp.id && (
+                          <tr className="detail-row">
+                            <td colSpan="5">
+                              <div className="detail-content">
+                                {editingId === emp.id ? (
+                                  <div className="edit-form-grid">
+                                    <div className="form-group"><label>Nombre Empresa</label><input name="nombre_empresa" value={editData.nombre_empresa || ''} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Email</label><input type="email" name="email" value={editData.email || ''} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Contraseña</label><input type="password" name="password" value={editData.password || ''} onChange={handleEditChange} className="form-control" placeholder="Dejar en blanco para no modificar" /></div>
+                                    <div className="form-group"><label>Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre || ''} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono || ''} onChange={handleEditChange} className="form-control" /></div>
+                                    <div className="form-group">
+                                      <label>Estado</label>
+                                      <select name="estado" value={editData.estado || 'activo'} onChange={handleEditChange} className="form-control">
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
+                                      </select>
+                                    </div>
+                                    <div className="edit-actions">
+                                      <button onClick={() => handleUpdateRecord('empresas', emp.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
+                                      <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="detail-grid" style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '8px' }}>
+                                    <div className="full-width">
+                                      <h5 style={{ margin: '0 0 15px 0', color: '#334155', fontSize: '1rem' }}>Días Bloqueados / Reservados por esta empresa:</h5>
+                                      {(() => {
+                                        const bookedDays = disponibilidad.filter(d => d.bloqueado_por === emp.id);
+                                        if (bookedDays.length === 0) {
+                                          return <p style={{ color: '#64748b', margin: 0, fontSize: '0.9rem' }}>Esta empresa no tiene guías reservados actualmente.</p>;
+                                        }
+
+                                        return (
+                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                            {bookedDays.map(item => {
+                                              let nombreGuia = 'Guía Desconocido';
+                                              let cod = 'S/N';
+                                              if (item.tipo_guia === 'guia') {
+                                                const g = postulacionesGuias.find(x => x.id === item.guia_id);
+                                                if (g) {
+                                                  nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+                                                  cod = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                                                }
+                                              } else {
+                                                const e = postulacionesEstudiantes.find(x => x.id === item.guia_id);
+                                                if (e) {
+                                                  nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+                                                  cod = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+                                                }
+                                              }
+
+                                              return (
+                                                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '10px 15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <Calendar size={16} color="#ef4444" />
+                                                    <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>{new Date(item.fecha + 'T12:00:00Z').toLocaleDateString()}</span>
+                                                  </div>
+                                                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                    <span style={{ fontWeight: '500', fontSize: '0.9rem', color: '#0f172a' }}>{nombreGuia} ({cod})</span>
+                                                    <span className="status-badge rechazado" style={{ fontSize: '0.75rem' }}>Reservado</span>
+                                                  </div>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        );
+                                      })()}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {activeTab === 'evaluaciones' && (
+              <div className="evaluaciones-admin-container">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                  <div>
+                    <h3>Evaluaciones de Servicios Recibidas</h3>
+                    <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>Comentarios y calificaciones internas provistas por las agencias asociadas.</p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      onClick={() => exportarEvaluacionesExcel(evaluaciones, postulacionesGuias, postulacionesEstudiantes, empresas)}
+                      style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                    >
+                      <Download size={18} /> Exportar Excel
+                    </button>
+                    <button className="btn-portal-refresh" onClick={fetchData} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: '#ecfdf5', color: '#059669', border: '1px solid #10b981', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}>
+                      <RefreshCw size={15} />
+                      <span>Actualizar</span>
+                    </button>
+                  </div>
+                </div>
+
+                {evaluaciones.length > 0 && (() => {
+                  const promedioPorGuia = (() => {
+                    const map = {};
+                    evaluaciones.forEach(ev => {
+                      const key = `${ev.guia_id}_${ev.tipo_guia}`;
+                      if (!map[key]) {
+                        map[key] = {
+                          guia_id: ev.guia_id,
+                          tipo_guia: ev.tipo_guia,
+                          sumaEstrellas: 0,
+                          count: 0
+                        };
+                      }
+                      map[key].sumaEstrellas += ev.estrellas;
+                      map[key].count += 1;
+                    });
+
+                    return Object.values(map).map(item => {
+                      let nombre = 'Guía Desconocido';
+                      let codigo = 'S/N';
+                      if (item.tipo_guia === 'guia') {
+                        const g = postulacionesGuias.find(x => x.id === item.guia_id);
+                        if (g) {
+                          nombre = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+                          codigo = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                        }
+                      } else {
+                        const e = postulacionesEstudiantes.find(x => x.id === item.guia_id);
+                        if (e) {
+                          nombre = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+                          codigo = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+                        }
+                      }
+                      return {
+                        ...item,
+                        nombre,
+                        codigo,
+                        promedio: item.sumaEstrellas / item.count
+                      };
+                    });
+                  })();
+
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginBottom: '2rem' }}>
+                      {promedioPorGuia.map(p => (
+                        <div key={`${p.guia_id}_${p.tipo_guia}`} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                          <div>
+                            <h4 style={{ margin: 0, fontSize: '1rem', color: '#0f172a', fontWeight: '800' }}>{p.nombre}</h4>
+                            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600' }}>{p.codigo}</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <div style={{ display: 'flex', gap: '3px', color: '#fbbf24' }}>
+                              {[1, 2, 3, 4, 5].map((star) => {
+                                const difference = p.promedio - star + 1;
+                                let fill = 'none';
+                                if (difference >= 1) fill = '#fbbf24';
+                                else if (difference > 0) fill = 'url(#halfStarGradient)'; // partial star
+                                return (
+                                  <svg key={star} width="18" height="18" viewBox="0 0 24 24" fill={fill} stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <defs>
+                                      <linearGradient id="halfStarGradient">
+                                        <stop offset="50%" stopColor="#fbbf24" />
+                                        <stop offset="50%" stopColor="transparent" stopOpacity="1" />
+                                      </linearGradient>
+                                    </defs>
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                  </svg>
+                                );
+                              })}
+                            </div>
+                            <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#0f172a' }}>{p.promedio.toFixed(1)}</span>
+                          </div>
+                          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Basado en {p.count} evaluación{p.count > 1 ? 'es' : ''}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+
+                {evaluaciones.length === 0 ? (
+                  <div className="portal-empty-state" style={{ padding: '3rem', background: 'white', borderRadius: '15px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                    <div className="empty-icon" style={{ margin: '0 auto 1rem auto', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fef3c7', borderRadius: '50%', color: '#d97706' }}>
+                      <Star size={24} />
+                    </div>
+                    <h4>No hay evaluaciones aún</h4>
+                    <p style={{ color: '#64748b' }}>Las evaluaciones aparecerán aquí una vez que los clientes califiquen sus servicios ejecutados.</p>
+                  </div>
+                ) : (
+                  <table className="pro-table">
+                    <thead>
+                      <tr>
+                        <th>Guía</th>
+                        <th>Empresa</th>
+                        <th>Calificación</th>
+                        <th>Comentario</th>
+                        <th>Fecha de Registro</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {evaluaciones.map(ev => {
+                        let nombreGuia = 'Guía Desconocido';
+                        let codigoGuia = 'S/N';
+                        if (ev.tipo_guia === 'guia') {
+                          const g = postulacionesGuias.find(x => x.id === ev.guia_id);
+                          if (g) {
+                            nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+                            codigoGuia = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                          }
+                        } else {
+                          const e = postulacionesEstudiantes.find(x => x.id === ev.guia_id);
+                          if (e) {
+                            nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+                            codigoGuia = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+                          }
+                        }
+
+                        const emp = empresas.find(x => x.id === ev.empresa_id);
+                        const nombreEmpresa = emp ? emp.nombre_empresa : 'Empresa Desconocida';
+
+                        return (
+                          <tr key={ev.id}>
+                            <td>
+                              <div className="main-text" style={{ fontWeight: '600' }}>{nombreGuia}</div>
+                              <div className="sub-text" style={{ fontSize: '0.75rem', color: '#64748b' }}>{codigoGuia}</div>
+                            </td>
+                            <td>
+                              <div className="main-text">{nombreEmpresa}</div>
+                            </td>
+                            <td>
+                              <div style={{ display: 'flex', gap: '3px', color: '#fbbf24' }}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star 
+                                    key={star} 
+                                    size={16} 
+                                    fill={star <= ev.estrellas ? '#fbbf24' : 'none'} 
+                                    stroke={star <= ev.estrellas ? '#fbbf24' : '#d1d5db'}
+                                  />
+                                ))}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="main-text" style={{ fontStyle: ev.comentario ? 'normal' : 'italic', color: ev.comentario ? '#334155' : '#94a3b8', maxWidth: '350px', whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                {ev.comentario || 'Sin comentarios adicionales'}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="sub-text">{new Date(ev.created_at).toLocaleDateString('es-CL', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}</div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
               </div>
             )}
           </div>

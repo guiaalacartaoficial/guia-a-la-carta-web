@@ -45,12 +45,12 @@
 
 /* Nav links container */
 .navbar-nav {
-  display: flex; align-items: center; gap: var(--s-4);
+  display: flex; align-items: center; gap: 0.85rem;
 }
 
 /* Links con underline animado */
 .nav-link {
-  font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem;
+  font-family: var(--font-heading); font-weight: 600; font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.85);
   position: relative; padding-bottom: 4px;
   transition: color 0.3s;
@@ -74,7 +74,7 @@
 .nav-cta {
   background-color: var(--c-accent) !important;
   color: var(--c-primary-dark) !important;
-  padding: 8px 22px !important;
+  padding: 6px 14px !important;
   border-radius: var(--radius-full);
   font-weight: 700 !important;
   animation: cta-glow 3s ease-in-out infinite;
@@ -94,7 +94,7 @@
 .nav-highlight {
   border: 1px solid var(--c-accent) !important;
   color: var(--c-accent) !important;
-  padding: 6px 16px !important;
+  padding: 5px 12px !important;
   border-radius: var(--radius-full);
   transition: all 0.3s !important;
 }
@@ -176,6 +176,9 @@
   .navbar-nav.active > *:nth-child(6) { animation-delay: 0.3s; }
   .navbar-nav.active > *:nth-child(7) { animation-delay: 0.35s; }
   .navbar-nav.active > *:nth-child(8) { animation-delay: 0.4s; }
+  .navbar-nav.active > *:nth-child(9) { animation-delay: 0.45s; }
+  .navbar-nav.active > *:nth-child(10) { animation-delay: 0.5s; }
+  .navbar-nav.active > *:nth-child(11) { animation-delay: 0.55s; }
 
   @keyframes slide-in {
     to { opacity: 1; transform: translateX(0); }

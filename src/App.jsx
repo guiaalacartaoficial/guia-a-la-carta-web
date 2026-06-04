@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+﻿import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -16,6 +16,7 @@ import RelatoDetalle from './pages/RelatoDetalle';
 import AdminDashboard from './pages/Admin';
 import Reserva from './pages/Reserva';
 import Manuales from './pages/Manuales';
+import Disponibilidad from './pages/Disponibilidad';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="/relatos/:id" element={<RelatoDetalle />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/reservar" element={<Reserva />} />
+            <Route path="/disponibilidad" element={<Disponibilidad />} />
           </Routes>
         </main>
         <Footer />
@@ -46,3 +48,4 @@ function App() {
 }
 
 export default App;
+
