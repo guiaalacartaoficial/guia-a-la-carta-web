@@ -34,6 +34,7 @@
   display: flex; align-items: center; gap: var(--s-2);
   font-family: var(--font-heading); font-weight: 800; font-size: 1.25rem;
   color: white; text-decoration: none;
+  white-space: nowrap;
 }
 .navbar-logo img { height: 44px; width: auto; transition: transform 0.3s; }
 
@@ -45,16 +46,17 @@
 
 /* Nav links container */
 .navbar-nav {
-  display: flex; align-items: center; gap: 0.85rem;
+  display: flex; align-items: center; gap: 0.5rem;
 }
 
 /* Links con underline animado */
 .nav-link {
-  font-family: var(--font-heading); font-weight: 600; font-size: 0.88rem;
+  font-family: var(--font-heading); font-weight: 600; font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.85);
   position: relative; padding-bottom: 4px;
   transition: color 0.3s;
   background: none; border: none; cursor: pointer;
+  white-space: nowrap;
 }
 
 /* Underline que crece desde el centro */
@@ -140,7 +142,7 @@
 }
 
 /* ===== RESPONSIVE / MOBILE ===== */
-@media (max-width: 968px) {
+@media (max-width: 1100px) {
   .mobile-toggle { display: block; }
 
   .navbar-nav {
@@ -233,7 +235,7 @@
   }
 }
 
-@media (min-width: 969px) {
+@media (min-width: 1101px) {
   .nav-dropdown:hover .nav-dropdown-menu {
     opacity: 1; visibility: visible;
     transform: translateX(-50%) translateY(0);
