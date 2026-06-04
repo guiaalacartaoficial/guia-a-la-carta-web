@@ -398,7 +398,7 @@
 /* Responsive */
 @media (max-width: 600px) {
   .disp-card {
-    padding: 1.75rem 1.25rem;
+    padding: 1.5rem 0.5rem;
   }
 
   .disp-hero h1 {
@@ -416,7 +416,18 @@
     justify-content: center;
   }
 
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-day-header {
+    padding: 0.2rem 0;
+    font-size: 0.65rem;
+    letter-spacing: 0;
+  }
+
   .calendar-day {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
   }
 }
