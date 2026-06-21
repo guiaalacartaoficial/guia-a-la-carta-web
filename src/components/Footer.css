@@ -3,6 +3,8 @@
   background-color: var(--c-primary-dark);
   color: rgba(255,255,255,0.95);
   margin-top: auto;
+  contain: layout style;
+  content-visibility: auto;
 }
 
 .footer-main {
@@ -15,7 +17,12 @@
 /* Marca */
 .footer-brand { display: flex; flex-direction: column; gap: var(--s-3); }
 .footer-logo-row { display: flex; align-items: center; gap: var(--s-3); }
-.footer-logo { height: 50px; width: auto; }
+.footer-logo {
+  height: 50px;
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
 .footer-brand-name {
   font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem;
   color: white; letter-spacing: -0.02em;

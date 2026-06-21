@@ -21,7 +21,7 @@ export const getOptimizedImageUrl = (url, width = 300, height = 300, quality = 7
   if (url.includes('supabase.co/storage/v1/object/public/')) {
     return url
       .replace('/storage/v1/object/public/', '/storage/v1/render/image/public/')
-      + `?width=${width}&height=${height}&resize=cover&quality=${quality}`;
+      + `?width=${width}&height=${height}&resize=cover&quality=${quality}&format=origin`;
   }
   return url;
 };

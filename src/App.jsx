@@ -22,7 +22,7 @@ const ClientesPortal = lazy(() => import('./pages/ClientesPortal'));
 
 // Fallback de carga minimalista
 const PageLoader = () => (
-  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
     <div style={{ width: 40, height: 40, border: '4px solid rgba(14,91,76,0.2)', borderTopColor: '#0E5B4C', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
     <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
   </div>
@@ -52,9 +52,9 @@ function App() {
             <Route path="/disponibilidad" element={<Disponibilidad />} />
             <Route path="/portal-b2b" element={<ClientesPortal />} />
           </Routes>
+          <Footer />
           </Suspense>
         </main>
-        <Footer />
       </div>
     </Router>
   );

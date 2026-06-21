@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './GuideCarousel.css';
 import { supabase, getOptimizedImageUrl } from '../services/supabase';
+import LazyBackground from './LazyBackground';
 
 const GuideCarousel = () => {
   const [index, setIndex] = useState(0);
@@ -11,14 +12,15 @@ const GuideCarousel = () => {
     const fetchApprovedGuides = async () => {
       setLoading(true);
       try {
+        const cols = 'id, nombres, nombre_visual, apellido_visual, url_foto, url_sernatur';
         const { data: pros, error: errPros } = await supabase
           .from('postulaciones_guias')
-          .select('*')
+          .select(cols)
           .eq('estado', 'aprobado');
         
         const { data: ests, error: errEsts } = await supabase
           .from('postulaciones_estudiantes')
-          .select('*')
+          .select(cols)
           .eq('estado', 'aprobado');
 
         if (errPros) console.error("Error fetching pros:", errPros);
@@ -55,7 +57,11 @@ const GuideCarousel = () => {
       }
     };
 
-    fetchApprovedGuides();
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => fetchApprovedGuides());
+    } else {
+      setTimeout(fetchApprovedGuides, 150);
+    }
   }, []);
 
   useEffect(() => {
@@ -105,10 +111,10 @@ const GuideCarousel = () => {
         {guias.map((guia, i) => {
           const posClass = getPositionClass(i);
           return (
-            <div 
+            <LazyBackground 
               key={`${guia.id}-${i}`} 
               className={`guide-circle ${posClass}`}
-              style={{ backgroundImage: `url(${guia.img})` }}
+              src={guia.img}
               onClick={() => setIndex(i)}
             >
               <div className="guide-gold-border"></div>
@@ -119,7 +125,7 @@ const GuideCarousel = () => {
                   <span className="guide-badge">{guia.cert}</span>
                 </div>
               )}
-            </div>
+            </LazyBackground>
           );
         })}
       </div>
