@@ -10,10 +10,19 @@ const Navbar = () => {
   const [sociosOpen, setSociosOpen] = useState(false);
   const location = useLocation();
 
-  // Detectar scroll para transición transparente → sólido
+  // Detectar scroll para transición transparente → sólido de manera no bloqueante
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

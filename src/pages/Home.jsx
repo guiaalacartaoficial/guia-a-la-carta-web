@@ -1,16 +1,17 @@
 import React, { useState, lazy, Suspense, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight } from 'lucide-react';
-import GuideCarousel from '../components/GuideCarousel';
-import './Home.css';
-
-// Lazy load del mapa (Leaflet es pesado)
+// Lazy load de componentes pesados below-the-fold
 const ChileMap = lazy(() => import('../components/ChileMap'));
+const GuideCarousel = lazy(() => import('../components/GuideCarousel'));
+import './Home.css';
 
 const Home = () => {
   const [activeService, setActiveService] = useState(null);
   const [mapVisible, setMapVisible] = useState(false);
+  const [carouselVisible, setCarouselVisible] = useState(false);
   const mapRef = useRef(null);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -24,6 +25,22 @@ const Home = () => {
     );
     if (mapRef.current) {
       observer.observe(mapRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCarouselVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    if (carouselRef.current) {
+      observer.observe(carouselRef.current);
     }
     return () => observer.disconnect();
   }, []);
@@ -185,8 +202,16 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Carrusel de Guías en Arco */}
-            <GuideCarousel />
+            {/* Carrusel de Guías en Arco diferido hasta entrar en el Viewport */}
+            <div ref={carouselRef} style={{ minHeight: '350px', width: '100%' }}>
+              {carouselVisible ? (
+                <Suspense fallback={<div className="loading-carousel">Cargando visualizador de red...</div>}>
+                  <GuideCarousel />
+                </Suspense>
+              ) : (
+                <div className="loading-carousel">Cargando directorio de red...</div>
+              )}
+            </div>
           </div>
         </div>
       </section>

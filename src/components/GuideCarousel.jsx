@@ -111,6 +111,7 @@ const GuideCarousel = () => {
       <div className="arc-wrapper">
         {guias.map((guia, i) => {
           const posClass = getPositionClass(i);
+          if (posClass === 'hidden') return null;
           return (
             <LazyBackground 
               key={`${guia.id}-${i}`} 
