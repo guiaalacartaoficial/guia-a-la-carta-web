@@ -3,8 +3,10 @@ import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Pages — lazy loaded for code splitting
+// ... (rest of lazy loaded imports)
 const Home = lazy(() => import('./pages/Home'));
 const Guias = lazy(() => import('./pages/Guias'));
 const Servicios = lazy(() => import('./pages/Servicios'));
@@ -35,25 +37,27 @@ function App() {
       <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
         <main style={{ flex: 1 }}>
-          <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/guias" element={<Guias />} />
-            <Route path="/servicios" element={<Servicios />} />
-            <Route path="/postular-guia" element={<PostulacionGuias />} />
-            <Route path="/postular-estudiante" element={<PostulacionEstudiantes />} />
-            <Route path="/manuales" element={<Manuales />} />
-            <Route path="/quienes-somos" element={<QuienesSomos />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/relatos" element={<Relatos />} />
-            <Route path="/relatos/:id" element={<RelatoDetalle />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/reservar" element={<Reserva />} />
-            <Route path="/disponibilidad" element={<Disponibilidad />} />
-            <Route path="/portal-b2b" element={<ClientesPortal />} />
-          </Routes>
-          <Footer />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/guias" element={<Guias />} />
+              <Route path="/servicios" element={<Servicios />} />
+              <Route path="/postular-guia" element={<PostulacionGuias />} />
+              <Route path="/postular-estudiante" element={<PostulacionEstudiantes />} />
+              <Route path="/manuales" element={<Manuales />} />
+              <Route path="/quienes-somos" element={<QuienesSomos />} />
+              <Route path="/contacto" element={<Contacto />} />
+              <Route path="/relatos" element={<Relatos />} />
+              <Route path="/relatos/:id" element={<RelatoDetalle />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/reservar" element={<Reserva />} />
+              <Route path="/disponibilidad" element={<Disponibilidad />} />
+              <Route path="/portal-b2b" element={<ClientesPortal />} />
+            </Routes>
+            <Footer />
+            </Suspense>
+          </ErrorBoundary>
         </main>
       </div>
     </Router>
