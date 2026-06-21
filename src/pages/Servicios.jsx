@@ -152,7 +152,7 @@ const Servicios = () => {
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="/card-v-guías-verificados.png" alt="Provisión de Guías" />
+                <img src="/card-v-guías-verificados.webp" alt="Provisión de Guías" loading="lazy" />
               </div>
             </div>
 
@@ -176,7 +176,7 @@ const Servicios = () => {
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="/card-v- flex-operativa.png" alt="Guía SOS" />
+                <img src="/card-v- flex-operativa.webp" alt="Guía SOS" loading="lazy" />
               </div>
             </div>
 
@@ -200,7 +200,7 @@ const Servicios = () => {
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="/card-v-soporte-operativo.png" alt="Soporte Logístico" />
+                <img src="/card-v-soporte-operativo.webp" alt="Soporte Logístico" loading="lazy" />
               </div>
             </div>
 
@@ -224,7 +224,7 @@ const Servicios = () => {
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="/card-v-carga-operativa.png" alt="DrivePlus+" />
+                <img src="/card-v-carga-operativa.webp" alt="DrivePlus+" loading="lazy" />
               </div>
             </div>
 
@@ -248,7 +248,7 @@ const Servicios = () => {
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="/fondo-mapa.jpg" alt="Optimización de Experiencias" />
+                <img src="/fondo-mapa.webp" alt="Optimización de Experiencias" loading="lazy" />
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-﻿import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -17,6 +17,7 @@ import AdminDashboard from './pages/Admin';
 import Reserva from './pages/Reserva';
 import Manuales from './pages/Manuales';
 import Disponibilidad from './pages/Disponibilidad';
+import ClientesPortal from './pages/ClientesPortal';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/reservar" element={<Reserva />} />
             <Route path="/disponibilidad" element={<Disponibilidad />} />
+            <Route path="/portal-b2b" element={<ClientesPortal />} />
           </Routes>
         </main>
         <Footer />

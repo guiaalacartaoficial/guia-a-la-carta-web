@@ -63,14 +63,14 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
     try {
       // 1. PRE-CARGA ABSOLUTA (Cero Red durante la captura)
       const images = {
-        logo: await fetchToBase64('/logo.png'),
-        verified: await fetchToBase64('/sello-verificado.png?v=5'),
+        logo: await fetchToBase64('/logo.webp'),
+        verified: await fetchToBase64('/sello-verificado.webp?v=5'),
         flagChile: await fetchToBase64(getFlagUrl('Chile')),
-        iconVoz: await fetchToBase64('/icono-voz.png'),
+        iconVoz: await fetchToBase64('/icono-voz.webp'),
         profile: await fetchToBase64(guia.imagen),
-        sernatur: await fetchToBase64('/sernatur.png'),
-        wfr: await fetchToBase64('/wfr.png'),
-        wafa: await fetchToBase64('/wafa.png')
+        sernatur: await fetchToBase64('/sernatur.webp'),
+        wfr: await fetchToBase64('/wfr.webp'),
+        wafa: await fetchToBase64('/wafa.webp')
       };
       
       if (guia.idiomas) {
@@ -168,10 +168,10 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
         <div className="credential-top-row">
           <div className="credential-top-left-logos">
             <div className="logo-circle-v2">
-              <img src="/logo.png" alt="Guia a la Carta" crossOrigin="anonymous" />
+              <img src="/logo.webp" alt="Guia a la Carta" crossOrigin="anonymous" />
             </div>
             <div className="logo-circle-v2 verified">
-              <img src="/sello-verificado.png?v=5" alt="Verificado" crossOrigin="anonymous" />
+              <img src="/sello-verificado.webp?v=5" alt="Verificado" crossOrigin="anonymous" />
             </div>
           </div>
           
@@ -197,7 +197,7 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
 
             <div className="v2-languages-bar">
               <div className="v2-speaker-icon">
-                <img src="/icono-voz.png" alt="Voz" crossOrigin="anonymous" />
+                <img src="/icono-voz.webp" alt="Voz" crossOrigin="anonymous" />
               </div>
               <div className="v2-flags-row">
                 {guia.idiomas?.map((lang, idx) => (
@@ -222,20 +222,20 @@ const GuideCredential = ({ guia, onClose, isExample = false }) => {
             ) && (
               <div className="v2-seals-column">
                 {guia.certificaciones?.sernatur && (
-                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" crossOrigin="anonymous" /></div>
+                  <div className="v2-seal-wrapper"><img src="/sernatur.webp" alt="Sernatur" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 {guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" crossOrigin="anonymous" /></div>
+                  <div className="v2-seal-wrapper"><img src="/wfr.webp" alt="WFR" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 {guia.certificaciones?.wafa && !guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper"><img src="/wafa.png" alt="WAFA" className="v2-seal-img" crossOrigin="anonymous" /></div>
+                  <div className="v2-seal-wrapper"><img src="/wafa.webp" alt="WAFA" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 
                 {Array.isArray(guia.certificaciones) && guia.certificaciones.includes('SERNATUR') && (
-                  <div className="v2-seal-wrapper"><img src="/sernatur.png" alt="Sernatur" className="v2-seal-img" crossOrigin="anonymous" /></div>
+                  <div className="v2-seal-wrapper"><img src="/sernatur.webp" alt="Sernatur" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
                 {Array.isArray(guia.certificaciones) && guia.certificaciones.includes('Primeros Auxilios') && !guia.certificaciones?.wfr && (
-                  <div className="v2-seal-wrapper"><img src="/wfr.png" alt="WFR" className="v2-seal-img" crossOrigin="anonymous" /></div>
+                  <div className="v2-seal-wrapper"><img src="/wfr.webp" alt="WFR" className="v2-seal-img" crossOrigin="anonymous" /></div>
                 )}
               </div>
             )}

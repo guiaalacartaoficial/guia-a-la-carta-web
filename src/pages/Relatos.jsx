@@ -200,9 +200,10 @@ const Relatos = () => {
       <section className="relatos-colaborador-section" style={{ padding: '80px 0', backgroundColor: '#CDE0CC' }}>
         <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '800px' }}>
           <img 
-            src="/biblioteca-turismo-logo.png" 
+            src="/biblioteca-turismo-logo.webp" 
             alt="Biblioteca del Turismo" 
             className="colaborador-logo"
+            loading="lazy"
           />
           <h3 style={{ color: 'var(--c-primary-dark)', fontSize: '1.8rem', marginBottom: '20px' }}>
             Contenido desarrollado en colaboración con la Biblioteca del Turismo

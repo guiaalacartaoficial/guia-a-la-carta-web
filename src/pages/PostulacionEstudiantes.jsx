@@ -162,7 +162,7 @@ const PostulacionEstudiantes = () => {
     edad: 23,
     codigo: "EST:012",
     idiomas: ["Español", "Inglés"],
-    imagen: "/guias/guia2.png", 
+    imagen: "/guias/guia2.webp", 
     biografia: "Estudiante de 3er año de Administración en Ecoturismo en Duoc UC. Apasionada por la interpretación del patrimonio natural y con gran vocación por el servicio al cliente y las experiencias al aire libre.",
     formacion: [
       "Cursando Administración Ecoturismo",

@@ -40,19 +40,19 @@ const teamMembers = [
   {
     name: 'Benjamín Meneses',
     role: 'Fundador & CEO / Director General y Estratégico',
-    photo: '/foto-perfil-benjamin.jpeg',
-    description: 'Fundador y líder de Guía a la Carta, responsable de la visión estratégica, desarrollo comercial, expansión y posicionamiento de la empresa, impulsando un modelo turístico escalable, profesional y orientado a experiencias de alto valor.'
+    photo: '/foto-perfil-benjamin.webp',
+    description: 'Fundador y líder de Guía a la Carta, responsable de la visión estratégica, desarrollo comercial, expansión and posicionamiento de la empresa, impulsando un modelo turístico escalable, profesional y orientado a experiencias de alto valor.'
   },
   {
     name: 'Gabriel',
     role: 'Co-Fundador / Plataforma y Área Legal',
-    photo: '/foto-perfil-gabriel.jpeg',
+    photo: '/foto-perfil-gabriel.webp',
     description: 'Encargado de la estructura operativa, tecnológica y legal de Guía a la Carta, asegurando orden interno, escalabilidad y funcionamiento eficiente de los procesos y sistemas de la empresa.'
   },
   {
     name: 'Camilo',
     role: 'Jefe de Operaciones',
-    photo: '/foto-perfil-camilo.PNG',
+    photo: '/foto-perfil-camilo.webp',
     description: 'Responsable de coordinar y supervisar toda la logística de nuestros tours, asegurando que cada experiencia se desarrolle de manera eficiente, segura y con altos estándares de calidad. Gestiona al equipo de guías y supervisión de servicios.'
   }
 ];
@@ -90,25 +90,25 @@ const enfoqueItems = [
 const respaldoItems = [
   {
     icon: <ShieldCheck size={26} />,
-    img: '/sernatur.png', // Espacio para logo futuro
+    img: '/sernatur.webp', // Espacio para logo futuro
     title: 'Empresa registrada en SERNATUR',
     desc: 'Cumplimos con los requisitos formales del Servicio Nacional de Turismo para operar en el sector.'
   },
   {
     icon: <Globe size={26} />,
-    img: '/Logo_MarcaChile_Caja Roja.png', // Espacio para logo futuro
+    img: '/Logo_MarcaChile_Caja Roja.webp', // Espacio para logo futuro
     title: 'Vinculación con Marca Chile',
     desc: 'Contamos con vinculación o autorización asociada a Marca Chile, reforzando nuestro compromiso con un turismo de alto estándar.'
   },
   {
     icon: <BadgeCheck size={26} />,
-    img: '/sello-verificado.png?v=5', // Logo de Verificado
+    img: '/sello-verificado.webp?v=5', // Logo de Verificado
     title: 'Red de guías con validación documental',
     desc: 'Cada guía de nuestra red pasa por un proceso de verificación de certificaciones, antecedentes y competencias.'
   },
   {
     icon: <Star size={26} />,
-    img: '/logo-guia-circular-v2.png', // Nuevo Logo Guía a la Carta Circular
+    img: '/logo-guia-circular-v2.webp', // Nuevo Logo Guía a la Carta Circular
     title: 'Compromiso con calidad operativa',
     desc: 'Trabajamos bajo procesos claros de coordinación, seguimiento y mejora continua del servicio.'
   }
@@ -158,6 +158,7 @@ const QuienesSomos = () => {
               <img
                 src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop"
                 alt="Equipo Guía a la Carta trabajando"
+                loading="lazy"
               />
             </div>
             <div className="ns-quienes-text">
@@ -330,6 +331,7 @@ const QuienesSomos = () => {
                   src={member.photo}
                   alt={member.name}
                   className="ns-team-photo"
+                  loading="lazy"
                 />
                 <h4>{member.name}</h4>
                 <span className="ns-team-role">{member.role}</span>
@@ -372,7 +374,7 @@ const QuienesSomos = () => {
                   
                   <div className="ns-respaldo-card-img-box">
                     {item.img ? (
-                      <img src={item.img} alt={item.title} className="ns-respaldo-custom-img" />
+                      <img src={item.img} alt={item.title} className="ns-respaldo-custom-img" loading="lazy" />
                     ) : (
                       <div className="ns-respaldo-card-placeholder">
                         {item.icon}

@@ -30,7 +30,7 @@ const Navbar = () => {
     <header className={`navbar-header ${scrolled ? 'scrolled' : ''} ${isHome && !scrolled ? 'transparent' : ''}`}>
       <div className="container navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <img src="/logo.png" alt="Guía a la Carta" />
+          <img src="/logo.webp" alt="Guía a la Carta" />
           <span>Guía a la Carta</span>
         </Link>
 
@@ -46,7 +46,12 @@ const Navbar = () => {
           
           {/* Dropdown Postulaciones */}
           <div className="nav-dropdown">
-            <button className="nav-link nav-dropdown-toggle" onClick={() => { setPostOpen(!postOpen); setSociosOpen(false); }}>
+            <button 
+              className="nav-link nav-dropdown-toggle" 
+              aria-haspopup="true" 
+              aria-expanded={postOpen} 
+              onClick={() => { setPostOpen(!postOpen); setSociosOpen(false); }}
+            >
               Postulaciones <ChevronDown size={16} className={`chevron ${postOpen ? 'open' : ''}`} />
             </button>
             <div className={`nav-dropdown-menu ${postOpen ? 'show' : ''}`}>
@@ -57,11 +62,17 @@ const Navbar = () => {
 
           {/* Dropdown Gestión de Servicios */}
           <div className="nav-dropdown">
-            <button className="nav-link nav-dropdown-toggle" onClick={() => { setSociosOpen(!sociosOpen); setPostOpen(false); }}>
+            <button 
+              className="nav-link nav-dropdown-toggle" 
+              aria-haspopup="true" 
+              aria-expanded={sociosOpen} 
+              onClick={() => { setSociosOpen(!sociosOpen); setPostOpen(false); }}
+            >
               Gestión de Servicios <ChevronDown size={16} className={`chevron ${sociosOpen ? 'open' : ''}`} />
             </button>
             <div className={`nav-dropdown-menu ${sociosOpen ? 'show' : ''}`}>
               <NavLink to="/disponibilidad" onClick={closeMenu} className="dropdown-item">Mi Disponibilidad (Guía)</NavLink>
+              <NavLink to="/portal-b2b" onClick={closeMenu} className="dropdown-item">Portal de Operadores Turísticos</NavLink>
             </div>
           </div>
           

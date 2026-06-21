@@ -178,7 +178,7 @@ const PostulacionGuias = () => {
     edad: 26,
     codigo: "GV:005",
     idiomas: ["Español", "Portugués", "Inglés"],
-    imagen: "/guias/guia1.png",
+    imagen: "/guias/guia1.webp",
     biografia: "Guía de ecoturismo certificado con amplia experiencia en la coordinación y manejo de grupos nacionales e internacionales. Especializado en experiencias outdoor y culturales.",
     formacion: [
       "Administración Ecoturismo (Duoc UC)", 

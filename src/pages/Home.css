@@ -59,7 +59,7 @@
   display: flex;
   align-items: center; 
   justify-content: center;
-  background: url('/fondo-hero.jpg') center / cover no-repeat;
+  background: url('/fondo-hero.webp') center / cover no-repeat;
   padding-top: 80px;
   padding-bottom: 70px; /* Reducido a la mitad según solicitud */
   animation: heroFadeIn 1.5s ease-out;
@@ -206,7 +206,7 @@
   display: flex;
   align-items: center;
   padding: var(--s-10) 0;
-  background: url('/fondo-arc-guias.jpg') center / cover no-repeat;
+  background: url('/fondo-arc-guias.webp') center / cover no-repeat;
   color: white; /* Ajuste para que el texto resalte sobre el fondo */
 }
 
@@ -592,7 +592,7 @@
 .section-cobertura {
   min-height: 100vh; display: flex; align-items: center;
   padding: var(--s-10) 0; position: relative;
-  background: url('/fondo-empresas.jpg') center / cover no-repeat;
+  background: url('/fondo-empresas.webp') center / cover no-repeat;
 }
 .section-cobertura::before { content: ''; position: absolute; inset: 0; background: rgba(10,59,49,0.88); }
 .section-cobertura .container { position: relative; z-index: 2; color: white; }
@@ -867,6 +867,9 @@
   background: rgba(14, 91, 76, 0.1);
   cursor: pointer;
   transition: all 0.4s ease;
+  border: none;
+  padding: 0;
+  outline: none;
 }
 
 .dot.active {

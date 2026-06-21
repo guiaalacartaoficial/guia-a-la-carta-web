@@ -12,7 +12,7 @@ const Footer = () => {
         {/* Columna 1: Marca */}
         <div className="footer-brand">
           <div className="footer-logo-row">
-            <img src="/logo.png" alt="Guía a la Carta" className="footer-logo" />
+            <img src="/logo.webp" alt="Guía a la Carta" className="footer-logo" loading="lazy" />
             <span className="footer-brand-name">Guía a la Carta</span>
           </div>
           <p className="footer-tagline">

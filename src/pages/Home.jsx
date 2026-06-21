@@ -52,7 +52,7 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-overlay"></div>
         <div className="container hero-content text-center">
-          <img src="/logo.png" alt="Guía a la Carta Logo" className="hero-center-logo mb-4" style={{ width: '200px' }} />
+          <img src="/logo.webp" alt="Guía a la Carta Logo" className="hero-center-logo mb-4" style={{ width: '200px' }} />
           <h1>Tu red confiable de guías en todo Chile</h1>
           <p className="hero-subtitle">Soluciones operativas para empresas de turismo en Chile</p>
           <p className="hero-desc">Conectamos empresas turísticas, hoteles y agencias con guías certificados, entregando una operación más confiable, flexible y profesional.</p>
@@ -350,26 +350,26 @@ const Home = () => {
               {/* Slide 1: Santiago Icónico */}
               <div className="collage-slide active">
                 <div className="custom-collage-grid">
-                  <div className="collage-item item-1"><img src="/gallery/Bellavista.jpg" alt="Barrio Bellavista" /></div>
-                  <div className="collage-item item-2"><img src="/gallery/Costanera-Center.jpg" alt="Costanera Center" /></div>
-                  <div className="collage-item item-3"><img src="/gallery/Gastronomia-Santiago.jpg" alt="Gastronomía Chilena" /></div>
-                  <div className="collage-item item-4"><img src="/gallery/Museo-a-cielo-abierto-1.jpg" alt="Museo a Cielo Abierto" /></div>
+                  <div className="collage-item item-1"><img src="/gallery/Bellavista.webp" alt="Barrio Bellavista" loading="lazy" /></div>
+                  <div className="collage-item item-2"><img src="/gallery/Costanera-Center.webp" alt="Costanera Center" loading="lazy" /></div>
+                  <div className="collage-item item-3"><img src="/gallery/Gastronomia-Santiago.webp" alt="Gastronomía Chilena" loading="lazy" /></div>
+                  <div className="collage-item item-4"><img src="/gallery/Museo-a-cielo-abierto-1.webp" alt="Museo a Cielo Abierto" loading="lazy" /></div>
                 </div>
               </div>
 
               {/* Slide 2: Patrimonio y Cultura */}
               <div className="collage-slide">
                 <div className="custom-collage-grid">
-                  <div className="collage-item item-1"><img src="/gallery/Plaza-de-Armas-Filipa.jpg" alt="Plaza de Armas" /></div>
-                  <div className="collage-item item-2"><img src="/gallery/lastarria.jpg" alt="Barrio Lastarria" /></div>
-                  <div className="collage-item item-3"><img src="/gallery/mercado-central.jpg" alt="Mercado Central" /></div>
-                  <div className="collage-item item-4"><img src="/gallery/Bellavista.jpg" alt="Barrio Bellavista" /></div>
+                  <div className="collage-item item-1"><img src="/gallery/Plaza-de-Armas-Filipa.webp" alt="Plaza de Armas" loading="lazy" /></div>
+                  <div className="collage-item item-2"><img src="/gallery/lastarria.webp" alt="Barrio Lastarria" loading="lazy" /></div>
+                  <div className="collage-item item-3"><img src="/gallery/mercado-central.webp" alt="Mercado Central" loading="lazy" /></div>
+                  <div className="collage-item item-4"><img src="/gallery/Bellavista.webp" alt="Barrio Bellavista" loading="lazy" /></div>
                 </div>
               </div>
             </div>
 
             <div className="slider-controls">
-              <button className="slider-btn prev" onClick={() => {
+              <button className="slider-btn prev" aria-label="Diapositiva anterior" onClick={() => {
                 const slides = document.querySelectorAll('.collage-slide');
                 const dots = document.querySelectorAll('.dot');
                 let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
@@ -381,7 +381,7 @@ const Home = () => {
               }}>
                 <ChevronLeft size={32} />
               </button>
-              <button className="slider-btn next" onClick={() => {
+              <button className="slider-btn next" aria-label="Diapositiva siguiente" onClick={() => {
                 const slides = document.querySelectorAll('.collage-slide');
                 const dots = document.querySelectorAll('.dot');
                 let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
@@ -397,14 +397,14 @@ const Home = () => {
 
             <div className="slider-dots">
               {[0, 1].map((i) => (
-                <span key={i} className={`dot ${i === 0 ? 'active' : ''}`} onClick={() => {
+                <button key={i} type="button" aria-label={`Ir a diapositiva ${i + 1}`} className={`dot ${i === 0 ? 'active' : ''}`} onClick={() => {
                   const slides = document.querySelectorAll('.collage-slide');
                   const dots = document.querySelectorAll('.dot');
                   slides.forEach(s => s.classList.remove('active'));
                   dots.forEach(d => d.classList.remove('active'));
                   slides[i].classList.add('active');
                   dots[i].classList.add('active');
-                }}></span>
+                }}></button>
               ))}
             </div>
           </div>
