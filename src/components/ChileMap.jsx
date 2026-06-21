@@ -7,7 +7,7 @@ import './ChileMap.css';
 
 // Custom Logo Icon for the pins
 const logoIcon = new L.Icon({
-  iconUrl: '/logo.png',
+  iconUrl: '/logo.webp',
   iconSize: [40, 40],
   iconAnchor: [20, 40],
   popupAnchor: [0, -40],

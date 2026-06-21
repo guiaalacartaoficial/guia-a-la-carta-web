@@ -244,3 +244,11 @@
     transform: rotate(180deg);
   }
 }
+
+@media (max-width: 768px) {
+  .navbar-header.scrolled {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: var(--c-primary-dark) !important;
+  }
+}

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
 import './Home.css';
-import ChileMap from '../components/ChileMap';
+
+// Lazy load del mapa (Leaflet es pesado)
+const ChileMap = lazy(() => import('../components/ChileMap'));
 
 const Home = () => {
   const [activeService, setActiveService] = useState(null);
@@ -333,7 +335,9 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: MAPA INTERACTIVO */}
-      <ChileMap />
+      <Suspense fallback={<div style={{ minHeight: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--c-primary-dark)', color: 'white' }}><p>Cargando mapa...</p></div>}>
+        <ChileMap />
+      </Suspense>
 
       <div className="footer-accent-bar" />
 
