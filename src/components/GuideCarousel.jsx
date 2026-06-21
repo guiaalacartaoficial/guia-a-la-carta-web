@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './GuideCarousel.css';
-import { supabase } from '../services/supabase';
+import { supabase, getOptimizedImageUrl } from '../services/supabase';
 
 const GuideCarousel = () => {
   const [index, setIndex] = useState(0);
@@ -38,7 +38,7 @@ const GuideCarousel = () => {
             nombre: `${nombreVisual} ${apellidoVisual}`.trim(),
             especialidad: type === 'guia' ? 'Guía Profesional' : 'Guía Junior',
             cert: certName,
-            img: item.url_foto || '/placeholder-user.png'
+            img: getOptimizedImageUrl(item.url_foto, 300, 300, 75)
           };
         };
 

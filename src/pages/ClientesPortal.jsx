@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../services/supabase';
+import { supabase, getOptimizedImageUrl } from '../services/supabase';
 import {
   ShieldCheck, Calendar, Filter, CheckCircle2,
   LogOut, Eye, Search, RefreshCw, Lock, ArrowRight, Star, X, Trash2
@@ -95,6 +95,7 @@ const ClientesPortal = () => {
         let nivel = 'Senior';
         let idiomas = ['Español'];
         let urlFoto = '/placeholder-user.png';
+        const OPT = getOptimizedImageUrl;
         let info = null;
 
         if (d.tipo_guia === 'guia') {
@@ -108,7 +109,7 @@ const ClientesPortal = () => {
             idiomas = Array.isArray(info.idiomas)
               ? info.idiomas.map(i => (typeof i === 'object' ? i.idioma : i))
               : ['Español'];
-            urlFoto = info.url_foto || urlFoto;
+            urlFoto = OPT(info.url_foto, 200, 200, 70);
           }
         } else {
           info = (estData || []).find(x => x.id === d.guia_id);
@@ -119,7 +120,7 @@ const ClientesPortal = () => {
             idiomas = Array.isArray(info.idiomas)
               ? info.idiomas.map(i => (typeof i === 'object' ? i.idioma : i))
               : ['Español'];
-            urlFoto = info.url_foto || urlFoto;
+            urlFoto = OPT(info.url_foto, 200, 200, 70);
           }
         }
 
@@ -293,7 +294,7 @@ const ClientesPortal = () => {
       idiomas: Array.isArray(r.idiomas)
         ? r.idiomas.map(i => (typeof i === 'object' ? i?.idioma : i) || 'Español')
         : ['Español'],
-      imagen: r.url_foto || '/placeholder-user.png',
+      imagen: getOptimizedImageUrl(r.url_foto, 300, 300, 75),
       biografia: String(r.biografia || 'Sin biografía'),
       formacion: typeof r.educacion === 'string' ? r.educacion.split('\n') : [],
       experiencia:

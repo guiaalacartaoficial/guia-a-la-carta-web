@@ -1,7 +1,7 @@
 import { MapPin, Star, Shield, Award, CheckCircle, Clock, Search, Filter } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../services/supabase';
+import { supabase, getOptimizedImageUrl } from '../services/supabase';
 import GuideCredential from '../components/GuideCredential';
 import SelloModal from '../components/SelloModal';
 import './Guias.css';
@@ -53,7 +53,7 @@ const Guias = () => {
               edad: item.edad || 'N/A',
               codigo: item.id ? (type === 'guia' ? `PRO:${String(item.id).substring(0, 5).toUpperCase()}` : `EST:${String(item.id).substring(0, 5).toUpperCase()}`) : 'N/A',
               idiomas: Array.isArray(item.idiomas) ? item.idiomas.map(i => i.idioma || i) : [],
-              imagen: item.url_foto || '/placeholder-user.png',
+              imagen: getOptimizedImageUrl(item.url_foto, 300, 300, 75),
               biografia: item.biografia || '',
               formacion: item.educacion ? item.educacion.split('\n') : [],
               experiencia: item.rutas_experiencia ? item.rutas_experiencia.split('\n') : (item.experiencia_terreno ? item.experiencia_terreno.split('\n') : []),

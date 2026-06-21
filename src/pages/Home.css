@@ -852,7 +852,6 @@
   transform: scale(1.15);
   box-shadow: 0 15px 30px rgba(14, 91, 76, 0.2);
 }
-
 .slider-dots {
   display: flex;
   justify-content: center;
@@ -861,6 +860,7 @@
 }
 
 .dot {
+  position: relative;
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -872,12 +872,22 @@
   outline: none;
 }
 
+.dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
 .dot.active {
   background: var(--c-primary);
   width: 40px;
   border-radius: 10px;
 }
-
 /* Responsive */
 @media (max-width: 1200px) {
   .slider-controls {

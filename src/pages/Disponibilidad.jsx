@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../services/supabase';
+import { supabase, getOptimizedImageUrl } from '../services/supabase';
 import { CheckCircle, AlertCircle, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Lock, LogOut } from 'lucide-react';
 import ToastContainer, { useToast } from '../components/Toast';
 import emailjs from '@emailjs/browser';
@@ -500,7 +500,7 @@ const Disponibilidad = () => {
           {step === 2 && guideData && (
             <div className="disp-step-2">
               <div className="disp-guide-info">
-                <img src={guideData.url_foto || '/placeholder-user.png'} alt={guideData.nombre_mostrar} />
+                <img src={getOptimizedImageUrl(guideData.url_foto, 150, 150, 75)} alt={guideData.nombre_mostrar} />
                 <div className="disp-guide-details">
                   <h4>{guideData.nombre_mostrar}</h4>
                   <p>Código: {guideData.codigo} • {guideData.tipo === 'guia' ? 'Profesional' : 'Estudiante'}</p>

@@ -85,7 +85,7 @@ const Home = () => {
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
                 <BadgeCheck className="icon-problema" size={32} />
-                <h4>GUÍAS VERIFICADOS</h4>
+                <h3>GUÍAS VERIFICADOS</h3>
                 <p>Cada guía es validado en certificaciones, experiencia y habilidades en terreno, asegurando un estándar real de servicio.
                   Menos riesgo, mejor experiencia para tus pasajeros.</p>
               </div>
@@ -94,7 +94,7 @@ const Home = () => {
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
                 <CalendarCog className="icon-problema" size={32} />
-                <h4>FLEXIBILIDAD OPERATIVA REAL</h4>
+                <h3>FLEXIBILIDAD OPERATIVA REAL</h3>
                 <p>Nos adaptamos a cada tipo de servicio.
                   Asignamos guías según idioma, perfil de pasajero, nivel de exigencia y tipo de operación.
                   Puedes cubrir desde servicios simples hasta experiencias de alto nivel sin fricción.
@@ -105,7 +105,7 @@ const Home = () => {
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
                 <DatabaseBackup className="icon-problema" size={32} />
-                <h4>RESPALDO OPERATIVO</h4>
+                <h3>RESPALDO OPERATIVO</h3>
                 <p>No estás solo durante la ejecución.
                   Acompañamos cada servicio con coordinación activa y capacidad de respuesta ante cambios o imprevistos.
                   Mayor control y continuidad en tu operación.
@@ -116,9 +116,9 @@ const Home = () => {
               <div className="bloque-overlay"></div>
               <div className="bloque-content">
                 <TimerReset className="icon-problema" size={32} />
-                <h4>REDUCCIÓN DE CARGA OPERATIVA</h4>
+                <h3>REDUCCIÓN DE CARGA OPERATIVA</h3>
                 <p>Deja de coordinar, enfócate en crecer.
-                  Centralizamos la búsqueda, asignación y comunicación con guías para simplificar tu operación diaria.
+                  Centralizamos la búsqueda, asignación y comunicación con guías para simplificar tu operation diaria.
                   Menos desgaste interno, más eficiencia.
                 </p>
               </div>
@@ -143,25 +143,25 @@ const Home = () => {
             <div className="solucion-pilares">
               <div className="pilar-item">
                 <HeartPulse size={32} className="text-accent mb-3" />
-                <h4>PRIMEROS AUXILIOS</h4>
+                <h3>PRIMEROS AUXILIOS</h3>
                 <p>Guías con formación en primeros auxilios, preparados para responder ante situaciones de riesgo en terreno.</p>
                 <div className="pilar-highlight">Mayor seguridad para tus pasajeros</div>
               </div>
               <div className="pilar-item">
                 <Mountain size={32} className="text-accent mb-3" />
-                <h4>EXPERIENCIA EN TERRENO</h4>
+                <h3>EXPERIENCIA EN TERRENO</h3>
                 <p>Profesionales con experiencia real operando tours y enfrentando distintos escenarios.</p>
                 <div className="pilar-highlight">Menos improvisación, mejor ejecución</div>
               </div>
               <div className="pilar-item">
                 <Languages size={32} className="text-accent mb-3" />
-                <h4>MANEJO DE IDIOMAS</h4>
+                <h3>MANEJO DE IDIOMAS</h3>
                 <p>Guías capacitados para comunicarse con pasajeros internacionales.</p>
                 <div className="pilar-highlight">Mejor conexión y experiencia del cliente</div>
               </div>
               <div className="pilar-item">
                 <Users size={32} className="text-accent mb-3" />
-                <h4>MANEJO DE GRUPOS</h4>
+                <h3>MANEJO DE GRUPOS</h3>
                 <p>Capacidad para liderar, organizar y mantener el control de grupos en todo momento.</p>
                 <div className="pilar-highlight">Servicios más fluidos y ordenados</div>
               </div>
@@ -224,10 +224,10 @@ const Home = () => {
 
           <div className="niveles-resumen mt-5 mb-5">
             <div className="nivel-mini">
-              <h4>Guía Junior</h4>
+              <h3>Guía Junior</h3>
               <p className="nivel-desc">Apoyo operativo o servicios de menor complejidad.</p>
               <div className="nivel-ideal">
-                <h5>Ideal para:</h5>
+                <h4>Ideal para:</h4>
                 <ul>
                   <li><CheckCircle size={16} /> Servicios simples</li>
                   <li><CheckCircle size={16} /> Apoyo en terreno</li>
@@ -242,10 +242,10 @@ const Home = () => {
 
             <div className="nivel-mini destacado">
               <div className="nivel-ribbon">Más solicitado</div>
-              <h4>Guía Full</h4>
+              <h3>Guía Full</h3>
               <p className="nivel-desc">Operativo estándar, autónomo y con experiencia comprobable.</p>
               <div className="nivel-ideal">
-                <h5>Ideal para:</h5>
+                <h4>Ideal para:</h4>
                 <ul>
                   <li><CheckCircle size={16} /> Tours regulares</li>
                   <li><CheckCircle size={16} /> Servicios completos</li>
@@ -259,10 +259,10 @@ const Home = () => {
             </div>
 
             <div className="nivel-mini">
-              <h4>Guía Senior</h4>
+              <h3>Guía Senior</h3>
               <p className="nivel-desc">Máxima resolución y capacidad de representación.</p>
               <div className="nivel-ideal">
-                <h5>Ideal para:</h5>
+                <h4>Ideal para:</h4>
                 <ul>
                   <li><CheckCircle size={16} /> Servicios exigentes</li>
                   <li><CheckCircle size={16} /> Grupos especiales / VIP</li>
@@ -310,23 +310,23 @@ const Home = () => {
           <div className="estandares-grid">
             <div className="estandar-box">
               <CheckCircle className="text-accent mb-3" size={32} />
-              <h5>Guías registrados en SERNATUR</h5>
+              <h3>Guías registrados en SERNATUR</h3>
             </div>
             <div className="estandar-box">
               <Star className="text-accent mb-3" size={32} />
-              <h5>Perfiles evaluados</h5>
+              <h3>Perfiles evaluados</h3>
             </div>
             <div className="estandar-box">
               <Settings className="text-accent mb-3" size={32} />
-              <h5>Coordinación previa al servicio</h5>
+              <h3>Coordinación previa al servicio</h3>
             </div>
             <div className="estandar-box">
               <Zap className="text-accent mb-3" size={32} />
-              <h5>Respuesta flexible según disponibilidad</h5>
+              <h3>Respuesta flexible según disponibilidad</h3>
             </div>
             <div className="estandar-box">
               <Users className="text-accent mb-3" size={32} />
-              <h5>Posibilidad de reemplazo operativo</h5>
+              <h3>Posibilidad de reemplazo operativo</h3>
             </div>
           </div>
         </div>
@@ -360,8 +360,8 @@ const Home = () => {
       <section className="section-gallery b2b-theme-light">
         <div className="container">
           <div className="section-header text-center mb-5">
-            <h3 className="gallery-title">Nuestra Comunidad en Acción</h3>
-            <h4 className="gallery-desc">Resumen visual de las experiencias y el estándar operativo que entregamos en cada rincón de Chile.</h4>
+            <h2 className="gallery-title">Nuestra Comunidad en Acción</h2>
+            <p className="gallery-desc">Resumen visual de las experiencias y el estándar operativo que entregamos en cada rincón de Chile.</p>
           </div>
 
           <div className="collage-slider-wrapper">
