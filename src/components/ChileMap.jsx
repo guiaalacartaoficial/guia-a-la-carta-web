@@ -73,47 +73,36 @@ const ChileMap = () => {
   }, []);
   
   return (
-    <section className="chile-map-section">
-      <div className="container">
-        <div className="map-header text-center mb-5">
-          <h2 className="map-titleHighlight">Nuestra Red Nacional</h2>
-          <p className="map-subtitle">Con presencia en todas las regiones, aseguramos cobertura donde la necesites.</p>
-        </div>
-        
-        <div className="map-container-wrapper">
-          <MapContainer 
-            center={chileCenter} 
-            zoom={4} 
-            scrollWheelZoom={false}
-            className="leaflet-map-custom"
-            style={{ height: '100%', width: '100%' }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-            />
-            
-            {regiones.map((region) => (
-              <Marker 
-                key={region.id} 
-                position={[region.lat, region.lng]} 
-                icon={logoIcon}
-              >
-                <Popup>
-                  <div className="map-popup-content">
-                    <h4>{region.nombre}</h4>
-                    <p className="guide-count">
-                      <strong>{region.guias}</strong> guías registrados
-                    </p>
-                    <a href="/guias" className="popup-link">Ver directorio</a>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div>
-      </div>
-    </section>
+    <MapContainer 
+      center={chileCenter} 
+      zoom={4} 
+      scrollWheelZoom={false}
+      className="leaflet-map-custom"
+      style={{ height: '100%', width: '100%' }}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+      />
+      
+      {regiones.map((region) => (
+        <Marker 
+          key={region.id} 
+          position={[region.lat, region.lng]} 
+          icon={logoIcon}
+        >
+          <Popup>
+            <div className="map-popup-content">
+              <h4>{region.nombre}</h4>
+              <p className="guide-count">
+                <strong>{region.guias}</strong> guías registrados
+              </p>
+              <a href="/guias" className="popup-link">Ver directorio</a>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
 };
 

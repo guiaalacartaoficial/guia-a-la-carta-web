@@ -30,7 +30,7 @@ const Navbar = () => {
     <header className={`navbar-header ${scrolled ? 'scrolled' : ''} ${isHome && !scrolled ? 'transparent' : ''}`}>
       <div className="container navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <img src="/logo.webp" alt="Guía a la Carta" />
+          <img src="/logo.webp" alt="Guía a la Carta" width="44" height="44" />
           <span>Guía a la Carta</span>
         </Link>
 

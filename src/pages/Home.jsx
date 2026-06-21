@@ -54,7 +54,7 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-overlay"></div>
         <div className="container hero-content text-center">
-          <img src="/logo.webp" alt="Guía a la Carta Logo" className="hero-center-logo mb-4" style={{ width: '200px' }} />
+          <img src="/logo.webp" alt="Guía a la Carta Logo" className="hero-center-logo mb-4" width="200" height="200" style={{ width: '200px', height: '200px' }} />
           <h1>Tu red confiable de guías en todo Chile</h1>
           <p className="hero-subtitle">Soluciones operativas para empresas de turismo en Chile</p>
           <p className="hero-desc">Conectamos empresas turísticas, hoteles y agencias con guías certificados, entregando una operación más confiable, flexible y profesional.</p>
@@ -335,9 +335,24 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: MAPA INTERACTIVO */}
-      <Suspense fallback={<div style={{ minHeight: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--c-primary-dark)', color: 'white' }}><p>Cargando mapa...</p></div>}>
-        <ChileMap />
-      </Suspense>
+      <section className="chile-map-section">
+        <div className="container">
+          <div className="map-header text-center mb-5">
+            <h2 className="map-titleHighlight">Nuestra Red Nacional</h2>
+            <p className="map-subtitle">Con presencia en todas las regiones, aseguramos cobertura donde la necesites.</p>
+          </div>
+          
+          <div className="map-container-wrapper">
+            <Suspense fallback={
+              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020a09', color: 'white' }}>
+                <p>Cargando mapa interactivo...</p>
+              </div>
+            }>
+              <ChileMap />
+            </Suspense>
+          </div>
+        </div>
+      </section>
 
       <div className="footer-accent-bar" />
 
