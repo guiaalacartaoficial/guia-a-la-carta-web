@@ -1,10 +1,8 @@
 /* ===== FOOTER ===== */
 .footer-section {
   background-color: var(--c-primary-dark);
-  color: rgba(255,255,255,0.95);
+  color: #FFFFFF;
   margin-top: auto;
-  contain: layout style;
-  content-visibility: auto;
 }
 
 .footer-main {
@@ -27,13 +25,13 @@
   font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem;
   color: white; letter-spacing: -0.02em;
 }
-.footer-tagline { color: rgba(255,255,255,0.82); font-size: 0.9rem; line-height: 1.6; max-width: 320px; }
+.footer-tagline { color: #E2E8F0; font-size: 0.9rem; line-height: 1.6; max-width: 320px; }
 .footer-socials { display: flex; gap: var(--s-3); margin-top: var(--s-2); }
 .footer-socials a {
   position: relative;
   display: flex; align-items: center; justify-content: center;
   width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.12); color: #E2E8F0;
   transition: all 0.3s;
 }
 .footer-socials a::after {
@@ -47,7 +45,7 @@
 }
 .footer-socials a:hover { background: var(--c-accent); color: var(--c-primary-dark); transform: translateY(-2px); }
 
-/* Columnas */
+.footer-col h3,
 .footer-col h4 {
   color: white; font-size: 1rem; margin-bottom: var(--s-4);
   padding-bottom: var(--s-2); border-bottom: 2px solid var(--c-accent);
@@ -55,7 +53,7 @@
 }
 .footer-links li { margin-bottom: var(--s-3); }
 .footer-links a {
-  color: rgba(255,255,255,0.82); font-size: 0.9rem;
+  color: #E2E8F0; font-size: 0.9rem;
   display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s;
   padding: 4px 0;
 }
@@ -64,7 +62,7 @@
 /* Contacto */
 .footer-contact li {
   display: flex; align-items: center; gap: var(--s-2);
-  margin-bottom: var(--s-3); font-size: 0.9rem; color: rgba(255,255,255,0.82);
+  margin-bottom: var(--s-3); font-size: 0.9rem; color: #E2E8F0;
 }
 .footer-contact li svg { color: var(--c-accent); flex-shrink: 0; }
 
@@ -72,7 +70,7 @@
 .footer-bottom {
   text-align: center; padding: var(--s-4);
   border-top: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.65); font-size: 0.8rem;
+  color: #CBD5E1; font-size: 0.8rem;
 }
 
 /* Responsive */

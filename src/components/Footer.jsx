@@ -40,7 +40,7 @@ const Footer = () => {
 
         {/* Columna 2: Navegación */}
         <div className="footer-col">
-          <h4>Navegación</h4>
+          <h3>Navegación</h3>
           <ul className="footer-links">
             <li><Link to="/">Inicio</Link></li>
             <li><Link to="/servicios">Servicios</Link></li>
@@ -52,7 +52,7 @@ const Footer = () => {
 
         {/* Columna 3: Únete */}
         <div className="footer-col">
-          <h4>Únete a la Red</h4>
+          <h3>Únete a la Red</h3>
           <ul className="footer-links">
             <li><Link to="/postular-guia">Postulación Guías <ArrowUpRight size={14}/></Link></li>
             <li><Link to="/postular-estudiante">Pasantías Estudiantes <ArrowUpRight size={14}/></Link></li>
@@ -61,7 +61,7 @@ const Footer = () => {
 
         {/* Columna 4: Contacto */}
         <div className="footer-col">
-          <h4>Contacto</h4>
+          <h3>Contacto</h3>
           <ul className="footer-contact">
             <li><MapPin size={16} /> Santiago, Chile</li>
             <li><Phone size={16} /> +56 9 5604 8293</li>

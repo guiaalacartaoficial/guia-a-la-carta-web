@@ -711,11 +711,14 @@
 }
 
 .btn-whatsapp-cta {
-  background-color: #25D366 !important;
+  background-color: #075E54 !important;
   color: white !important;
   border: none !important;
   padding: 0.8rem 1.8rem !important; /* Botones un poco más pequeños */
   font-size: 0.9rem !important;
+}
+.btn-whatsapp-cta:hover {
+  background-color: #128C7E !important;
 }
 
 /* ===== RESPONSIVE ===== */

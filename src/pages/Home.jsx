@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight } from 'lucide-react';
 import GuideCarousel from '../components/GuideCarousel';
@@ -9,6 +9,24 @@ const ChileMap = lazy(() => import('../components/ChileMap'));
 
 const Home = () => {
   const [activeService, setActiveService] = useState(null);
+  const [mapVisible, setMapVisible] = useState(false);
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMapVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    if (mapRef.current) {
+      observer.observe(mapRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
 
   const servicesData = [
     {
@@ -335,7 +353,7 @@ const Home = () => {
       <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: MAPA INTERACTIVO */}
-      <section className="chile-map-section">
+      <section className="chile-map-section" ref={mapRef}>
         <div className="container">
           <div className="map-header text-center mb-5">
             <h2 className="map-titleHighlight">Nuestra Red Nacional</h2>
@@ -343,13 +361,19 @@ const Home = () => {
           </div>
           
           <div className="map-container-wrapper">
-            <Suspense fallback={
+            {mapVisible ? (
+              <Suspense fallback={
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020a09', color: 'white' }}>
+                  <p>Cargando mapa interactivo...</p>
+                </div>
+              }>
+                <ChileMap />
+              </Suspense>
+            ) : (
               <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020a09', color: 'white' }}>
-                <p>Cargando mapa interactivo...</p>
+                <p>Desplázate para ver el mapa...</p>
               </div>
-            }>
-              <ChileMap />
-            </Suspense>
+            )}
           </div>
         </div>
       </section>

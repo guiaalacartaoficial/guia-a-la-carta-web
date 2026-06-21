@@ -12,15 +12,16 @@ const GuideCarousel = () => {
     const fetchApprovedGuides = async () => {
       setLoading(true);
       try {
-        const cols = 'id, nombres, nombre_visual, apellido_visual, url_foto, url_sernatur';
+        const colsPros = 'id, nombres, nombre_visual, apellido_visual, url_foto, url_sernatur';
+        const colsEsts = 'id, nombres, nombre_visual, apellido_visual, url_foto';
         const { data: pros, error: errPros } = await supabase
           .from('postulaciones_guias')
-          .select(cols)
+          .select(colsPros)
           .eq('estado', 'aprobado');
         
         const { data: ests, error: errEsts } = await supabase
           .from('postulaciones_estudiantes')
-          .select(cols)
+          .select(colsEsts)
           .eq('estado', 'aprobado');
 
         if (errPros) console.error("Error fetching pros:", errPros);

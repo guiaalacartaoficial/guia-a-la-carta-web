@@ -5,12 +5,12 @@ import { supabase } from '../services/supabase';
 import 'leaflet/dist/leaflet.css';
 import './ChileMap.css';
 
-// Custom Logo Icon for the pins
+// Custom Logo Icon for the pins (48x48px for perfect touch target size)
 const logoIcon = new L.Icon({
   iconUrl: '/logo.webp',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-  popupAnchor: [0, -40],
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48],
   className: 'custom-logo-marker'
 });
 

@@ -97,11 +97,11 @@ ul, ol { list-style: none; }
 .btn-hero:hover { background-color: var(--c-surface); color: var(--c-primary-dark); transform: translateY(-2px); }
 
 .btn-whatsapp {
-  background-color: #25D366; color: white; padding: 0.8rem 2.5rem;
+  background-color: #075E54; color: white; padding: 0.8rem 2.5rem;
   border-radius: var(--radius-full); font-weight: 600; font-size: 1.1rem;
   border: 1px solid transparent;
 }
-.btn-whatsapp:hover { background-color: #1EBE55; transform: translateY(-2px); color: white; }
+.btn-whatsapp:hover { background-color: #128C7E; transform: translateY(-2px); color: white; }
 
 .border-white { border: 1px solid rgba(255,255,255,0.3) !important; }
 
