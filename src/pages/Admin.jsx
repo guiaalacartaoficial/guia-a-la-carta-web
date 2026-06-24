@@ -901,10 +901,7 @@ const AdminDashboard = () => {
         <div className="admin-main-viewport">
           <header className="admin-top-bar">
             <div className="search-bar-pro">
-              {/* Buscador estético tipo Mediline */}
-              <div className="search-input-wrapper">
-                <input type="text" placeholder="Buscar..." disabled />
-              </div>
+              <img src="/logo.webp" alt="Guía a la Carta" style={{ height: '42px', objectFit: 'contain' }} />
             </div>
             <div className="topbar-actions">
               <button onClick={toggleTheme} className="btn-theme-toggle" title="Cambiar Tema" style={{ background: 'var(--panel-bg)', border: '1px solid var(--border)', padding: '10px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--primary)' }}>
@@ -926,32 +923,66 @@ const AdminDashboard = () => {
               <div className="stat-pro-card">
                 <div className="stat-info">
                   <span className="stat-label">Solicitudes</span>
-                  <span className="stat-value">{reservas.filter(r => r.estado === 'nueva').length}</span>
-                  <span style={{ fontSize: '0.7rem', color: '#0369a1', fontWeight: '700', marginTop: '5px' }}>Nuevas Entrantes</span>
+                  <span className="stat-value">{reservas.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#0369a1', fontWeight: '700', marginTop: '2px' }}>{reservas.filter(r => r.estado === 'nueva').length} Nuevas</span>
                 </div>
-                <div className="stat-icon res"><Calendar size={28}/></div>
+                <div className="stat-icon res"><Calendar size={20}/></div>
               </div>
               <div className="stat-pro-card">
                 <div className="stat-info">
                   <span className="stat-label">Postulantes</span>
-                  <span className="stat-value">
-                    {postulacionesGuias.filter(g => g.estado === 'pendiente').length + 
-                     postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: '#15803d', fontWeight: '700', marginTop: '5px' }}>En Espera</span>
+                  <span className="stat-value">{postulacionesGuias.length + postulacionesEstudiantes.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#15803d', fontWeight: '700', marginTop: '2px' }}>{postulacionesGuias.filter(g => g.estado === 'pendiente').length + postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length} En Espera</span>
                 </div>
-                <div className="stat-icon tal"><Users size={28}/></div>
+                <div className="stat-icon tal"><Users size={20}/></div>
               </div>
               <div className="stat-pro-card">
                 <div className="stat-info">
                   <span className="stat-label">Relatos</span>
-                  <span className="stat-value">
-                    {relatos.filter(r => r.estado === 'pendiente').length + 
-                     comentarios.filter(c => c.estado === 'pendiente').length}
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: '#c2410c', fontWeight: '700', marginTop: '5px' }}>Por Moderar</span>
+                  <span className="stat-value">{relatos.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#c2410c', fontWeight: '700', marginTop: '2px' }}>{relatos.filter(r => r.estado === 'pendiente').length + comentarios.filter(c => c.estado === 'pendiente').length} Pendientes</span>
                 </div>
-                <div className="stat-icon com"><MessageCircle size={28}/></div>
+                <div className="stat-icon com"><Globe size={20}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Manuales</span>
+                  <span className="stat-value">{manuales.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#7c3aed', fontWeight: '700', marginTop: '2px' }}>Documentos</span>
+                </div>
+                <div className="stat-icon man"><BookOpen size={20}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Días Disponibles</span>
+                  <span className="stat-value">{disponibilidad.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#0284c7', fontWeight: '700', marginTop: '2px' }}>{disponibilidad.filter(d => d.estado_bloqueo === 'bloqueado').length} Reservados</span>
+                </div>
+                <div className="stat-icon disp"><Calendar size={20}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Clientes B2B</span>
+                  <span className="stat-value">{empresas.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#059669', fontWeight: '700', marginTop: '2px' }}>{empresas.filter(e => e.estado === 'aprobado').length} Activos</span>
+                </div>
+                <div className="stat-icon cli"><Briefcase size={20}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Evaluaciones</span>
+                  <span className="stat-value">{evaluaciones.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#ca8a04', fontWeight: '700', marginTop: '2px' }}>Calificaciones</span>
+                </div>
+                <div className="stat-icon eval"><Star size={20}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Chats Activos</span>
+                  <span className="stat-value">{adminChats.length}</span>
+                  <span style={{ fontSize: '0.65rem', color: '#4f46e5', fontWeight: '700', marginTop: '2px' }}>{Object.values(adminUnread).reduce((a, b) => a + b, 0)} Sin Leer</span>
+                </div>
+                <div className="stat-icon msg"><MessageCircle size={20}/></div>
               </div>
             </section>
 
