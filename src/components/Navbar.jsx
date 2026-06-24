@@ -32,6 +32,11 @@ const Navbar = () => {
     setSociosOpen(false);
   };
 
+  // Hide Navbar on Admin pages
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
+
   // Solo transparente en la Home
   const isHome = location.pathname === '/';
 

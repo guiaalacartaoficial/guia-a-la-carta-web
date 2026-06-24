@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { supabase, getOptimizedImageUrl } from '../services/supabase';
 import {
   ShieldCheck, Calendar, Filter, CheckCircle2,
-  LogOut, Eye, Search, RefreshCw, Lock, ArrowRight, Star, X, Trash2
+  LogOut, Eye, Search, RefreshCw, Lock, ArrowRight, Star, X, Trash2,
+  MessageCircle
 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
+import ChatWindow from '../components/ChatWindow';
 import ToastContainer, { useToast } from '../components/Toast';
 import './ClientesPortal.css';
 
@@ -34,6 +36,11 @@ const ClientesPortal = () => {
   // Selected guide credential
   const [selectedGuideForCredential, setSelectedGuideForCredential] = useState(null);
 
+  // Chat state
+  const [chats, setChats] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [unreadCounts, setUnreadCounts] = useState({});
+
   // Search/Filters State
   const [selectedFecha, setSelectedFecha] = useState('');
   const [selectedIdioma, setSelectedIdioma] = useState('');
@@ -50,8 +57,33 @@ const ClientesPortal = () => {
   useEffect(() => {
     if (empresa) {
       fetchPortalData();
+      loadChats();
     }
   }, [empresa]);
+
+  const loadChats = async () => {
+    if (!empresa) return;
+    const { data } = await supabase
+      .from('chats')
+      .select('*')
+      .eq('empresa_id', empresa.id)
+      .eq('activo', true)
+      .order('created_at', { ascending: false });
+    setChats(data || []);
+
+    // Calcular no leídos por empresa
+    const counts = {};
+    for (const chat of (data || [])) {
+      const { count } = await supabase
+        .from('chat_mensajes')
+        .select('*', { count: 'exact', head: true })
+        .eq('chat_id', chat.id)
+        .eq('leido_empresa', false)
+        .neq('autor_tipo', 'empresa');
+      counts[chat.id] = count || 0;
+    }
+    setUnreadCounts(counts);
+  };
 
   const fetchPortalData = async () => {
     setLoading(true);
@@ -64,14 +96,17 @@ const ClientesPortal = () => {
         .or(`fecha.gte.${hoy},bloqueado_por.eq.${empresa.id}`)
         .order('fecha', { ascending: true });
 
+      const colsGuias = 'id, nombres, apellidos, nombre_visual, apellido_visual, edad, idiomas, url_foto, biografia, educacion, rutas_experiencia, url_sernatur, url_primeros_auxilios, url_otras_certificaciones, nivel';
+      const colsEsts = 'id, nombres, apellidos, nombre_visual, apellido_visual, edad, idiomas, url_foto, biografia, educacion, experiencia_terreno';
+
       const { data: guiasData } = await supabase
         .from('postulaciones_guias')
-        .select('*')
+        .select(colsGuias)
         .eq('estado', 'aprobado');
 
       const { data: estData } = await supabase
         .from('postulaciones_estudiantes')
-        .select('*')
+        .select(colsEsts)
         .eq('estado', 'aprobado');
 
       let evData = [];
@@ -143,21 +178,19 @@ const ClientesPortal = () => {
     setLoading(true);
     setError('');
     try {
-      const { data, error: dbError } = await supabase
-        .from('empresas')
-        .select('*')
-        .eq('email', email.trim())
-        .eq('password', password.trim())
-        .eq('estado', 'activo');
+      const { data, error: rpcError } = await supabase.rpc('verify_empresa_login', {
+        input_email: email.trim(),
+        input_password: password.trim()
+      });
 
-      if (dbError) throw dbError;
+      if (rpcError) throw rpcError;
 
-      if (!data || data.length === 0) {
-        setError('Credenciales incorrectas o empresa inactiva.');
+      if (!data || !data.success) {
+        setError(data?.error || 'Credenciales incorrectas o empresa inactiva.');
         return;
       }
 
-      const userCompany = data[0];
+      const userCompany = data.empresa;
       localStorage.setItem('empresa_b2b', JSON.stringify(userCompany));
       setEmpresa(userCompany);
     } catch (err) {
@@ -224,7 +257,7 @@ const ClientesPortal = () => {
     setNombreServicioInput('');
   };
 
-  // Confirmar reserva desde modal
+  // Confirmar reserva desde modal + crear chat automáticamente
   const handleConfirmBooking = async () => {
     if (!bookingModal) return;
     setLoading(true);
@@ -244,10 +277,28 @@ const ClientesPortal = () => {
         .eq('id', bookingModal.rowId);
 
       if (error) throw error;
+
+      // Crear sala de chat vinculada a esta reserva
+      const chatExistente = chats.find(c => c.disponibilidad_id === bookingModal.rowId);
+      if (!chatExistente) {
+        await supabase.from('chats').insert({
+          disponibilidad_id: bookingModal.rowId,
+          empresa_id: empresa.id,
+          empresa_nombre: empresa.nombre_empresa,
+          guia_id: bookingModal.guiaId,
+          tipo_guia: bookingModal.tipoGuia,
+          guia_nombre: bookingModal.nombreGuia,
+          nombre_servicio: nombreServicioInput.trim() || null,
+          fecha_servicio: bookingModal.fecha,
+          activo: true,
+        });
+      }
+
       addToast(`¡Reserva confirmada! Guía: ${bookingModal.nombreGuia} — ${new Date(bookingModal.fecha + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}`, 'success', 5000);
       setBookingModal(null);
       setNombreServicioInput('');
       fetchPortalData();
+      loadChats();
     } catch (err) {
       console.error(err);
       addToast('Error al realizar la reserva. Intenta de nuevo.', 'error');
@@ -463,6 +514,19 @@ const ClientesPortal = () => {
                   <CheckCircle2 size={15} />
                   Servicios Ejecutados
                   <span className="tab-badge" style={myBookings.filter(b => b.estado_servicio === 'ejecutado').length > 0 ? { background: '#059669' } : {}}>{myBookings.filter(b => b.estado_servicio === 'ejecutado').length}</span>
+                </button>
+                <button
+                  className={`tab-link ${activePortalTab === 'mensajes' ? 'active' : ''}`}
+                  onClick={() => { setActivePortalTab('mensajes'); loadChats(); }}
+                  style={{ position: 'relative' }}
+                >
+                  <MessageCircle size={15} />
+                  Mensajes
+                  {Object.values(unreadCounts).reduce((a, b) => a + b, 0) > 0 && (
+                    <span className="tab-badge" style={{ background: '#ef4444' }}>
+                      {Object.values(unreadCounts).reduce((a, b) => a + b, 0)}
+                    </span>
+                  )}
                 </button>
               </div>
 
@@ -965,6 +1029,100 @@ const ClientesPortal = () => {
                 </section>
               );
             })()}
+
+            {/* ===================== MENSAJES / CHAT ===================== */}
+            {activePortalTab === 'mensajes' && (
+              <section className="portal-full-width-section">
+                <div className="tab-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <h3>Mensajes con Guías</h3>
+                    <p style={{ color: '#64748b', fontSize: '0.9rem', margin: '4px 0 0 0' }}>Comunicación directa con guías y el equipo Guía a la Carta.</p>
+                  </div>
+                  <button onClick={loadChats} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: '#ecfdf5', color: '#059669', border: '1px solid #10b981', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>
+                    <RefreshCw size={15} />
+                    Actualizar
+                  </button>
+                </div>
+
+                {chats.length === 0 ? (
+                  <div className="portal-empty-state" style={{ margin: '1rem 0', padding: '2.5rem' }}>
+                    <div className="empty-icon"><MessageCircle size={28} /></div>
+                    <h4>Sin chats activos</h4>
+                    <p>Los chats se crean automáticamente al reservar un guía.</p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+                    {chats.map(chat => {
+                      const unread = unreadCounts[chat.id] || 0;
+                      const isActive = activeChatId === chat.id;
+                      return (
+                        <div
+                          key={chat.id}
+                          style={{
+                            background: isActive ? '#f0fdf4' : 'white',
+                            border: isActive ? '2px solid var(--portal-primary)' : '1.5px solid #e2e8f0',
+                            borderRadius: '12px',
+                            padding: '1rem 1.25rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            boxShadow: isActive ? '0 4px 16px rgba(14,91,76,0.15)' : '0 2px 8px rgba(0,0,0,0.04)',
+                          }}
+                          onClick={() => setActiveChatId(isActive ? null : chat.id)}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #0E5B4C, #1a7a68)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '1rem', flexShrink: 0 }}>
+                                {(chat.guia_nombre || 'G')[0].toUpperCase()}
+                              </div>
+                              <div>
+                                <p style={{ margin: 0, fontWeight: '700', color: '#1e293b', fontSize: '0.9rem' }}>{chat.guia_nombre}</p>
+                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                                  {chat.nombre_servicio || 'Sin tour especificado'}
+                                  {chat.fecha_servicio && ` · ${new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}`}
+                                </span>
+                              </div>
+                            </div>
+                            {unread > 0 && (
+                              <span style={{ background: '#ef4444', color: 'white', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: '800', flexShrink: 0 }}>
+                                {unread}
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ marginTop: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                              Chat creado: {new Date(chat.created_at).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
+                            </span>
+                            <span style={{ fontSize: '0.78rem', fontWeight: '700', color: isActive ? 'var(--portal-primary)' : '#64748b' }}>
+                              {isActive ? '▲ Ocultar chat' : '💬 Abrir chat'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Panel de chat activo */}
+                {activeChatId && (
+                  <div style={{ marginTop: '1.5rem', maxWidth: '680px', margin: '1.5rem auto 0' }}>
+                    {(() => {
+                      const chat = chats.find(c => c.id === activeChatId);
+                      if (!chat) return null;
+                      return (
+                        <ChatWindow
+                          chatId={activeChatId}
+                          autorTipo="empresa"
+                          autorNombre={empresa.nombre_empresa}
+                          titulo={`Chat con ${chat.guia_nombre}`}
+                          subtitulo={[chat.nombre_servicio, chat.fecha_servicio && new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })].filter(Boolean).join(' · ')}
+                          onClose={() => { setActiveChatId(null); loadChats(); }}
+                        />
+                      );
+                    })()}
+                  </div>
+                )}
+              </section>
+            )}
           </main>
         </div>
       )}

@@ -38,8 +38,10 @@ const Guias = () => {
     const fetchApprovedGuides = async () => {
       setLoading(true);
       try {
-        const { data: pros, error: errPros } = await supabase.from('postulaciones_guias').select('*').eq('estado', 'aprobado');
-        const { data: ests, error: errEsts } = await supabase.from('postulaciones_estudiantes').select('*').eq('estado', 'aprobado');
+        const colsGuias = 'id, nombres, nombre_visual, apellido_visual, edad, idiomas, url_foto, biografia, educacion, rutas_experiencia, url_sernatur, url_primeros_auxilios, url_otras_certificaciones, nivel, ciudad_residencia';
+        const colsEsts = 'id, nombres, nombre_visual, apellido_visual, edad, idiomas, url_foto, biografia, educacion, experiencia_terreno, ciudad_residencia';
+        const { data: pros, error: errPros } = await supabase.from('postulaciones_guias').select(colsGuias).eq('estado', 'aprobado');
+        const { data: ests, error: errEsts } = await supabase.from('postulaciones_estudiantes').select(colsEsts).eq('estado', 'aprobado');
 
         const formatGuide = (item, type) => {
           try {

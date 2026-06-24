@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase, getOptimizedImageUrl } from '../services/supabase';
-import { CheckCircle, AlertCircle, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Lock, LogOut } from 'lucide-react';
+import { CheckCircle, AlertCircle, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Lock, LogOut, MessageCircle } from 'lucide-react';
 import ToastContainer, { useToast } from '../components/Toast';
+import ChatWindow from '../components/ChatWindow';
 import emailjs from '@emailjs/browser';
 import './Disponibilidad.css';
 
@@ -17,6 +18,11 @@ const Disponibilidad = () => {
 
   // Logged In Guide Data
   const [guideData, setGuideData] = useState(null);
+
+  // Chat state
+  const [guideChats, setGuideChats] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [chatUnread, setChatUnread] = useState({});
 
   // Calendar State
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -113,66 +119,30 @@ const Disponibilidad = () => {
     setError('');
 
     try {
-      const { data: pros, error: errPros } = await supabase.from('postulaciones_guias').select('*').eq('estado', 'aprobado');
-      const { data: ests, error: errEsts } = await supabase.from('postulaciones_estudiantes').select('*').eq('estado', 'aprobado');
+      const { data, error: rpcError } = await supabase.rpc('request_guia_password_recovery', { search_code: searchCode });
 
-      if (errPros || errEsts) {
-        throw new Error('Error al consultar la base de datos.');
-      }
-
-      let match = null;
-      let tipo = '';
-      let table = '';
-
-      for (const p of (pros || [])) {
-        const expectedCode = `PRO:${String(p.id).substring(0, 5).toUpperCase()}`;
-        if (expectedCode === searchCode) {
-          match = p;
-          tipo = 'guia';
-          table = 'postulaciones_guias';
-          break;
-        }
-      }
-
-      if (!match) {
-        for (const est of (ests || [])) {
-          const expectedCode = `EST:${String(est.id).substring(0, 5).toUpperCase()}`;
-          if (expectedCode === searchCode) {
-            match = est;
-            tipo = 'estudiante';
-            table = 'postulaciones_estudiantes';
-            break;
-          }
-        }
-      }
-
-      if (!match) {
-        setError('No encontramos un guía o estudiante aprobado con ese código de credencial.');
+      if (rpcError) throw rpcError;
+      if (!data || !data.success) {
+        setError(data?.error || 'No encontramos un guía o estudiante aprobado con ese código de credencial.');
         setLoading(false);
         return;
       }
 
-      let password = match.password;
-      if (!password) {
-        password = 'GC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-        const { error: updErr } = await supabase.from(table).update({ password }).eq('id', match.id);
-        if (updErr) throw updErr;
-      }
-
+      const { nombres, apellidos, email: guideEmail, password, tipo } = data;
       const linkAcceso = 'https://www.guiaalacarta.cl/disponibilidad';
 
       await emailjs.send(
         'service_ihvjiza',
         'template_credenciales',
         {
-          name: `${match.nombres || ''} ${match.apellidos || ''}`.trim(),
-          email: match.email,
-          message: `Hola ${match.nombres || ''},\n\nHas solicitado recordar tus credenciales de acceso para registrar y actualizar tu disponibilidad en la página web:\n\n- Usuario (Código): ${searchCode}\n- Contraseña: ${password}\n\nIngresa aquí para actualizar tu disponibilidad:\n${linkAcceso}\n\n¡Mucho éxito!\nEquipo Guía a la Carta`
+          name: `${nombres || ''} ${apellidos || ''}`.trim(),
+          email: guideEmail,
+          message: `Hola ${nombres || ''},\n\nHas solicitado recordar tus credenciales de acceso para registrar y actualizar tu disponibilidad en la página web:\n\n- Usuario (Código): ${searchCode}\n- Contraseña: ${password}\n\nIngresa aquí para actualizar tu disponibilidad:\n${linkAcceso}\n\n¡Mucho éxito!\nEquipo Guía a la Carta`
         },
         '_nmx76wxhMLgNa1ic'
       );
 
-      const emailText = match.email || '';
+      const emailText = guideEmail || '';
       const parts = emailText.split('@');
       let maskedEmail = emailText;
       if (parts.length === 2) {
@@ -197,92 +167,78 @@ const Disponibilidad = () => {
     setError('');
 
     try {
-      const { data: pros, error: errPros } = await supabase.from('postulaciones_guias').select('*').eq('estado', 'aprobado');
-      const { data: ests, error: errEsts } = await supabase.from('postulaciones_estudiantes').select('*').eq('estado', 'aprobado');
-
-      if (errPros || errEsts) {
-        throw new Error('Error al consultar la base de datos.');
-      }
-
-      let match = null;
-      let tipo = '';
       const searchCode = codigo.trim().toUpperCase();
       const searchPin = pin.trim();
 
-      for (const p of (pros || [])) {
-        const expectedCode = `PRO:${String(p.id).substring(0, 5).toUpperCase()}`;
-        if (expectedCode === searchCode) {
-          if (!p.password) {
-            setError('Tu perfil no tiene una contraseña registrada. Por favor, contacta al administrador para que te genere y envíe tus credenciales.');
-            setLoading(false);
-            return;
-          }
-          if (searchPin !== p.password.trim()) {
-            setError('La contraseña ingresada no es correcta.');
-            setLoading(false);
-            return;
-          }
-          match = p;
-          tipo = 'guia';
-          break;
-        }
+      const { data, error: rpcError } = await supabase.rpc('verify_guia_login', {
+        search_code: searchCode,
+        input_password: searchPin
+      });
+
+      if (rpcError) throw rpcError;
+      if (!data || !data.success) {
+        setError(data?.error || 'No encontramos un guía aprobado con esos datos. Verifica tu código y contraseña.');
+        setLoading(false);
+        return;
       }
 
-      if (!match && !error) {
-        for (const est of (ests || [])) {
-          const expectedCode = `EST:${String(est.id).substring(0, 5).toUpperCase()}`;
-          if (expectedCode === searchCode) {
-            if (!est.password) {
-              setError('Tu perfil no tiene una contraseña registrada. Por favor, contacta al administrador para que te genere y envíe tus credenciales.');
-              setLoading(false);
-              return;
-            }
-            if (searchPin !== est.password.trim()) {
-              setError('La contraseña ingresada no es correcta.');
-              setLoading(false);
-              return;
-            }
-            match = est;
-            tipo = 'estudiante';
-            break;
-          }
-        }
+      const match = data.guia;
+      const tipo = searchCode.startsWith('EST') ? 'estudiante' : 'guia';
+
+      const guideObj = {
+        ...match,
+        tipo,
+        codigo: searchCode,
+        original_id: match.id,
+        nombre_mostrar: String(match.nombres || match.nombre || 'Guía')
+      };
+      setGuideData(guideObj);
+
+      const hoy = new Date().toISOString().slice(0, 10);
+
+      // Cargar TODAS las fechas futuras de este guía
+      const { data: todasLasFechas } = await supabase
+        .from('disponibilidad_guias')
+        .select('fecha, estado_bloqueo')
+        .eq('guia_id', match.id)
+        .gte('fecha', hoy)
+        .order('fecha', { ascending: true });
+
+      const libres = (todasLasFechas || [])
+        .filter(f => f.estado_bloqueo !== 'bloqueado')
+        .map(f => f.fecha);
+
+      const bloqueadas = (todasLasFechas || [])
+        .filter(f => f.estado_bloqueo === 'bloqueado')
+        .map(f => f.fecha);
+
+      setSelectedDates(libres);
+      setSavedDates(libres);
+      setBlockedDates(bloqueadas);
+
+      // Cargar chats activos de este guía
+      const { data: chatsData } = await supabase
+        .from('chats')
+        .select('*')
+        .eq('guia_id', match.id)
+        .eq('activo', true)
+        .order('created_at', { ascending: false });
+      setGuideChats(chatsData || []);
+
+      // No leídos por el guía
+      const counts = {};
+      for (const chat of (chatsData || [])) {
+        const { count } = await supabase
+          .from('chat_mensajes')
+          .select('*', { count: 'exact', head: true })
+          .eq('chat_id', chat.id)
+          .eq('leido_guia', false)
+          .neq('autor_tipo', 'guia');
+        counts[chat.id] = count || 0;
       }
+      setChatUnread(counts);
 
-      if (match) {
-        setGuideData({
-          ...match,
-          tipo,
-          codigo: searchCode,
-          original_id: match.id,
-          nombre_mostrar: String(match.nombres || match.nombre || 'Guía')
-        });
-
-        const hoy = new Date().toISOString().slice(0, 10);
-
-        // Cargar TODAS las fechas futuras de este guía
-        const { data: todasLasFechas } = await supabase
-          .from('disponibilidad_guias')
-          .select('fecha, estado_bloqueo')
-          .eq('guia_id', match.id)
-          .gte('fecha', hoy)
-          .order('fecha', { ascending: true });
-
-        const libres = (todasLasFechas || [])
-          .filter(f => f.estado_bloqueo !== 'bloqueado')
-          .map(f => f.fecha);
-
-        const bloqueadas = (todasLasFechas || [])
-          .filter(f => f.estado_bloqueo === 'bloqueado')
-          .map(f => f.fecha);
-
-        setSelectedDates(libres);
-        setSavedDates(libres);
-        setBlockedDates(bloqueadas);
-        setStep(2);
-      } else if (!error) {
-        setError('No encontramos un guía aprobado con esos datos. Verifica tu código y PIN.');
-      }
+      setStep(2);
 
     } catch (err) {
       console.error(err);
@@ -553,6 +509,9 @@ const Disponibilidad = () => {
                   setSelectedDates([]);
                   setSavedDates([]);
                   setBlockedDates([]);
+                  setGuideChats([]);
+                  setActiveChatId(null);
+                  setChatUnread({});
                 }} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <LogOut size={18} />
                   Cerrar Sesión
@@ -568,6 +527,84 @@ const Disponibilidad = () => {
                   {loading ? 'Guardando...' : hasChanges() ? `Guardar Cambios (${selectedDates.length} días)` : 'Sin cambios'}
                 </button>
               </div>
+
+              {/* ===== MIS MENSAJES ===== */}
+              {guideChats.length > 0 && (
+                <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1.5px solid #e2e8f0' }}>
+                  <h3 style={{ color: '#1e293b', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem' }}>
+                    <MessageCircle size={20} color="#0E5B4C" />
+                    Mis Mensajes
+                    {Object.values(chatUnread).reduce((a, b) => a + b, 0) > 0 && (
+                      <span style={{ background: '#ef4444', color: 'white', borderRadius: '12px', padding: '2px 8px', fontSize: '0.75rem', fontWeight: '800' }}>
+                        {Object.values(chatUnread).reduce((a, b) => a + b, 0)} nuevo{Object.values(chatUnread).reduce((a, b) => a + b, 0) > 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </h3>
+                  <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                    Comunicáte con la empresa y el equipo Guía a la Carta sobre tus servicios asignados.
+                  </p>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    {guideChats.map(chat => {
+                      const unread = chatUnread[chat.id] || 0;
+                      const isActive = activeChatId === chat.id;
+                      return (
+                        <div
+                          key={chat.id}
+                          onClick={() => setActiveChatId(isActive ? null : chat.id)}
+                          style={{
+                            background: isActive ? '#f0fdf4' : 'white',
+                            border: isActive ? '2px solid #0E5B4C' : '1.5px solid #e2e8f0',
+                            borderRadius: '10px',
+                            padding: '0.9rem 1.1rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            transition: 'all 0.2s',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '0.85rem', flexShrink: 0 }}>
+                              {(chat.empresa_nombre || 'E')[0].toUpperCase()}
+                            </div>
+                            <div>
+                              <p style={{ margin: 0, fontWeight: '700', color: '#1e293b', fontSize: '0.875rem' }}>{chat.empresa_nombre}</p>
+                              <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                                {chat.nombre_servicio || 'Sin tour especificado'}
+                                {chat.fecha_servicio && ` · ${new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}`}
+                              </span>
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                            {unread > 0 && (
+                              <span style={{ background: '#ef4444', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.68rem', fontWeight: '800' }}>
+                                {unread}
+                              </span>
+                            )}
+                            <MessageCircle size={16} color={isActive ? '#0E5B4C' : '#94a3b8'} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {activeChatId && (() => {
+                    const chat = guideChats.find(c => c.id === activeChatId);
+                    if (!chat) return null;
+                    return (
+                      <ChatWindow
+                        chatId={activeChatId}
+                        autorTipo="guia"
+                        autorNombre={guideData.nombre_mostrar}
+                        titulo={`Chat con ${chat.empresa_nombre}`}
+                        subtitulo={[chat.nombre_servicio, chat.fecha_servicio && new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })].filter(Boolean).join(' · ')}
+                        onClose={() => setActiveChatId(null)}
+                      />
+                    );
+                  })()}
+                </div>
+              )}
             </div>
           )}
         </div>

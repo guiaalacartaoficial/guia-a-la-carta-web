@@ -6,11 +6,12 @@ import {
   Eye, Trash2, Check, Crop,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
   ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download, Star, Bell,
-  Key
+  Key, Sun, Moon
 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
 import CropperModal from '../components/CropperModal';
 import ToastContainer, { useToast } from '../components/Toast';
+import ChatWindow from '../components/ChatWindow';
 import emailjs from '@emailjs/browser';
 import './Admin.css';
 
@@ -135,12 +136,19 @@ const exportarEvaluacionesExcel = (evaluaciones, postulacionesGuias, postulacion
 };
 
 const AdminDashboard = () => {
+  const [theme, setTheme] = useState(() => localStorage.getItem('admin-theme') || 'light');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('reservas');
   const [subTab, setSubTab] = useState('guias');
   const [reservas, setReservas] = useState([]);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('admin-theme', nextTheme);
+  };
   const [postulacionesGuias, setPostulacionesGuias] = useState([]);
   const [postulacionesEstudiantes, setPostulacionesEstudiantes] = useState([]);
   const [relatos, setRelatos] = useState([]);
@@ -149,6 +157,9 @@ const AdminDashboard = () => {
   const [disponibilidad, setDisponibilidad] = useState([]);
   const [empresas, setEmpresas] = useState([]);
   const [evaluaciones, setEvaluaciones] = useState([]);
+  const [adminChats, setAdminChats] = useState([]);
+  const [adminActiveChatId, setAdminActiveChatId] = useState(null);
+  const [adminUnread, setAdminUnread] = useState({});
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
@@ -160,6 +171,34 @@ const AdminDashboard = () => {
   const [agregarDiaGuiaId, setAgregarDiaGuiaId] = useState(null); // guia_id del formulario "agregar día" abierto
   const [agregarDiaData, setAgregarDiaData] = useState({ fecha: '', empresa_id: '', nombre_servicio: '' });
   const { toasts, addToast, removeToast } = useToast();
+
+  const loadAdminChats = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('chats')
+        .select('*')
+        .eq('activo', true)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setAdminChats(data || []);
+
+      const counts = {};
+      for (const chat of (data || [])) {
+        const { count, error: countErr } = await supabase
+          .from('chat_mensajes')
+          .select('*', { count: 'exact', head: true })
+          .eq('chat_id', chat.id)
+          .eq('leido_admin', false)
+          .neq('autor_tipo', 'admin');
+        if (!countErr) {
+          counts[chat.id] = count || 0;
+        }
+      }
+      setAdminUnread(counts);
+    } catch (err) {
+      console.error('Error al cargar chats de admin:', err);
+    }
+  };
 
   // Reservar un día LIBRE existente (UPDATE → bloqueado)
   const handleReservarDia = async (dispRowId) => {
@@ -230,12 +269,18 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const { data: resData } = await supabase.from('reservas').select('*').order('created_at', { ascending: false });
-      const { data: guiasData } = await supabase.from('postulaciones_guias').select('*').order('created_at', { ascending: false });
-      const { data: estData } = await supabase.from('postulaciones_estudiantes').select('*').order('created_at', { ascending: false });
+      
+      const colsGuiasOnly = 'id, nombres, apellidos, nombre_visual, apellido_visual, edad, telefono, email, ciudad_residencia, biografia, educacion, rutas_experiencia, url_foto, url_cv, url_sernatur, url_primeros_auxilios, url_otras_certificaciones, nivel, estado, created_at, idiomas';
+      const colsEstsOnly = 'id, nombres, apellidos, nombre_visual, apellido_visual, edad, telefono, email, ciudad_residencia, biografia, educacion, experiencia_terreno, url_foto, url_cv, url_certificaciones, estado, created_at, idiomas';
+      const { data: guiasData } = await supabase.from('postulaciones_guias').select(colsGuiasOnly).order('created_at', { ascending: false });
+      const { data: estData } = await supabase.from('postulaciones_estudiantes').select(colsEstsOnly).order('created_at', { ascending: false });
+      
       const { data: relatoData } = await supabase.from('relatos').select('*').order('fecha', { ascending: false });
       const { data: comData } = await supabase.from('comentarios_relatos').select('*, relatos(titulo)').order('fecha', { ascending: false });
       const { data: manualesData } = await supabase.from('manuales').select('*').order('created_at', { ascending: false });
-      const { data: empData } = await supabase.from('empresas').select('*').order('nombre_empresa', { ascending: true });
+      
+      const colsEmp = 'id, nombre_empresa, email, contacto_nombre, telefono, estado, created_at';
+      const { data: empData } = await supabase.from('empresas').select(colsEmp).order('nombre_empresa', { ascending: true });
       
       // Auto-limpieza: eliminar SOLO fechas pasadas LIBRES (no reservadas) de la base de datos
       const hoy = new Date().toISOString().slice(0, 10); // formato YYYY-MM-DD
@@ -277,6 +322,9 @@ const AdminDashboard = () => {
       setDisponibilidad(dispData || []);
       setEmpresas(empData || []);
       setEvaluaciones(evData);
+      
+      // Load chats too
+      loadAdminChats();
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
@@ -348,7 +396,8 @@ const AdminDashboard = () => {
       let generatedPass = null;
       if (newStatus === 'aprobado' && (isGuia || isEstudiante)) {
         // Consultar el registro primero para ver si ya tiene contraseña
-        const { data: currentRec } = await supabase.from(table).select('password').eq('id', id).single();
+        const { data: currentRecVal, error: rpcErr } = await supabase.rpc('get_sensitive_password', { tbl: table, rec_id: id });
+        const currentRec = { password: currentRecVal };
         if (currentRec && !currentRec.password) {
           generatedPass = 'GC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
           updateData.password = generatedPass;
@@ -400,6 +449,10 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       let password = record.password;
+      if (!password) {
+        const { data: fetchedPass } = await supabase.rpc('get_sensitive_password', { tbl: table, rec_id: record.id });
+        password = fetchedPass;
+      }
       const isGuia = table === 'postulaciones_guias';
       
       // Si no tiene contraseña asignada, la generamos e insertamos en Supabase
@@ -723,15 +776,15 @@ const AdminDashboard = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="admin-dashboard-pro" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ background: 'white', padding: '3rem', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
-          <ShieldCheck size={48} style={{ color: '#0f172a', marginBottom: '1rem' }} />
-          <h2 style={{ marginBottom: '0.5rem' }}>Panel Administrativo</h2>
-          <p style={{ color: '#64748b', marginBottom: '2rem' }}>Acceso restringido a administradores</p>
+      <div className={`admin-dashboard-pro admin-login-page ${theme}`}>
+        <div className="login-card-pro" style={{ background: 'var(--panel-bg)', padding: '3rem', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
+          <ShieldCheck size={48} style={{ color: 'var(--primary)', marginBottom: '1rem' }} />
+          <h2 style={{ marginBottom: '0.5rem', color: 'var(--text-main)' }}>Panel Administrativo</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Acceso restringido a administradores</p>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid #e2e8f0' }} required />
-            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid #e2e8f0' }} required />
-            <button type="submit" style={{ background: '#0f172a', color: 'white', padding: '0.8rem', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>Entrar al Sistema</button>
+            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--panel-bg)', color: 'var(--text-main)' }} required />
+            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--panel-bg)', color: 'var(--text-main)' }} required />
+            <button type="submit" style={{ background: 'var(--primary)', color: 'white', padding: '0.8rem', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>Entrar al Sistema</button>
           </form>
         </div>
       </div>
@@ -739,65 +792,18 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="admin-dashboard-pro">
+    <div className={`admin-dashboard-pro ${theme}`}>
       <ToastContainer toasts={toasts} removeToast={removeToast} />
-      <header className="admin-top-bar">
-        <div className="container-pro" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      
+      <div className="admin-layout-wrapper">
+        <aside className="admin-sidebar">
           <div className="admin-logo-section">
             <ShieldCheck size={32} className="admin-icon-brand" />
             <div>
-              <h1>Panel Administrativo</h1>
-              <span>Guía a la Carta • Business Suite v2.0</span>
+              <h1>Guía a la Carta</h1>
+              <span>Business Suite v2.0</span>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <button onClick={fetchData} className="btn-refresh" disabled={loading}>
-              <RefreshCw size={18} className={loading ? 'spin' : ''} /> 
-              <span>{loading ? 'Actualizando...' : 'Actualizar'}</span>
-            </button>
-            <div className="admin-user-pill" style={{ background: 'white', padding: '5px 15px', borderRadius: '30px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '0.8rem' }}>AD</div>
-              <span style={{ fontWeight: '700', fontSize: '0.85rem' }}>Administrador</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <section className="admin-stats-summary container-pro">
-        <div className="stat-pro-card">
-          <div className="stat-info">
-            <span className="stat-label">Solicitudes</span>
-            <span className="stat-value">{reservas.filter(r => r.estado === 'nueva').length}</span>
-            <span style={{ fontSize: '0.7rem', color: '#0369a1', fontWeight: '700', marginTop: '5px' }}>Nuevas Entrantes</span>
-          </div>
-          <div className="stat-icon res"><Calendar size={28}/></div>
-        </div>
-        <div className="stat-pro-card">
-          <div className="stat-info">
-            <span className="stat-label">Postulantes</span>
-            <span className="stat-value">
-              {postulacionesGuias.filter(g => g.estado === 'pendiente').length + 
-               postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}
-            </span>
-            <span style={{ fontSize: '0.7rem', color: '#15803d', fontWeight: '700', marginTop: '5px' }}>En Espera</span>
-          </div>
-          <div className="stat-icon tal"><Users size={28}/></div>
-        </div>
-        <div className="stat-pro-card">
-          <div className="stat-info">
-            <span className="stat-label">Relatos</span>
-            <span className="stat-value">
-              {relatos.filter(r => r.estado === 'pendiente').length + 
-               comentarios.filter(c => c.estado === 'pendiente').length}
-            </span>
-            <span style={{ fontSize: '0.7rem', color: '#c2410c', fontWeight: '700', marginTop: '5px' }}>Por Moderar</span>
-          </div>
-          <div className="stat-icon com"><MessageCircle size={28}/></div>
-        </div>
-      </section>
-
-      <main className="admin-main container-pro">
-        <aside className="admin-sidebar">
           <nav>
             <button className={`admin-nav-link ${activeTab === 'reservas' ? 'active' : ''}`} onClick={() => setActiveTab('reservas')}>
               <Briefcase size={22} /> <span>Solicitud de Servicios</span>
@@ -835,16 +841,91 @@ const AdminDashboard = () => {
             <button className={`admin-nav-link ${activeTab === 'evaluaciones' ? 'active' : ''}`} onClick={() => setActiveTab('evaluaciones')}>
               <Star size={22} /> <span>Evaluaciones B2B</span>
             </button>
+            <button 
+              className={`admin-nav-link ${activeTab === 'mensajes' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('mensajes'); loadAdminChats(); }} 
+              style={{ position: 'relative' }}
+            >
+              <MessageCircle size={22} /> <span>Mensajes</span>
+              {Object.values(adminUnread).reduce((a, b) => a + b, 0) > 0 && (
+                <span style={{ 
+                  position: 'absolute', top: '8px', right: '10px', 
+                  background: '#ef4444', color: 'white', borderRadius: '50%', 
+                  width: '18px', height: '18px', fontSize: '0.7rem', fontWeight: '800', 
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 2px 6px rgba(239,68,68,0.4)'
+                }}>
+                  {Object.values(adminUnread).reduce((a, b) => a + b, 0)}
+                </span>
+              )}
+            </button>
           </nav>
         </aside>
 
-        <div className="admin-content-panel">
-          {activeTab === 'talento' && (
-            <div className="subtabs-bar">
-              <button className={`subtab-btn ${subTab === 'guias' ? 'active' : ''}`} onClick={() => setSubTab('guias')}>Guías Full/Senior</button>
-              <button className={`subtab-btn ${subTab === 'estudiantes' ? 'active' : ''}`} onClick={() => setSubTab('estudiantes')}>Guías Junior</button>
+        <div className="admin-main-viewport">
+          <header className="admin-top-bar">
+            <div className="search-bar-pro">
+              {/* Buscador estético tipo Mediline */}
+              <div className="search-input-wrapper">
+                <input type="text" placeholder="Buscar..." disabled />
+              </div>
             </div>
-          )}
+            <div className="topbar-actions">
+              <button onClick={toggleTheme} className="btn-theme-toggle" title="Cambiar Tema" style={{ background: 'var(--panel-bg)', border: '1px solid var(--border)', padding: '10px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--primary)' }}>
+                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+              </button>
+              <button onClick={fetchData} className="btn-refresh" disabled={loading}>
+                <RefreshCw size={18} className={loading ? 'spin' : ''} /> 
+                <span>{loading ? 'Actualizando...' : 'Actualizar'}</span>
+              </button>
+              <div className="admin-user-pill" style={{ background: 'var(--panel-bg)', padding: '5px 15px', borderRadius: '30px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '0.8rem' }}>AD</div>
+                <span style={{ fontWeight: '700', fontSize: '0.85rem', color: 'var(--text-main)' }}>Administrador</span>
+              </div>
+            </div>
+          </header>
+
+          <div className="admin-viewport-content">
+            <section className="admin-stats-summary">
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Solicitudes</span>
+                  <span className="stat-value">{reservas.filter(r => r.estado === 'nueva').length}</span>
+                  <span style={{ fontSize: '0.7rem', color: '#0369a1', fontWeight: '700', marginTop: '5px' }}>Nuevas Entrantes</span>
+                </div>
+                <div className="stat-icon res"><Calendar size={28}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Postulantes</span>
+                  <span className="stat-value">
+                    {postulacionesGuias.filter(g => g.estado === 'pendiente').length + 
+                     postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#15803d', fontWeight: '700', marginTop: '5px' }}>En Espera</span>
+                </div>
+                <div className="stat-icon tal"><Users size={28}/></div>
+              </div>
+              <div className="stat-pro-card">
+                <div className="stat-info">
+                  <span className="stat-label">Relatos</span>
+                  <span className="stat-value">
+                    {relatos.filter(r => r.estado === 'pendiente').length + 
+                     comentarios.filter(c => c.estado === 'pendiente').length}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#c2410c', fontWeight: '700', marginTop: '5px' }}>Por Moderar</span>
+                </div>
+                <div className="stat-icon com"><MessageCircle size={28}/></div>
+              </div>
+            </section>
+
+            <div className="admin-content-panel">
+              {activeTab === 'talento' && (
+                <div className="subtabs-bar">
+                  <button className={`subtab-btn ${subTab === 'guias' ? 'active' : ''}`} onClick={() => setSubTab('guias')}>Guías Full/Senior</button>
+                  <button className={`subtab-btn ${subTab === 'estudiantes' ? 'active' : ''}`} onClick={() => setSubTab('estudiantes')}>Guías Junior</button>
+                </div>
+              )}
           {activeTab === 'comunidad' && (
             <div className="subtabs-bar">
               <button className={`subtab-btn ${subTab === 'relatos' ? 'active' : ''}`} onClick={() => setSubTab('relatos')}>Relatos</button>
@@ -1191,11 +1272,11 @@ const AdminDashboard = () => {
                   {reservas.map(res => (
                     <React.Fragment key={res.id}>
                       <tr className={expandedId === res.id ? 'row-expanded' : ''}>
-                        <td><div className="main-text">{res.empresa}</div><div className="sub-text">{res.contacto_nombre}</div></td>
-                        <td><div className="main-text">{new Date(res.fecha_servicio).toLocaleDateString()}</div><div className="sub-text">{res.nivel_guia}</div></td>
-                        <td>{res.destino}</td>
-                        <td><span className={`status-badge ${res.estado}`}>{res.estado}</span></td>
-                        <td><ActionButtons table="reservas" id={res.id} currentStatus={res.estado} record={res} /></td>
+                        <td data-label="Empresa / Contacto"><div className="main-text">{res.empresa}</div><div className="sub-text">{res.contacto_nombre}</div></td>
+                        <td data-label="Servicio / Fecha"><div className="main-text">{new Date(res.fecha_servicio).toLocaleDateString()}</div><div className="sub-text">{res.nivel_guia}</div></td>
+                        <td data-label="Destino">{res.destino}</td>
+                        <td data-label="Estado"><span className={`status-badge ${res.estado}`}>{res.estado}</span></td>
+                        <td data-label="Acciones"><ActionButtons table="reservas" id={res.id} currentStatus={res.estado} record={res} /></td>
                       </tr>
                       {expandedId === res.id && (
                         <tr className="detail-row">
@@ -2218,9 +2299,113 @@ const AdminDashboard = () => {
                 )}
               </div>
             )}
+
+            {activeTab === 'mensajes' && (
+              <div className="table-wrapper">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: 'white', borderRadius: '12px', marginBottom: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)' }}>
+                  <div>
+                    <h3 style={{ margin: '0 0 0.25rem 0', color: '#1e293b', fontSize: '1.2rem', fontWeight: '800' }}>Centro de Mensajes</h3>
+                    <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>Canales de comunicación entre empresas, guías y administración.</p>
+                  </div>
+                  <button 
+                    onClick={loadAdminChats} 
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#ecfdf5', color: '#059669', border: '1px solid #a7f3d0', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', transition: 'all 0.2s' }}
+                  >
+                    <RefreshCw size={16} /> Actualizar
+                  </button>
+                </div>
+
+                {adminChats.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '4rem 2rem', color: '#94a3b8', background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                    <MessageCircle size={48} style={{ marginBottom: '1rem', color: '#cbd5e1' }} />
+                    <p style={{ margin: 0, fontWeight: '500' }}>No hay chats activos registrados aún.</p>
+                    <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#cbd5e1' }}>Los chats se generan automáticamente al confirmar una reserva.</p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+                    {adminChats.map(chat => {
+                      const unread = adminUnread[chat.id] || 0;
+                      const isActive = adminActiveChatId === chat.id;
+                      return (
+                        <div 
+                          key={chat.id} 
+                          onClick={() => setAdminActiveChatId(isActive ? null : chat.id)} 
+                          style={{ 
+                            background: isActive ? '#f0fdf4' : 'white', 
+                            border: isActive ? '2px solid #10b981' : '1px solid #e2e8f0', 
+                            borderRadius: '12px', 
+                            padding: '1.25rem', 
+                            cursor: 'pointer', 
+                            transition: 'all 0.2s',
+                            boxShadow: isActive ? '0 4px 12px rgba(16,185,129,0.1)' : '0 1px 3px rgba(0,0,0,0.02)',
+                            position: 'relative'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                            <div style={{ flex: 1 }}>
+                              <p style={{ margin: 0, fontWeight: '700', fontSize: '0.95rem', color: '#1e293b' }}>
+                                {chat.empresa_nombre} ↔ {chat.guia_nombre}
+                              </p>
+                              <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: '500' }}>
+                                  {chat.nombre_servicio || 'Servicio de Guiado'}
+                                </span>
+                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                                  {chat.fecha_servicio && new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                </span>
+                              </div>
+                            </div>
+                            {unread > 0 && (
+                              <span style={{ 
+                                background: '#ef4444', 
+                                color: 'white', 
+                                borderRadius: '50%', 
+                                width: '22px', 
+                                height: '22px', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                fontSize: '0.75rem', 
+                                fontWeight: '800', 
+                                flexShrink: 0,
+                                boxShadow: '0 2px 5px rgba(239,68,68,0.3)'
+                              }}>
+                                {unread}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {adminActiveChatId && (() => {
+                  const chat = adminChats.find(c => c.id === adminActiveChatId);
+                  if (!chat) return null;
+                  return (
+                    <div style={{ maxWidth: '750px', margin: '1.5rem auto 0 auto' }}>
+                      <ChatWindow 
+                        chatId={adminActiveChatId} 
+                        autorTipo="admin" 
+                        autorNombre="Administrador" 
+                        titulo={`${chat.empresa_nombre} ↔ ${chat.guia_nombre}`} 
+                        subtitulo={[chat.nombre_servicio, chat.fecha_servicio && new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })].filter(Boolean).join(' · ')} 
+                        onClose={() => { 
+                          setAdminActiveChatId(null); 
+                          loadAdminChats(); 
+                        }} 
+                      />
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
           </div>
         </div>
-      </main>
+      </div>
+    </div>
+  </div>
 
       {cropModalData && (
         <CropperModal
