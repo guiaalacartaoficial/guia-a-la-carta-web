@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import { supabase } from '../services/supabase';
 import { 
   Users, FileText, Calendar, CheckCircle, XCircle, 
-  Eye, Trash2, Check, Crop,
+  Eye, Trash2, Check, Crop, Search,
   Mail, Phone, MapPin, Globe, Award, BookOpen, MessageCircle,
   ShieldCheck, Briefcase, RefreshCw, Edit, Save, X as CloseIcon, Plus, Download, Star, Bell,
   Key, Sun, Moon
@@ -142,6 +142,14 @@ const AdminDashboard = () => {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('reservas');
   const [subTab, setSubTab] = useState('guias');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('todos');
+
+  useEffect(() => {
+    setSearchTerm('');
+    setStatusFilter('todos');
+  }, [activeTab, subTab]);
+
   const [reservas, setReservas] = useState([]);
 
   const toggleTheme = () => {
@@ -774,6 +782,34 @@ const AdminDashboard = () => {
     };
   };
 
+  const filteredGuias = postulacionesGuias
+    .filter(g => {
+      if (statusFilter !== 'todos' && g.estado !== statusFilter) return false;
+      if (!searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      const nameStr = `${g.nombres || ''} ${g.apellidos || ''} ${g.nombre_visual || ''} ${g.apellido_visual || ''}`.toLowerCase();
+      const emailStr = (g.email || '').toLowerCase();
+      const cityStr = (g.ciudad_residencia || '').toLowerCase();
+      const langStr = Array.isArray(g.idiomas) 
+        ? g.idiomas.map(i => (typeof i === 'object' ? i.idioma : i)).join(' ').toLowerCase()
+        : 'español';
+      return nameStr.includes(term) || emailStr.includes(term) || cityStr.includes(term) || langStr.includes(term);
+    });
+
+  const filteredEstudiantes = postulacionesEstudiantes
+    .filter(e => {
+      if (statusFilter !== 'todos' && e.estado !== statusFilter) return false;
+      if (!searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      const nameStr = `${e.nombres || ''} ${e.apellidos || ''} ${e.nombre_visual || ''} ${e.apellido_visual || ''}`.toLowerCase();
+      const emailStr = (e.email || '').toLowerCase();
+      const cityStr = (e.ciudad_residencia || '').toLowerCase();
+      const langStr = Array.isArray(e.idiomas) 
+        ? e.idiomas.map(i => (typeof i === 'object' ? i.idioma : i)).join(' ').toLowerCase()
+        : 'español';
+      return nameStr.includes(term) || emailStr.includes(term) || cityStr.includes(term) || langStr.includes(term);
+    });
+
   if (!isAuthenticated) {
     return (
       <div className={`admin-dashboard-pro admin-login-page ${theme}`}>
@@ -1328,32 +1364,59 @@ const AdminDashboard = () => {
             {activeTab === 'talento' && subTab === 'guias' && (
               <div className="talento-tab-content">
                 <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span><strong>Total Registrados:</strong> {postulacionesGuias.length}</span>
-                  <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesGuias.filter(g => g.estado === 'pendiente').length}</span>
-                  <span style={{ color: '#dc2626' }}><strong>Rechazados:</strong> {postulacionesGuias.filter(g => g.estado === 'rechazado').length}</span>
-                  <span style={{ color: '#16a34a' }}><strong>Aprobados:</strong> {postulacionesGuias.filter(g => g.estado === 'aprobado').length}</span>
+                  <button onClick={() => setStatusFilter('todos')} style={{ background: statusFilter === 'todos' ? '#cbd5e1' : 'transparent', border: '1px solid #cbd5e1', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'todos' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Total Registrados: {postulacionesGuias.length}
+                  </button>
+                  <button onClick={() => setStatusFilter('pendiente')} style={{ background: statusFilter === 'pendiente' ? '#fef3c7' : 'transparent', border: '1px solid #f59e0b', color: '#d97706', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'pendiente' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Pendientes: {postulacionesGuias.filter(g => g.estado === 'pendiente').length}
+                  </button>
+                  <button onClick={() => setStatusFilter('rechazado')} style={{ background: statusFilter === 'rechazado' ? '#fee2e2' : 'transparent', border: '1px solid #ef4444', color: '#dc2626', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'rechazado' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Rechazados: {postulacionesGuias.filter(g => g.estado === 'rechazado').length}
+                  </button>
+                  <button onClick={() => setStatusFilter('aprobado')} style={{ background: statusFilter === 'aprobado' ? '#dcfce7' : 'transparent', border: '1px solid #22c55e', color: '#16a34a', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'aprobado' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Aprobados: {postulacionesGuias.filter(g => g.estado === 'aprobado').length}
+                  </button>
                   <button onClick={() => exportarAprobados(postulacionesGuias, 'Guias_Senior_Aprobados')} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>
                     <Download size={15} /> Exportar Aprobados (.xlsx)
                   </button>
                 </div>
+
+                {/* Buscador */}
+                <div style={{ position: 'relative', marginBottom: '15px' }}>
+                  <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Buscar guía por nombre, correo, ubicación o idiomas..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px 10px 40px',
+                      borderRadius: '8px',
+                      border: '1.5px solid #cbd5e1',
+                      fontSize: '0.9rem',
+                      outline: 'none',
+                      transition: 'all 0.2s',
+                    }}
+                  />
+                </div>
+
                 <table className="pro-table">
-                  <thead><tr><th>Postulante</th><th>Ubicación</th><th>Idiomas</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
+                  <thead><tr><th>Postulante</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
                   <tbody>
-                    {[...postulacionesGuias].sort((a,b) => {
+                    {filteredGuias.sort((a,b) => {
                       const orden = { pendiente: 1, rechazado: 2, aprobado: 3 };
                       return (orden[a.estado] || 4) - (orden[b.estado] || 4);
                     }).map(guia => (
                     <React.Fragment key={guia.id}>
                       <tr className={expandedId === guia.id ? 'row-expanded' : ''}>
                         <td><div className="main-text">{String(guia.nombres || '')} {String(guia.apellidos || '')}</div><div className="sub-text">{guia.email}</div></td>
-                        <td>{guia.ciudad_residencia}</td>
-                        <td>{Array.isArray(guia.idiomas) ? guia.idiomas.map(i => (typeof i === 'object' ? i.idioma : i)).join(', ') : 'Español'}</td>
                         <td><span className={`status-badge ${guia.estado}`}>{guia.estado}</span></td>
                         <td><ActionButtons table="postulaciones_guias" id={guia.id} currentStatus={guia.estado} record={guia} /></td>
                       </tr>
                       {expandedId === guia.id && (
                         <tr className="detail-row">
-                          <td colSpan="5">
+                          <td colSpan="3">
                             <div className="detail-content">
                               {editingId === guia.id ? (
                                 <div className="edit-form-grid">
@@ -1585,32 +1648,59 @@ const AdminDashboard = () => {
             {activeTab === 'talento' && subTab === 'estudiantes' && (
               <div className="talento-tab-content">
                 <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span><strong>Total Registrados:</strong> {postulacionesEstudiantes.length}</span>
-                  <span style={{ color: '#d97706' }}><strong>Pendientes:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}</span>
-                  <span style={{ color: '#dc2626' }}><strong>Rechazados:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'rechazado').length}</span>
-                  <span style={{ color: '#16a34a' }}><strong>Aprobados:</strong> {postulacionesEstudiantes.filter(e => e.estado === 'aprobado').length}</span>
+                  <button onClick={() => setStatusFilter('todos')} style={{ background: statusFilter === 'todos' ? '#cbd5e1' : 'transparent', border: '1px solid #cbd5e1', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'todos' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Total Registrados: {postulacionesEstudiantes.length}
+                  </button>
+                  <button onClick={() => setStatusFilter('pendiente')} style={{ background: statusFilter === 'pendiente' ? '#fef3c7' : 'transparent', border: '1px solid #f59e0b', color: '#d97706', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'pendiente' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Pendientes: {postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}
+                  </button>
+                  <button onClick={() => setStatusFilter('rechazado')} style={{ background: statusFilter === 'rechazado' ? '#fee2e2' : 'transparent', border: '1px solid #ef4444', color: '#dc2626', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'rechazado' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Rechazados: {postulacionesEstudiantes.filter(e => e.estado === 'rechazado').length}
+                  </button>
+                  <button onClick={() => setStatusFilter('aprobado')} style={{ background: statusFilter === 'aprobado' ? '#dcfce7' : 'transparent', border: '1px solid #22c55e', color: '#16a34a', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'aprobado' ? '700' : '500', transition: 'all 0.2s' }}>
+                    Aprobados: {postulacionesEstudiantes.filter(e => e.estado === 'aprobado').length}
+                  </button>
                   <button onClick={() => exportarAprobados(postulacionesEstudiantes, 'Guias_Junior_Aprobados')} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>
                     <Download size={15} /> Exportar Aprobados (.xlsx)
                   </button>
                 </div>
+
+                {/* Buscador */}
+                <div style={{ position: 'relative', marginBottom: '15px' }}>
+                  <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Buscar estudiante por nombre, correo, ubicación o idiomas..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px 10px 40px',
+                      borderRadius: '8px',
+                      border: '1.5px solid #cbd5e1',
+                      fontSize: '0.9rem',
+                      outline: 'none',
+                      transition: 'all 0.2s',
+                    }}
+                  />
+                </div>
+
                 <table className="pro-table">
-                  <thead><tr><th>Estudiante</th><th>Contacto</th><th>Residencia</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
+                  <thead><tr><th>Estudiante</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
                   <tbody>
-                    {[...postulacionesEstudiantes].sort((a,b) => {
+                    {filteredEstudiantes.sort((a,b) => {
                       const orden = { pendiente: 1, rechazado: 2, aprobado: 3 };
                       return (orden[a.estado] || 4) - (orden[b.estado] || 4);
                     }).map(est => (
                     <React.Fragment key={est.id}>
                       <tr className={expandedId === est.id ? 'row-expanded' : ''}>
-                        <td><div className="main-text">{String(est.nombres || '')} {String(est.apellidos || '')}</div><div className="sub-text">Junior</div></td>
-                        <td>{est.email}</td>
-                        <td>{est.ciudad_residencia}</td>
+                        <td><div className="main-text">{String(est.nombres || '')} {String(est.apellidos || '')}</div><div className="sub-text">{est.email} · Junior</div></td>
                         <td><span className={`status-badge ${est.estado}`}>{est.estado}</span></td>
                         <td><ActionButtons table="postulaciones_estudiantes" id={est.id} currentStatus={est.estado} record={est} /></td>
                       </tr>
                       {expandedId === est.id && (
                         <tr className="detail-row">
-                          <td colSpan="5">
+                          <td colSpan="3">
                             <div className="detail-content">
                               {editingId === est.id ? (
                                 <div className="edit-form-grid">
