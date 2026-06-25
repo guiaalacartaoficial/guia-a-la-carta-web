@@ -402,17 +402,19 @@ const AdminDashboard = () => {
       const isEstudiante = table === 'postulaciones_estudiantes';
 
       let generatedPass = null;
+      let currentRecVal = null;
       if (newStatus === 'aprobado' && (isGuia || isEstudiante)) {
         // Consultar el registro primero para ver si ya tiene contraseña
-        const { data: currentRecVal, error: rpcErr } = await supabase.rpc('get_sensitive_password', { tbl: table, rec_id: id });
-        const currentRec = { password: currentRecVal };
-        if (currentRec && !currentRec.password) {
+        const { data: val, error: rpcErr } = await supabase.rpc('get_sensitive_password', { tbl: table, rec_id: id });
+        currentRecVal = val;
+        if (!currentRecVal) {
           generatedPass = 'GC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
           updateData.password = generatedPass;
         }
       }
 
-      const { data, error } = await supabase.from(table).update(updateData).eq('id', id).select();
+      const selectFields = (isGuia || isEstudiante) ? 'id, nombres, apellidos, email' : '*';
+      const { data, error } = await supabase.from(table).update(updateData).eq('id', id).select(selectFields);
       if (error) throw error;
       if (!data || data.length === 0) {
         throw new Error("El registro no se actualizó. Por favor, intenta nuevamente.");
@@ -421,7 +423,7 @@ const AdminDashboard = () => {
       // Si se aprobó, enviar correo automático con credenciales
       if (newStatus === 'aprobado' && (isGuia || isEstudiante)) {
         const record = data[0];
-        const passToSend = record.password || generatedPass;
+        const passToSend = currentRecVal || generatedPass;
         if (passToSend) {
           const tipoLabel = isGuia ? 'PRO' : 'EST';
           const guiaCode = `${tipoLabel}:${String(record.id).substring(0, 5).toUpperCase()}`;
@@ -499,7 +501,7 @@ const AdminDashboard = () => {
 
   const updateField = async (table, id, field, value) => {
     try {
-      const { data, error } = await supabase.from(table).update({ [field]: value }).eq('id', id).select();
+      const { data, error } = await supabase.from(table).update({ [field]: value }).eq('id', id).select('id');
       if (error) throw error;
       if (!data || data.length === 0) {
         throw new Error("El registro no se actualizó.");
@@ -631,7 +633,7 @@ const AdminDashboard = () => {
     if (!window.confirm('¿Eliminar permanentemente este registro?')) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase.from(table).delete().eq('id', id).select();
+      const { data, error } = await supabase.from(table).delete().eq('id', id).select('id');
       if (error) {
         console.error("Supabase Delete Error:", error);
         throw error;
@@ -920,67 +922,67 @@ const AdminDashboard = () => {
 
           <div className="admin-viewport-content">
             <section className="admin-stats-summary">
-              <div className="stat-pro-card">
+              <div className="stat-pro-card res">
                 <div className="stat-info">
                   <span className="stat-label">Solicitudes</span>
                   <span className="stat-value">{reservas.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#0369a1', fontWeight: '700', marginTop: '2px' }}>{reservas.filter(r => r.estado === 'nueva').length} Nuevas</span>
+                  <span className="stat-sub-label">{reservas.filter(r => r.estado === 'nueva').length} Nuevas</span>
                 </div>
                 <div className="stat-icon res"><Calendar size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card tal">
                 <div className="stat-info">
                   <span className="stat-label">Postulantes</span>
                   <span className="stat-value">{postulacionesGuias.length + postulacionesEstudiantes.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#15803d', fontWeight: '700', marginTop: '2px' }}>{postulacionesGuias.filter(g => g.estado === 'pendiente').length + postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length} En Espera</span>
+                  <span className="stat-sub-label">{postulacionesGuias.filter(g => g.estado === 'pendiente').length + postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length} En Espera</span>
                 </div>
                 <div className="stat-icon tal"><Users size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card com">
                 <div className="stat-info">
                   <span className="stat-label">Relatos</span>
                   <span className="stat-value">{relatos.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#c2410c', fontWeight: '700', marginTop: '2px' }}>{relatos.filter(r => r.estado === 'pendiente').length + comentarios.filter(c => c.estado === 'pendiente').length} Pendientes</span>
+                  <span className="stat-sub-label">{relatos.filter(r => r.estado === 'pendiente').length + comentarios.filter(c => c.estado === 'pendiente').length} Pendientes</span>
                 </div>
                 <div className="stat-icon com"><Globe size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card man">
                 <div className="stat-info">
                   <span className="stat-label">Manuales</span>
                   <span className="stat-value">{manuales.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#7c3aed', fontWeight: '700', marginTop: '2px' }}>Documentos</span>
+                  <span className="stat-sub-label">Documentos</span>
                 </div>
                 <div className="stat-icon man"><BookOpen size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card disp">
                 <div className="stat-info">
                   <span className="stat-label">Días Disponibles</span>
                   <span className="stat-value">{disponibilidad.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#0284c7', fontWeight: '700', marginTop: '2px' }}>{disponibilidad.filter(d => d.estado_bloqueo === 'bloqueado').length} Reservados</span>
+                  <span className="stat-sub-label">{disponibilidad.filter(d => d.estado_bloqueo === 'bloqueado').length} Reservados</span>
                 </div>
                 <div className="stat-icon disp"><Calendar size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card cli">
                 <div className="stat-info">
                   <span className="stat-label">Clientes B2B</span>
                   <span className="stat-value">{empresas.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#059669', fontWeight: '700', marginTop: '2px' }}>{empresas.filter(e => e.estado === 'aprobado').length} Activos</span>
+                  <span className="stat-sub-label">{empresas.filter(e => e.estado === 'aprobado').length} Activos</span>
                 </div>
                 <div className="stat-icon cli"><Briefcase size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card eval">
                 <div className="stat-info">
                   <span className="stat-label">Evaluaciones</span>
                   <span className="stat-value">{evaluaciones.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#ca8a04', fontWeight: '700', marginTop: '2px' }}>Calificaciones</span>
+                  <span className="stat-sub-label">Calificaciones</span>
                 </div>
                 <div className="stat-icon eval"><Star size={20}/></div>
               </div>
-              <div className="stat-pro-card">
+              <div className="stat-pro-card msg">
                 <div className="stat-info">
                   <span className="stat-label">Chats Activos</span>
                   <span className="stat-value">{adminChats.length}</span>
-                  <span style={{ fontSize: '0.65rem', color: '#4f46e5', fontWeight: '700', marginTop: '2px' }}>{Object.values(adminUnread).reduce((a, b) => a + b, 0)} Sin Leer</span>
+                  <span className="stat-sub-label">{Object.values(adminUnread).reduce((a, b) => a + b, 0)} Sin Leer</span>
                 </div>
                 <div className="stat-icon msg"><MessageCircle size={20}/></div>
               </div>
@@ -1001,20 +1003,21 @@ const AdminDashboard = () => {
           )}
 
           {activeTab === 'disponibilidad' && (
-            <div className="table-wrapper">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'white', borderRadius: '8px', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
+            <div className="disponibilidad-admin-container">
+              <div className="admin-header-panel-box">
                 <div>
-                  <h3 style={{ margin: '0 0 0.5rem 0' }}>Calendario de Disponibilidad</h3>
-                  <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>Fechas reportadas como libres por los guías aprobados.</p>
+                  <h3 style={{ margin: 0 }}>Calendario de Disponibilidad</h3>
+                  <p style={{ fontSize: '0.85rem', margin: 0 }}>Fechas reportadas como libres por los guías aprobados.</p>
                 </div>
                 <button 
                   onClick={() => exportarDisponibilidadExcel(disponibilidad, postulacionesGuias, postulacionesEstudiantes, empresas)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                  className="btn-excel-export"
                 >
                   <Download size={18} /> Exportar Excel
                 </button>
               </div>
-              <table className="pro-table">
+              <div className="table-wrapper">
+                <table className="pro-table">
                 <thead>
                   <tr><th>Guía</th><th>Código</th><th>Total Días Disponibles</th><th className="text-right">Acciones</th></tr>
                 </thead>
@@ -1113,14 +1116,14 @@ const AdminDashboard = () => {
                           {expandedId === guia_id && (
                             <tr className="detail-row">
                               <td colSpan="4">
-                                <div className="detail-content" style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '8px' }}>
-                                  <h5 style={{ margin: '0 0 15px 0', color: '#334155', fontSize: '1rem' }}>Estado detallado de disponibilidad por fecha:</h5>
+                                <div className="detail-content">
+                                  <h5 style={{ margin: '0 0 15px 0', fontSize: '1rem' }}>Estado detallado de disponibilidad por fecha:</h5>
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {[...data.fechas].sort((a,b) => a.fecha.localeCompare(b.fecha)).map(item => {
                                       const isBlocked = item.estado_bloqueo === 'bloqueado';
                                       const associatedCompany = isBlocked ? empresas.find(x => x.id === item.bloqueado_por) : null;
                                       return (
-                                        <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                        <div key={item.id} className="admin-list-item-card">
                                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                               <Calendar size={16} color={isBlocked ? "#ef4444" : "#16a34a"} />
@@ -1172,9 +1175,9 @@ const AdminDashboard = () => {
                                           </div>
 
                                           {isBlocked && (
-                                            <div style={{ marginTop: '10px', borderTop: '1px solid #f1f5f9', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                              <div style={{ fontSize: '0.85rem', color: '#334155' }}>
-                                                <strong>Nombre del servicio (Tour):</strong> <span style={{ color: item.nombre_servicio ? '#0f172a' : '#94a3b8', fontStyle: item.nombre_servicio ? 'normal' : 'italic' }}>{item.nombre_servicio || 'Sin especificar'}</span>
+                                            <div className="admin-detail-sub-section">
+                                              <div className="admin-detail-sub-section-text">
+                                                <strong>Nombre del servicio (Tour):</strong> <span className={item.nombre_servicio ? 'specified' : 'unspecified'}>{item.nombre_servicio || 'Sin especificar'}</span>
                                               </div>
                                               <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                                 <label style={{ fontSize: '0.8rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase' }}>Nota Interna Admin:</label>
@@ -1189,6 +1192,7 @@ const AdminDashboard = () => {
                                                   <button
                                                     onClick={() => handleSaveNota(item.id, notasAdmin[item.id] !== undefined ? notasAdmin[item.id] : (item.nota_interna_admin || ''))}
                                                     style={{ padding: '0 15px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}
+                                                    className="btn-save-note"
                                                   >
                                                     <Save size={14} /> Guardar
                                                   </button>
@@ -1199,7 +1203,7 @@ const AdminDashboard = () => {
 
                                           {/* Formulario inline de reserva para día LIBRE */}
                                           {!isBlocked && reservaFormId === item.id && (
-                                            <div style={{ marginTop: '10px', borderTop: '1px solid #dbeafe', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px', background: '#eff6ff', padding: '12px', borderRadius: '6px' }}>
+                                            <div className="admin-inline-form-box">
                                               <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1e40af', textTransform: 'uppercase' }}>Reservar este día</div>
                                               <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
@@ -1207,7 +1211,7 @@ const AdminDashboard = () => {
                                                   <select
                                                     value={reservaFormData.empresa_id}
                                                     onChange={(e) => setReservaFormData({ ...reservaFormData, empresa_id: e.target.value })}
-                                                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem', background: 'white' }}
+                                                    className="form-control"
                                                   >
                                                     <option value="">Seleccionar empresa...</option>
                                                     {empresas.map(emp => (
@@ -1222,20 +1226,20 @@ const AdminDashboard = () => {
                                                     placeholder="Ej: Torres del Paine Full Day"
                                                     value={reservaFormData.nombre_servicio}
                                                     onChange={(e) => setReservaFormData({ ...reservaFormData, nombre_servicio: e.target.value })}
-                                                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                                                    className="form-control"
                                                   />
                                                 </div>
                                                 <div style={{ display: 'flex', gap: '6px' }}>
                                                   <button
                                                     onClick={() => handleReservarDia(item.id)}
                                                     disabled={loading}
-                                                    style={{ padding: '6px 14px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem' }}
+                                                    className="btn-confirm-reserva"
                                                   >
                                                     {loading ? 'Guardando...' : 'Confirmar Reserva'}
                                                   </button>
                                                   <button
                                                     onClick={() => { setReservaFormId(null); setReservaFormData({ empresa_id: '', nombre_servicio: '' }); }}
-                                                    style={{ padding: '6px 14px', background: '#e2e8f0', color: '#475569', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
+                                                    className="btn-cancel-reserva"
                                                   >
                                                     Cancelar
                                                   </button>
@@ -1254,14 +1258,12 @@ const AdminDashboard = () => {
                                           setAgregarDiaGuiaId(guia_id);
                                           setAgregarDiaData({ fecha: '', empresa_id: '', nombre_servicio: '' });
                                         }}
-                                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', background: 'white', color: '#2563eb', border: '2px dashed #93c5fd', borderRadius: '8px', cursor: 'pointer', fontWeight: '700', fontSize: '0.85rem', width: '100%', justifyContent: 'center', transition: 'all 0.2s' }}
-                                        onMouseEnter={(e) => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.borderColor = '#2563eb'; }}
-                                        onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#93c5fd'; }}
+                                        className="btn-add-new-day"
                                       >
                                         <Plus size={16} /> Agregar y Reservar Día
                                       </button>
                                     ) : (
-                                      <div style={{ background: '#eff6ff', border: '1.5px solid #93c5fd', borderRadius: '8px', padding: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                      <div className="admin-inline-form-box">
                                         <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1e40af', textTransform: 'uppercase' }}>Agregar y Reservar un Día Nuevo</div>
                                         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
                                           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '0 0 170px' }}>
@@ -1271,7 +1273,7 @@ const AdminDashboard = () => {
                                               value={agregarDiaData.fecha}
                                               min={new Date().toISOString().slice(0, 10)}
                                               onChange={(e) => setAgregarDiaData({ ...agregarDiaData, fecha: e.target.value })}
-                                              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                                              className="form-control"
                                             />
                                           </div>
                                           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
@@ -1279,7 +1281,7 @@ const AdminDashboard = () => {
                                             <select
                                               value={agregarDiaData.empresa_id}
                                               onChange={(e) => setAgregarDiaData({ ...agregarDiaData, empresa_id: e.target.value })}
-                                              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem', background: 'white' }}
+                                              className="form-control"
                                             >
                                               <option value="">Seleccionar empresa...</option>
                                               {empresas.map(emp => (
@@ -1294,20 +1296,20 @@ const AdminDashboard = () => {
                                               placeholder="Ej: Glaciar Grey"
                                               value={agregarDiaData.nombre_servicio}
                                               onChange={(e) => setAgregarDiaData({ ...agregarDiaData, nombre_servicio: e.target.value })}
-                                              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                                              className="form-control"
                                             />
                                           </div>
                                           <div style={{ display: 'flex', gap: '6px' }}>
                                             <button
                                               onClick={() => handleAgregarYReservar(guia_id, data.tipo_guia)}
                                               disabled={loading}
-                                              style={{ padding: '6px 14px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem' }}
+                                              className="btn-confirm-reserva"
                                             >
                                               {loading ? 'Guardando...' : 'Confirmar'}
                                             </button>
                                             <button
                                               onClick={() => { setAgregarDiaGuiaId(null); setAgregarDiaData({ fecha: '', empresa_id: '', nombre_servicio: '' }); }}
-                                              style={{ padding: '6px 14px', background: '#e2e8f0', color: '#475569', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.8rem' }}
+                                              className="btn-cancel-reserva"
                                             >
                                               Cancelar
                                             </button>
@@ -1327,108 +1329,111 @@ const AdminDashboard = () => {
                 </tbody>
               </table>
             </div>
-          )}
+          </div>
+        )}
 
-          <div className="table-wrapper">
+          <div className="admin-content-tabs-wrapper">
             {activeTab === 'reservas' && (
-              <table className="pro-table">
-                <thead>
-                  <tr><th>Empresa / Contacto</th><th>Servicio / Fecha</th><th>Destino</th><th>Estado</th><th className="text-right">Acciones</th></tr>
-                </thead>
-                <tbody>
-                  {reservas.map(res => (
-                    <React.Fragment key={res.id}>
-                      <tr className={expandedId === res.id ? 'row-expanded' : ''}>
-                        <td data-label="Empresa / Contacto"><div className="main-text">{res.empresa}</div><div className="sub-text">{res.contacto_nombre}</div></td>
-                        <td data-label="Servicio / Fecha"><div className="main-text">{new Date(res.fecha_servicio).toLocaleDateString()}</div><div className="sub-text">{res.nivel_guia}</div></td>
-                        <td data-label="Destino">{res.destino}</td>
-                        <td data-label="Estado"><span className={`status-badge ${res.estado}`}>{res.estado}</span></td>
-                        <td data-label="Acciones"><ActionButtons table="reservas" id={res.id} currentStatus={res.estado} record={res} /></td>
-                      </tr>
-                      {expandedId === res.id && (
-                        <tr className="detail-row">
-                          <td colSpan="5">
-                            <div className="detail-content">
-                              {editingId === res.id ? (
-                                <div className="edit-form-grid">
-                                  <div className="form-group"><label>Empresa</label><input name="empresa" value={editData.empresa} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Email</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Destino</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="full-width"><label>Comentarios</label><textarea name="comentarios" value={editData.comentarios} onChange={handleEditChange} className="form-control" style={{height:'100px'}}></textarea></div>
-                                  <div className="edit-actions">
-                                    <button onClick={() => handleUpdateRecord('reservas', res.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
-                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="card-dashboard" style={{maxWidth:'800px'}}>
-                                  <div className="card-header-pro">
-                                    <Briefcase size={20} />
-                                    <h4>Detalles de la Solicitud</h4>
-                                  </div>
-                                  <div className="card-body-pro">
-                                    <div className="info-grid-pro">
-                                      <div className="field-pro"><span className="field-label">Email de Contacto</span><span className="field-value">{res.email}</span></div>
-                                      <div className="field-pro"><span className="field-label">Teléfono</span><span className="field-value">{res.telefono}</span></div>
-                                      <div className="field-pro"><span className="field-label">Cantidad de Pasajeros (Pax)</span><span className="field-value">{res.pax}</span></div>
-                                      <div className="field-pro"><span className="field-label">Idioma Requerido</span><span className="field-value">{res.idioma}</span></div>
-                                      <div className="full-width field-pro" style={{marginTop:'15px'}}>
-                                        <span className="field-label">Comentarios Adicionales</span>
-                                        <p style={{fontSize:'1rem', color:'var(--text-main)', margin:'10px 0 0 0', lineHeight:'1.6'}}>{res.comentarios || 'Sin comentarios adicionales'}</p>
+              <div className="reservas-admin-container">
+                <div className="admin-header-panel-box">
+                  <div>
+                    <h3 style={{ margin: 0 }}>Solicitudes de Servicios</h3>
+                    <p style={{ fontSize: '0.85rem', margin: 0 }}>Listado de solicitudes de guiado recibidas a través del portal público.</p>
+                  </div>
+                </div>
+                <div className="table-wrapper">
+                  <table className="pro-table">
+                    <thead>
+                      <tr><th>Empresa / Contacto</th><th>Servicio / Fecha</th><th>Destino</th><th>Estado</th><th className="text-right">Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                      {reservas.map(res => (
+                        <React.Fragment key={res.id}>
+                          <tr className={expandedId === res.id ? 'row-expanded' : ''}>
+                            <td data-label="Empresa / Contacto"><div className="main-text">{res.empresa}</div><div className="sub-text">{res.contacto_nombre}</div></td>
+                            <td data-label="Servicio / Fecha"><div className="main-text">{new Date(res.fecha_servicio).toLocaleDateString()}</div><div className="sub-text">{res.nivel_guia}</div></td>
+                            <td data-label="Destino">{res.destino}</td>
+                            <td data-label="Estado"><span className={`status-badge ${res.estado}`}>{res.estado}</span></td>
+                            <td data-label="Acciones"><ActionButtons table="reservas" id={res.id} currentStatus={res.estado} record={res} /></td>
+                          </tr>
+                          {expandedId === res.id && (
+                            <tr className="detail-row">
+                              <td colSpan="5">
+                                <div className="detail-content">
+                                  {editingId === res.id ? (
+                                    <div className="edit-form-grid">
+                                      <div className="form-group"><label>Empresa</label><input name="empresa" value={editData.empresa} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Email</label><input name="email" value={editData.email} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Destino</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="full-width"><label>Comentarios</label><textarea name="comentarios" value={editData.comentarios} onChange={handleEditChange} className="form-control" style={{height:'100px'}}></textarea></div>
+                                      <div className="edit-actions">
+                                        <button onClick={() => handleUpdateRecord('reservas', res.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
+                                        <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
                                       </div>
                                     </div>
-                                  </div>
+                                  ) : (
+                                    <div className="card-dashboard" style={{maxWidth:'800px'}}>
+                                      <div className="card-header-pro">
+                                        <Briefcase size={20} />
+                                        <h4>Detalles de la Solicitud</h4>
+                                      </div>
+                                      <div className="card-body-pro">
+                                        <div className="info-grid-pro">
+                                          <div className="field-pro"><span className="field-label">Email de Contacto</span><span className="field-value">{res.email}</span></div>
+                                          <div className="field-pro"><span className="field-label">Teléfono</span><span className="field-value">{res.telefono}</span></div>
+                                          <div className="field-pro"><span className="field-label">Cantidad de Pasajeros (Pax)</span><span className="field-value">{res.pax}</span></div>
+                                          <div className="field-pro"><span className="field-label">Idioma Requerido</span><span className="field-value">{res.idioma}</span></div>
+                                          <div className="full-width field-pro" style={{marginTop:'15px'}}>
+                                            <span className="field-label">Comentarios Adicionales</span>
+                                            <p style={{fontSize:'1rem', color:'var(--text-main)', margin:'10px 0 0 0', lineHeight:'1.6'}}>{res.comentarios || 'Sin comentarios adicionales'}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             )}
 
             {activeTab === 'talento' && subTab === 'guias' && (
               <div className="talento-tab-content">
-                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <button onClick={() => setStatusFilter('todos')} style={{ background: statusFilter === 'todos' ? '#cbd5e1' : 'transparent', border: '1px solid #cbd5e1', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'todos' ? '700' : '500', transition: 'all 0.2s' }}>
+                <div className="status-summary-bar">
+                  <button onClick={() => setStatusFilter('todos')} className={`summary-filter-btn todos ${statusFilter === 'todos' ? 'active' : ''}`}>
                     Total Registrados: {postulacionesGuias.length}
                   </button>
-                  <button onClick={() => setStatusFilter('pendiente')} style={{ background: statusFilter === 'pendiente' ? '#fef3c7' : 'transparent', border: '1px solid #f59e0b', color: '#d97706', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'pendiente' ? '700' : '500', transition: 'all 0.2s' }}>
+                  <button onClick={() => setStatusFilter('pendiente')} className={`summary-filter-btn pendiente ${statusFilter === 'pendiente' ? 'active' : ''}`}>
                     Pendientes: {postulacionesGuias.filter(g => g.estado === 'pendiente').length}
                   </button>
-                  <button onClick={() => setStatusFilter('rechazado')} style={{ background: statusFilter === 'rechazado' ? '#fee2e2' : 'transparent', border: '1px solid #ef4444', color: '#dc2626', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'rechazado' ? '700' : '500', transition: 'all 0.2s' }}>
+                  <button onClick={() => setStatusFilter('rechazado')} className={`summary-filter-btn rechazado ${statusFilter === 'rechazado' ? 'active' : ''}`}>
                     Rechazados: {postulacionesGuias.filter(g => g.estado === 'rechazado').length}
                   </button>
-                  <button onClick={() => setStatusFilter('aprobado')} style={{ background: statusFilter === 'aprobado' ? '#dcfce7' : 'transparent', border: '1px solid #22c55e', color: '#16a34a', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'aprobado' ? '700' : '500', transition: 'all 0.2s' }}>
+                  <button onClick={() => setStatusFilter('aprobado')} className={`summary-filter-btn aprobado ${statusFilter === 'aprobado' ? 'active' : ''}`}>
                     Aprobados: {postulacionesGuias.filter(g => g.estado === 'aprobado').length}
                   </button>
-                  <button onClick={() => exportarAprobados(postulacionesGuias, 'Guias_Senior_Aprobados')} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>
+                  <button onClick={() => exportarAprobados(postulacionesGuias, 'Guias_Senior_Aprobados')} className="btn-excel-export" style={{ marginLeft: 'auto' }}>
                     <Download size={15} /> Exportar Aprobados (.xlsx)
                   </button>
                 </div>
 
                 {/* Buscador */}
-                <div style={{ position: 'relative', marginBottom: '15px' }}>
-                  <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                <div className="admin-search-wrapper">
+                  <Search size={18} className="admin-search-icon" />
                   <input 
                     type="text" 
                     placeholder="Buscar guía por nombre, correo, ubicación o idiomas..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px 10px 40px',
-                      borderRadius: '8px',
-                      border: '1.5px solid #cbd5e1',
-                      fontSize: '0.9rem',
-                      outline: 'none',
-                      transition: 'all 0.2s',
-                    }}
+                    className="admin-search-input"
                   />
                 </div>
 
@@ -1678,41 +1683,33 @@ const AdminDashboard = () => {
 
             {activeTab === 'talento' && subTab === 'estudiantes' && (
               <div className="talento-tab-content">
-                <div className="status-summary-bar" style={{ display: 'flex', gap: '15px', marginBottom: '15px', padding: '10px 15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.9rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <button onClick={() => setStatusFilter('todos')} style={{ background: statusFilter === 'todos' ? '#cbd5e1' : 'transparent', border: '1px solid #cbd5e1', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'todos' ? '700' : '500', transition: 'all 0.2s' }}>
+                <div className="status-summary-bar">
+                  <button onClick={() => setStatusFilter('todos')} className={`summary-filter-btn todos ${statusFilter === 'todos' ? 'active' : ''}`}>
                     Total Registrados: {postulacionesEstudiantes.length}
                   </button>
-                  <button onClick={() => setStatusFilter('pendiente')} style={{ background: statusFilter === 'pendiente' ? '#fef3c7' : 'transparent', border: '1px solid #f59e0b', color: '#d97706', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'pendiente' ? '700' : '500', transition: 'all 0.2s' }}>
+                  <button onClick={() => setStatusFilter('pendiente')} className={`summary-filter-btn pendiente ${statusFilter === 'pendiente' ? 'active' : ''}`}>
                     Pendientes: {postulacionesEstudiantes.filter(e => e.estado === 'pendiente').length}
                   </button>
-                  <button onClick={() => setStatusFilter('rechazado')} style={{ background: statusFilter === 'rechazado' ? '#fee2e2' : 'transparent', border: '1px solid #ef4444', color: '#dc2626', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'rechazado' ? '700' : '500', transition: 'all 0.2s' }}>
+                  <button onClick={() => setStatusFilter('rechazado')} className={`summary-filter-btn rechazado ${statusFilter === 'rechazado' ? 'active' : ''}`}>
                     Rechazados: {postulacionesEstudiantes.filter(e => e.estado === 'rechazado').length}
                   </button>
-                  <button onClick={() => setStatusFilter('aprobado')} style={{ background: statusFilter === 'aprobado' ? '#dcfce7' : 'transparent', border: '1px solid #22c55e', color: '#16a34a', cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', fontWeight: statusFilter === 'aprobado' ? '700' : '500', transition: 'all 0.2s' }}>
+                  <button onClick={() => setStatusFilter('aprobado')} className={`summary-filter-btn aprobado ${statusFilter === 'aprobado' ? 'active' : ''}`}>
                     Aprobados: {postulacionesEstudiantes.filter(e => e.estado === 'aprobado').length}
                   </button>
-                  <button onClick={() => exportarAprobados(postulacionesEstudiantes, 'Guias_Junior_Aprobados')} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#16a34a', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}>
+                  <button onClick={() => exportarAprobados(postulacionesEstudiantes, 'Guias_Junior_Aprobados')} className="btn-excel-export" style={{ marginLeft: 'auto' }}>
                     <Download size={15} /> Exportar Aprobados (.xlsx)
                   </button>
                 </div>
 
                 {/* Buscador */}
-                <div style={{ position: 'relative', marginBottom: '15px' }}>
-                  <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                <div className="admin-search-wrapper">
+                  <Search size={18} className="admin-search-icon" />
                   <input 
                     type="text" 
                     placeholder="Buscar estudiante por nombre, correo, ubicación o idiomas..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px 10px 40px',
-                      borderRadius: '8px',
-                      border: '1.5px solid #cbd5e1',
-                      fontSize: '0.9rem',
-                      outline: 'none',
-                      transition: 'all 0.2s',
-                    }}
+                    className="admin-search-input"
                   />
                 </div>
 
@@ -1922,90 +1919,98 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === 'comunidad' && subTab === 'relatos' && (
-              <table className="pro-table">
-                <thead><tr><th>Título / Autor</th><th>Ubicación / Fecha</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
-                <tbody>
-                  {relatos.map(rel => (
-                    <React.Fragment key={rel.id}>
-                      <tr className={expandedId === rel.id ? 'row-expanded' : ''}>
-                        <td><div className="main-text">{rel.titulo}</div><div className="sub-text">Por: {rel.autor}</div></td>
-                        <td><div className="main-text">{rel.ubicacion}</div><div className="sub-text">{new Date(rel.fecha).toLocaleDateString()}</div></td>
-                        <td><span className={`status-badge ${rel.estado}`}>{rel.estado}</span></td>
-                        <td><ActionButtons table="relatos" id={rel.id} currentStatus={rel.estado} record={rel} /></td>
-                      </tr>
-                      {expandedId === rel.id && (
-                        <tr className="detail-row">
-                          <td colSpan="5">
-                            <div className="detail-content">
-                              {editingId === rel.id ? (
-                                <div className="edit-form-grid">
-                                  <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo || ''} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="form-group"><label>Hook / Resumen</label><input name="hook" value={editData.hook || editData.resumen || ''} onChange={handleEditChange} className="form-control" /></div>
-                                  <div className="full-width"><label>Contenido</label><textarea name="contenido" value={editData.contenido || ''} onChange={handleEditChange} className="form-control" style={{height:'150px'}}></textarea></div>
-                                  <div className="full-width"><label>Datos Clave</label><textarea name="datos_clave" value={editData.datos_clave || ''} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                  <div className="full-width"><label>¿Cómo se cuenta?</label><textarea name="como_se_cuenta" value={editData.como_se_cuenta || ''} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                  <div className="edit-actions">
-                                    <button onClick={() => handleUpdateRecord('relatos', rel.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
-                                    <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="relato-preview">
-                                  {rel.imagen_url && <img src={rel.imagen_url} alt="Vista previa" className="detail-preview-img" />}
-                                  <div className="relato-text">
-                                    <strong>Hook / Resumen:</strong>
-                                    <p style={{marginBottom: '1rem', fontWeight: 'bold'}}>{rel.hook || rel.resumen}</p>
-                                    <strong>Contenido Completo:</strong>
-                                    <p style={{marginBottom: '1rem'}}>{rel.contenido}</p>
-                                    {rel.datos_clave && (
-                                      <>
-                                        <strong>Datos Clave:</strong>
-                                        <p style={{marginBottom: '1rem'}}>{rel.datos_clave}</p>
-                                      </>
-                                    )}
-                                    {rel.como_se_cuenta && (
-                                      <>
-                                        <strong>¿Cómo se cuenta en terreno?:</strong>
-                                        <p style={{marginBottom: '1rem'}}>{rel.como_se_cuenta}</p>
-                                      </>
-                                    )}
-                                    {rel.galeria_urls && rel.galeria_urls.length > 0 && (
-                                      <div className="relato-gallery-preview">
-                                        <strong>Galería adjunta:</strong>
-                                        <div style={{display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
-                                          {rel.galeria_urls.map((url, i) => (
-                                            <img key={i} src={url} alt={`Galería ${i}`} style={{width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px'}} />
-                                          ))}
-                                        </div>
+              <div className="comunidad-tab-content">
+                <div className="table-wrapper">
+                  <table className="pro-table">
+                    <thead><tr><th>Título / Autor</th><th>Ubicación / Fecha</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
+                    <tbody>
+                      {relatos.map(rel => (
+                        <React.Fragment key={rel.id}>
+                          <tr className={expandedId === rel.id ? 'row-expanded' : ''}>
+                            <td><div className="main-text">{rel.titulo}</div><div className="sub-text">Por: {rel.autor}</div></td>
+                            <td><div className="main-text">{rel.ubicacion}</div><div className="sub-text">{new Date(rel.fecha).toLocaleDateString()}</div></td>
+                            <td><span className={`status-badge ${rel.estado}`}>{rel.estado}</span></td>
+                            <td><ActionButtons table="relatos" id={rel.id} currentStatus={rel.estado} record={rel} /></td>
+                          </tr>
+                          {expandedId === rel.id && (
+                            <tr className="detail-row">
+                              <td colSpan="5">
+                                <div className="detail-content">
+                                  {editingId === rel.id ? (
+                                    <div className="edit-form-grid">
+                                      <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo || ''} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Hook / Resumen</label><input name="hook" value={editData.hook || editData.resumen || ''} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="full-width"><label>Contenido</label><textarea name="contenido" value={editData.contenido || ''} onChange={handleEditChange} className="form-control" style={{height:'150px'}}></textarea></div>
+                                      <div className="full-width"><label>Datos Clave</label><textarea name="datos_clave" value={editData.datos_clave || ''} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                      <div className="full-width"><label>¿Cómo se cuenta?</label><textarea name="como_se_cuenta" value={editData.como_se_cuenta || ''} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                      <div className="edit-actions">
+                                        <button onClick={() => handleUpdateRecord('relatos', rel.id)} className="btn btn-save"><Save size={16}/> Guardar</button>
+                                        <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
                                       </div>
-                                    )}
-                                  </div>
+                                    </div>
+                                  ) : (
+                                    <div className="relato-preview">
+                                      {rel.imagen_url && <img src={rel.imagen_url} alt="Vista previa" className="detail-preview-img" />}
+                                      <div className="relato-text">
+                                        <strong>Hook / Resumen:</strong>
+                                        <p style={{marginBottom: '1rem', fontWeight: 'bold'}}>{rel.hook || rel.resumen}</p>
+                                        <strong>Contenido Completo:</strong>
+                                        <p style={{marginBottom: '1rem'}}>{rel.contenido}</p>
+                                        {rel.datos_clave && (
+                                          <>
+                                            <strong>Datos Clave:</strong>
+                                            <p style={{marginBottom: '1rem'}}>{rel.datos_clave}</p>
+                                          </>
+                                        )}
+                                        {rel.como_se_cuenta && (
+                                          <>
+                                            <strong>¿Cómo se cuenta en terreno?:</strong>
+                                            <p style={{marginBottom: '1rem'}}>{rel.como_se_cuenta}</p>
+                                          </>
+                                        )}
+                                        {rel.galeria_urls && rel.galeria_urls.length > 0 && (
+                                          <div className="relato-gallery-preview">
+                                            <strong>Galería adjunta:</strong>
+                                            <div style={{display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
+                                              {rel.galeria_urls.map((url, i) => (
+                                                <img key={i} src={url} alt={`Galería ${i}`} style={{width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px'}} />
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             )}
 
             {activeTab === 'comunidad' && subTab === 'comentarios' && (
-              <table className="pro-table">
-                <thead><tr><th>Usuario / Comentario</th><th>Relato</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
-                <tbody>
-                  {comentarios.map(com => (
-                    <tr key={com.id}>
-                      <td><div className="main-text">{com.usuario_nombre}</div><div className="sub-text italic">"{com.texto}"</div></td>
-                      <td>{com.relatos?.titulo || 'Desconocido'}</td>
-                      <td><span className={`status-badge ${com.estado}`}>{com.estado}</span></td>
-                      <td><ActionButtons table="comentarios_relatos" id={com.id} currentStatus={com.estado} record={com} /></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="comunidad-tab-content">
+                <div className="table-wrapper">
+                  <table className="pro-table">
+                    <thead><tr><th>Usuario / Comentario</th><th>Relato</th><th>Estado</th><th className="text-right">Acciones</th></tr></thead>
+                    <tbody>
+                      {comentarios.map(com => (
+                        <tr key={com.id}>
+                          <td><div className="main-text">{com.usuario_nombre}</div><div className="sub-text italic">"{com.texto}"</div></td>
+                          <td>{com.relatos?.titulo || 'Desconocido'}</td>
+                          <td><span className={`status-badge ${com.estado}`}>{com.estado}</span></td>
+                          <td><ActionButtons table="comentarios_relatos" id={com.id} currentStatus={com.estado} record={com} /></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             )}
 
             {activeTab === 'manuales' && (
@@ -2024,7 +2029,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {editingId === 'new' && (
-                  <div className="edit-form-grid" style={{ background: '#f8fafc', padding: '2rem', borderRadius: '15px', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+                  <div className="edit-form-grid admin-form-container">
                     <div className="form-group"><label>Título del Manual</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" placeholder="Ej: Manual Trekking Torres del Paine" /></div>
                     <div className="form-group"><label>Destino / Zona</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" placeholder="Ej: Magallanes" /></div>
                     <div className="form-group">
@@ -2046,56 +2051,58 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                <table className="pro-table">
-                  <thead>
-                    <tr><th>Manual / Categoría</th><th>Destino</th><th>Fecha</th><th className="text-right">Acciones</th></tr>
-                  </thead>
-                  <tbody>
-                    {manuales.map(m => (
-                      <React.Fragment key={m.id}>
-                        <tr className={expandedId === m.id ? 'row-expanded' : ''}>
-                          <td><div className="main-text">{m.titulo}</div><div className="sub-text">{m.categoria}</div></td>
-                          <td>{m.destino}</td>
-                          <td>{new Date(m.created_at).toLocaleDateString()}</td>
-                          <td className="text-right">
-                            <div className="admin-actions">
-                              <button onClick={() => toggleExpand(m.id)} className="btn-action view"><Eye size={16}/></button>
-                              <button onClick={() => startEditing(m)} className="btn-action edit"><Edit size={16}/></button>
-                              <a href={m.url_archivo} target="_blank" rel="noreferrer" className="btn-action download"><Download size={16}/></a>
-                              <button onClick={() => handleDelete('manuales', m.id)} className="btn-action delete"><Trash2 size={16}/></button>
-                            </div>
-                          </td>
-                        </tr>
-                        {expandedId === m.id && (
-                          <tr className="detail-row">
-                            <td colSpan="4">
-                              <div className="detail-content">
-                                {editingId === m.id ? (
-                                  <div className="edit-form-grid">
-                                    <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group"><label>Destino</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group"><label>Categoría</label><input name="categoria" value={editData.categoria} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group"><label>Actualizar PDF</label><input type="file" name="file_manual" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
-                                    <div className="full-width"><label>Descripción</label><textarea name="descripcion" value={editData.descripcion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
-                                    <div className="edit-actions">
-                                      <button onClick={() => handleUpdateRecord('manuales', m.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
-                                      <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="detail-grid">
-                                    <div className="full-width"><strong>Descripción:</strong> {m.descripcion || 'Sin descripción'}</div>
-                                    <div className="full-width"><strong>URL Archivo:</strong> <a href={m.url_archivo} target="_blank" rel="noreferrer">{m.url_archivo}</a></div>
-                                  </div>
-                                )}
+                <div className="table-wrapper">
+                  <table className="pro-table">
+                    <thead>
+                      <tr><th>Manual / Categoría</th><th>Destino</th><th>Fecha</th><th className="text-right">Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                      {manuales.map(m => (
+                        <React.Fragment key={m.id}>
+                          <tr className={expandedId === m.id ? 'row-expanded' : ''}>
+                            <td><div className="main-text">{m.titulo}</div><div className="sub-text">{m.categoria}</div></td>
+                            <td>{m.destino}</td>
+                            <td>{new Date(m.created_at).toLocaleDateString()}</td>
+                            <td className="text-right">
+                              <div className="admin-actions">
+                                <button onClick={() => toggleExpand(m.id)} className="btn-action view"><Eye size={16}/></button>
+                                <button onClick={() => startEditing(m)} className="btn-action edit"><Edit size={16}/></button>
+                                <a href={m.url_archivo} target="_blank" rel="noreferrer" className="btn-action download"><Download size={16}/></a>
+                                <button onClick={() => handleDelete('manuales', m.id)} className="btn-action delete"><Trash2 size={16}/></button>
                               </div>
                             </td>
                           </tr>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </tbody>
-                </table>
+                          {expandedId === m.id && (
+                            <tr className="detail-row">
+                              <td colSpan="4">
+                                <div className="detail-content">
+                                  {editingId === m.id ? (
+                                    <div className="edit-form-grid">
+                                      <div className="form-group"><label>Título</label><input name="titulo" value={editData.titulo} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Destino</label><input name="destino" value={editData.destino} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Categoría</label><input name="categoria" value={editData.categoria} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Actualizar PDF</label><input type="file" name="file_manual" onChange={handleEditChange} className="form-control" accept=".pdf" /></div>
+                                      <div className="full-width"><label>Descripción</label><textarea name="descripcion" value={editData.descripcion} onChange={handleEditChange} className="form-control" style={{height:'80px'}}></textarea></div>
+                                      <div className="edit-actions">
+                                        <button onClick={() => handleUpdateRecord('manuales', m.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
+                                        <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="detail-grid">
+                                      <div className="full-width"><strong>Descripción:</strong> {m.descripcion || 'Sin descripción'}</div>
+                                      <div className="full-width"><strong>URL Archivo:</strong> <a href={m.url_archivo} target="_blank" rel="noreferrer">{m.url_archivo}</a></div>
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
 
@@ -2115,7 +2122,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {editingId === 'new' && (
-                  <div className="edit-form-grid" style={{ background: '#f8fafc', padding: '2rem', borderRadius: '15px', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+                  <div className="edit-form-grid admin-form-container">
                     <div className="form-group"><label>Nombre de la Empresa</label><input name="nombre_empresa" value={editData.nombre_empresa || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: Turismo Patagonia Excursiones" required /></div>
                     <div className="form-group"><label>Correo Electrónico (Login)</label><input type="email" name="email" value={editData.email || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: correo@patagonia.com" required /></div>
                     <div className="form-group"><label>Contraseña de Acceso</label><input type="password" name="password" value={editData.password || ''} onChange={handleEditChange} className="form-control" placeholder="Ej: ********" required /></div>
@@ -2135,111 +2142,113 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                <table className="pro-table">
-                  <thead>
-                    <tr><th>Nombre Empresa</th><th>Email</th><th>Contacto</th><th>Estado</th><th className="text-right">Acciones</th></tr>
-                  </thead>
-                  <tbody>
-                    {empresas.map(emp => (
-                      <React.Fragment key={emp.id}>
-                        <tr className={expandedId === emp.id ? 'row-expanded' : ''}>
-                          <td><div className="main-text">{emp.nombre_empresa}</div></td>
-                          <td>{emp.email}</td>
-                          <td><div className="main-text">{emp.contacto_nombre || 'S/N'}</div><div className="sub-text">{emp.telefono || ''}</div></td>
-                          <td><span className={`status-badge ${emp.estado === 'activo' ? 'aprobado' : 'rechazado'}`}>{emp.estado}</span></td>
-                          <td className="text-right">
-                            <div className="admin-actions">
-                              <button onClick={() => toggleExpand(emp.id)} className="btn-action view" title="Ver Bloqueos"><Eye size={16}/></button>
-                              <button onClick={() => startEditing(emp)} className="btn-action edit" title="Editar"><Edit size={16}/></button>
-                              <button onClick={() => handleDelete('empresas', emp.id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>
-                            </div>
-                          </td>
-                        </tr>
-                        {expandedId === emp.id && (
-                          <tr className="detail-row">
-                            <td colSpan="5">
-                              <div className="detail-content">
-                                {editingId === emp.id ? (
-                                  <div className="edit-form-grid">
-                                    <div className="form-group"><label>Nombre Empresa</label><input name="nombre_empresa" value={editData.nombre_empresa || ''} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group"><label>Email</label><input type="email" name="email" value={editData.email || ''} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group"><label>Contraseña</label><input type="password" name="password" value={editData.password || ''} onChange={handleEditChange} className="form-control" placeholder="Dejar en blanco para no modificar" /></div>
-                                    <div className="form-group"><label>Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre || ''} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono || ''} onChange={handleEditChange} className="form-control" /></div>
-                                    <div className="form-group">
-                                      <label>Estado</label>
-                                      <select name="estado" value={editData.estado || 'activo'} onChange={handleEditChange} className="form-control">
-                                        <option value="activo">Activo</option>
-                                        <option value="inactivo">Inactivo</option>
-                                      </select>
-                                    </div>
-                                    <div className="edit-actions">
-                                      <button onClick={() => handleUpdateRecord('empresas', emp.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
-                                      <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="detail-grid" style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '8px' }}>
-                                    <div className="full-width">
-                                      <h5 style={{ margin: '0 0 15px 0', color: '#334155', fontSize: '1rem' }}>Días Bloqueados / Reservados por esta empresa:</h5>
-                                      {(() => {
-                                        const bookedDays = disponibilidad.filter(d => d.bloqueado_por === emp.id);
-                                        if (bookedDays.length === 0) {
-                                          return <p style={{ color: '#64748b', margin: 0, fontSize: '0.9rem' }}>Esta empresa no tiene guías reservados actualmente.</p>;
-                                        }
-
-                                        return (
-                                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                            {bookedDays.map(item => {
-                                              let nombreGuia = 'Guía Desconocido';
-                                              let cod = 'S/N';
-                                              if (item.tipo_guia === 'guia') {
-                                                const g = postulacionesGuias.find(x => x.id === item.guia_id);
-                                                if (g) {
-                                                  nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
-                                                  cod = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
-                                                }
-                                              } else {
-                                                const e = postulacionesEstudiantes.find(x => x.id === item.guia_id);
-                                                if (e) {
-                                                  nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
-                                                  cod = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
-                                                }
-                                              }
-
-                                              return (
-                                                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '10px 15px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                    <Calendar size={16} color="#ef4444" />
-                                                    <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>{new Date(item.fecha + 'T12:00:00Z').toLocaleDateString()}</span>
-                                                  </div>
-                                                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                                    <span style={{ fontWeight: '500', fontSize: '0.9rem', color: '#0f172a' }}>{nombreGuia} ({cod})</span>
-                                                    <span className="status-badge rechazado" style={{ fontSize: '0.75rem' }}>Reservado</span>
-                                                  </div>
-                                                </div>
-                                              );
-                                            })}
-                                          </div>
-                                        );
-                                      })()}
-                                    </div>
-                                  </div>
-                                )}
+                <div className="table-wrapper">
+                  <table className="pro-table">
+                    <thead>
+                      <tr><th>Nombre Empresa</th><th>Email</th><th>Contacto</th><th>Estado</th><th className="text-right">Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                      {empresas.map(emp => (
+                        <React.Fragment key={emp.id}>
+                          <tr className={expandedId === emp.id ? 'row-expanded' : ''}>
+                            <td><div className="main-text">{emp.nombre_empresa}</div></td>
+                            <td>{emp.email}</td>
+                            <td><div className="main-text">{emp.contacto_nombre || 'S/N'}</div><div className="sub-text">{emp.telefono || ''}</div></td>
+                            <td><span className={`status-badge ${emp.estado === 'activo' ? 'aprobado' : 'rechazado'}`}>{emp.estado}</span></td>
+                            <td className="text-right">
+                              <div className="admin-actions">
+                                <button onClick={() => toggleExpand(emp.id)} className="btn-action view" title="Ver / Reservas"><Eye size={16}/></button>
+                                <button onClick={() => startEditing(emp)} className="btn-action edit" title="Editar"><Edit size={16}/></button>
+                                <button onClick={() => handleDelete('empresas', emp.id)} className="btn-action delete" title="Eliminar"><Trash2 size={16}/></button>
                               </div>
                             </td>
                           </tr>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </tbody>
-                </table>
+                          {expandedId === emp.id && (
+                            <tr className="detail-row">
+                              <td colSpan="5">
+                                <div className="detail-content">
+                                  {editingId === emp.id ? (
+                                    <div className="edit-form-grid">
+                                      <div className="form-group"><label>Nombre Empresa</label><input name="nombre_empresa" value={editData.nombre_empresa || ''} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Email</label><input type="email" name="email" value={editData.email || ''} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Contraseña</label><input type="password" name="password" value={editData.password || ''} onChange={handleEditChange} className="form-control" placeholder="Dejar en blanco para no modificar" /></div>
+                                      <div className="form-group"><label>Contacto</label><input name="contacto_nombre" value={editData.contacto_nombre || ''} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group"><label>Teléfono</label><input name="telefono" value={editData.telefono || ''} onChange={handleEditChange} className="form-control" /></div>
+                                      <div className="form-group">
+                                        <label>Estado</label>
+                                        <select name="estado" value={editData.estado || 'activo'} onChange={handleEditChange} className="form-control">
+                                          <option value="activo">Activo</option>
+                                          <option value="inactivo">Inactivo</option>
+                                        </select>
+                                      </div>
+                                      <div className="edit-actions">
+                                        <button onClick={() => handleUpdateRecord('empresas', emp.id)} className="btn btn-save"><Save size={16}/> Guardar Cambios</button>
+                                        <button onClick={cancelEditing} className="btn btn-cancel"><CloseIcon size={16}/> Cancelar</button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="detail-grid" style={{ padding: '1.5rem', background: 'var(--admin-bg)', borderRadius: '8px' }}>
+                                      <div className="full-width">
+                                        <h5 style={{ margin: '0 0 15px 0', color: 'var(--text-main)', fontSize: '1rem' }}>Días Bloqueados / Reservados por esta empresa:</h5>
+                                        {(() => {
+                                          const bookedDays = disponibilidad.filter(d => d.bloqueado_por === emp.id);
+                                          if (bookedDays.length === 0) {
+                                            return <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>Esta empresa no tiene guías reservados actualmente.</p>;
+                                          }
+
+                                          return (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                              {bookedDays.map(item => {
+                                                let nombreGuia = 'Guía Desconocido';
+                                                let cod = 'S/N';
+                                                if (item.tipo_guia === 'guia') {
+                                                  const g = postulacionesGuias.find(x => x.id === item.guia_id);
+                                                  if (g) {
+                                                    nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+                                                    cod = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                                                  }
+                                                } else {
+                                                  const e = postulacionesEstudiantes.find(x => x.id === item.guia_id);
+                                                  if (e) {
+                                                    nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+                                                    cod = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+                                                  }
+                                                }
+
+                                                return (
+                                                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--panel-bg)', padding: '10px 15px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                      <Calendar size={16} color="#ef4444" />
+                                                      <span style={{ fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-main)' }}>{new Date(item.fecha + 'T12:00:00Z').toLocaleDateString()}</span>
+                                                    </div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                      <span style={{ fontWeight: '500', fontSize: '0.9rem', color: 'var(--text-main)' }}>{nombreGuia} ({cod})</span>
+                                                      <span className="status-badge rechazado" style={{ fontSize: '0.75rem' }}>Reservado</span>
+                                                    </div>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          );
+                                        })()}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
 
             {activeTab === 'evaluaciones' && (
               <div className="evaluaciones-admin-container">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <div className="admin-header-panel">
                   <div>
                     <h3>Evaluaciones de Servicios Recibidas</h3>
                     <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>Comentarios y calificaciones internas provistas por las agencias asociadas.</p>
@@ -2301,12 +2310,12 @@ const AdminDashboard = () => {
                   })();
 
                   return (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginBottom: '2rem' }}>
+                    <div className="admin-grid-stats">
                       {promedioPorGuia.map(p => (
-                        <div key={`${p.guia_id}_${p.tipo_guia}`} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div key={`${p.guia_id}_${p.tipo_guia}`} className="admin-rating-card">
                           <div>
-                            <h4 style={{ margin: 0, fontSize: '1rem', color: '#0f172a', fontWeight: '800' }}>{p.nombre}</h4>
-                            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600' }}>{p.codigo}</span>
+                            <h4>{p.nombre}</h4>
+                            <span className="guide-code">{p.codigo}</span>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div style={{ display: 'flex', gap: '3px', color: '#fbbf24' }}>
@@ -2328,9 +2337,9 @@ const AdminDashboard = () => {
                                 );
                               })}
                             </div>
-                            <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#0f172a' }}>{p.promedio.toFixed(1)}</span>
+                            <span className="average-value">{p.promedio.toFixed(1)}</span>
                           </div>
-                          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Basado en {p.count} evaluación{p.count > 1 ? 'es' : ''}</span>
+                          <span className="rating-count">Basado en {p.count} evaluación{p.count > 1 ? 'es' : ''}</span>
                         </div>
                       ))}
                     </div>
@@ -2338,7 +2347,7 @@ const AdminDashboard = () => {
                 })()}
 
                 {evaluaciones.length === 0 ? (
-                  <div className="portal-empty-state" style={{ padding: '3rem', background: 'white', borderRadius: '15px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                  <div className="portal-empty-state admin-empty-state-box">
                     <div className="empty-icon" style={{ margin: '0 auto 1rem auto', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fef3c7', borderRadius: '50%', color: '#d97706' }}>
                       <Star size={24} />
                     </div>
@@ -2346,87 +2355,89 @@ const AdminDashboard = () => {
                     <p style={{ color: '#64748b' }}>Las evaluaciones aparecerán aquí una vez que los clientes califiquen sus servicios ejecutados.</p>
                   </div>
                 ) : (
-                  <table className="pro-table">
-                    <thead>
-                      <tr>
-                        <th>Guía</th>
-                        <th>Empresa</th>
-                        <th>Calificación</th>
-                        <th>Comentario</th>
-                        <th>Fecha de Registro</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {evaluaciones.map(ev => {
-                        let nombreGuia = 'Guía Desconocido';
-                        let codigoGuia = 'S/N';
-                        if (ev.tipo_guia === 'guia') {
-                          const g = postulacionesGuias.find(x => x.id === ev.guia_id);
-                          if (g) {
-                            nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
-                            codigoGuia = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                  <div className="table-wrapper">
+                    <table className="pro-table">
+                      <thead>
+                        <tr>
+                          <th>Guía</th>
+                          <th>Empresa</th>
+                          <th>Calificación</th>
+                          <th>Comentario</th>
+                          <th>Fecha de Registro</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {evaluaciones.map(ev => {
+                          let nombreGuia = 'Guía Desconocido';
+                          let codigoGuia = 'S/N';
+                          if (ev.tipo_guia === 'guia') {
+                            const g = postulacionesGuias.find(x => x.id === ev.guia_id);
+                            if (g) {
+                              nombreGuia = `${g.nombres || ''} ${g.apellidos || ''}`.trim();
+                              codigoGuia = `PRO:${String(g.id).substring(0, 5).toUpperCase()}`;
+                            }
+                          } else {
+                            const e = postulacionesEstudiantes.find(x => x.id === ev.guia_id);
+                            if (e) {
+                              nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
+                              codigoGuia = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
+                            }
                           }
-                        } else {
-                          const e = postulacionesEstudiantes.find(x => x.id === ev.guia_id);
-                          if (e) {
-                            nombreGuia = `${e.nombres || ''} ${e.apellidos || ''}`.trim();
-                            codigoGuia = `EST:${String(e.id).substring(0, 5).toUpperCase()}`;
-                          }
-                        }
 
-                        const emp = empresas.find(x => x.id === ev.empresa_id);
-                        const nombreEmpresa = emp ? emp.nombre_empresa : 'Empresa Desconocida';
+                          const emp = empresas.find(x => x.id === ev.empresa_id);
+                          const nombreEmpresa = emp ? emp.nombre_empresa : 'Empresa Desconocida';
 
-                        return (
-                          <tr key={ev.id}>
-                            <td>
-                              <div className="main-text" style={{ fontWeight: '600' }}>{nombreGuia}</div>
-                              <div className="sub-text" style={{ fontSize: '0.75rem', color: '#64748b' }}>{codigoGuia}</div>
-                            </td>
-                            <td>
-                              <div className="main-text">{nombreEmpresa}</div>
-                            </td>
-                            <td>
-                              <div style={{ display: 'flex', gap: '3px', color: '#fbbf24' }}>
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <Star 
-                                    key={star} 
-                                    size={16} 
-                                    fill={star <= ev.estrellas ? '#fbbf24' : 'none'} 
-                                    stroke={star <= ev.estrellas ? '#fbbf24' : '#d1d5db'}
-                                  />
-                                ))}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="main-text" style={{ fontStyle: ev.comentario ? 'normal' : 'italic', color: ev.comentario ? '#334155' : '#94a3b8', maxWidth: '350px', whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                                {ev.comentario || 'Sin comentarios adicionales'}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="sub-text">{new Date(ev.created_at).toLocaleDateString('es-CL', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}</div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                          return (
+                            <tr key={ev.id}>
+                              <td>
+                                <div className="main-text" style={{ fontWeight: '600' }}>{nombreGuia}</div>
+                                <div className="sub-text" style={{ fontSize: '0.75rem', color: '#64748b' }}>{codigoGuia}</div>
+                              </td>
+                              <td>
+                                <div className="main-text">{nombreEmpresa}</div>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', gap: '3px', color: '#fbbf24' }}>
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star 
+                                      key={star} 
+                                      size={16} 
+                                      fill={star <= ev.estrellas ? '#fbbf24' : 'none'} 
+                                      stroke={star <= ev.estrellas ? '#fbbf24' : '#d1d5db'}
+                                    />
+                                  ))}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main-text" style={{ fontStyle: ev.comentario ? 'normal' : 'italic', color: ev.comentario ? 'var(--text-main)' : 'var(--text-muted)', maxWidth: '350px', whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                  {ev.comentario || 'Sin comentarios adicionales'}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="sub-text">{new Date(ev.created_at).toLocaleDateString('es-CL', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}</div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             )}
 
             {activeTab === 'mensajes' && (
               <div className="table-wrapper">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: 'white', borderRadius: '12px', marginBottom: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)' }}>
+                <div className="admin-header-panel-box">
                   <div>
-                    <h3 style={{ margin: '0 0 0.25rem 0', color: '#1e293b', fontSize: '1.2rem', fontWeight: '800' }}>Centro de Mensajes</h3>
-                    <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>Canales de comunicación entre empresas, guías y administración.</p>
+                    <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.2rem', fontWeight: '800' }}>Centro de Mensajes</h3>
+                    <p style={{ fontSize: '0.85rem', margin: 0 }}>Canales de comunicación entre empresas, guías y administración.</p>
                   </div>
                   <button 
                     onClick={loadAdminChats} 
@@ -2451,27 +2462,18 @@ const AdminDashboard = () => {
                         <div 
                           key={chat.id} 
                           onClick={() => setAdminActiveChatId(isActive ? null : chat.id)} 
-                          style={{ 
-                            background: isActive ? '#f0fdf4' : 'white', 
-                            border: isActive ? '2px solid #10b981' : '1px solid #e2e8f0', 
-                            borderRadius: '12px', 
-                            padding: '1.25rem', 
-                            cursor: 'pointer', 
-                            transition: 'all 0.2s',
-                            boxShadow: isActive ? '0 4px 12px rgba(16,185,129,0.1)' : '0 1px 3px rgba(0,0,0,0.02)',
-                            position: 'relative'
-                          }}
+                          className={`admin-chat-session-card ${isActive ? 'active' : ''}`}
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
                             <div style={{ flex: 1 }}>
-                              <p style={{ margin: 0, fontWeight: '700', fontSize: '0.95rem', color: '#1e293b' }}>
+                              <p className="admin-chat-title">
                                 {chat.empresa_nombre} ↔ {chat.guia_nombre}
                               </p>
                               <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: '500' }}>
+                                <span className="admin-chat-subtitle">
                                   {chat.nombre_servicio || 'Servicio de Guiado'}
                                 </span>
-                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                                <span className="admin-chat-meta">
                                   {chat.fecha_servicio && new Date(chat.fecha_servicio + 'T12:00:00Z').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
                                 </span>
                               </div>
