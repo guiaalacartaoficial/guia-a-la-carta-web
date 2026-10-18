@@ -44,9 +44,9 @@
   background: #020a09;
 }
 
-/* THE FIX: Apply green tint ONLY to the tile pane, ensuring markers are NOT affected */
+/* Keep dark base tiles crisp without inverting them */
 .leaflet-tile-pane {
-  filter: invert(100%) hue-rotate(90deg) brightness(0.3) saturate(2) contrast(1.2);
+  filter: brightness(0.95) contrast(1.1);
 }
 
 /* Ensure marker pane and others have NO filters */
