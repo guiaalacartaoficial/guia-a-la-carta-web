@@ -7,9 +7,11 @@ import { useState, useEffect, useRef } from 'react';
  */
 const LazyBackground = ({ src, className, children, style, ...props }) => {
   const [loaded, setLoaded] = useState(false);
+  const [bgUrl, setBgUrl] = useState(src);
   const ref = useRef(null);
 
   useEffect(() => {
+    setBgUrl(src);
     const el = ref.current;
     if (!el || !src) return;
 
@@ -18,7 +20,14 @@ const LazyBackground = ({ src, className, children, style, ...props }) => {
         if (entry.isIntersecting) {
           const img = new Image();
           img.src = src;
-          img.onload = () => setLoaded(true);
+          img.onload = () => {
+            setBgUrl(src);
+            setLoaded(true);
+          };
+          img.onerror = () => {
+            setBgUrl('/logo.webp');
+            setLoaded(true);
+          };
           observer.unobserve(el);
         }
       },
@@ -34,7 +43,7 @@ const LazyBackground = ({ src, className, children, style, ...props }) => {
       className={className}
       style={{
         ...style,
-        backgroundImage: loaded ? `url(${src})` : 'none',
+        backgroundImage: loaded ? `url("${bgUrl}")` : 'none',
         backgroundColor: loaded ? undefined : '#1a3a32'
       }}
       {...props}

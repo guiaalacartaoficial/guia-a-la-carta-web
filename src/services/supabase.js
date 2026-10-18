@@ -13,15 +13,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
  * Optimiza en tiempo real las imágenes almacenadas en el Storage de Supabase
  * sustituyendo '/object/public/' por '/render/image/public/' y aplicando parámetros de redimensión.
  */
-export const getOptimizedImageUrl = (url, width = 300, height = 300, quality = 75) => {
-  if (!url) return '/placeholder-user.png';
-  if (typeof url !== 'string') return url;
+export const getOptimizedImageUrl = (url) => {
+  if (!url || typeof url !== 'string' || url.trim() === '') return '/logo.webp';
   
-  // Detectar si es una URL del Storage de Supabase
-  if (url.includes('supabase.co/storage/v1/object/public/')) {
+  // Si por error viene con /render/image/public/, restaurar a /object/public/ directo
+  if (url.includes('/storage/v1/render/image/public/')) {
     return url
-      .replace('/storage/v1/object/public/', '/storage/v1/render/image/public/')
-      + `?width=${width}&height=${height}&resize=cover&quality=${quality}&format=origin`;
+      .replace('/storage/v1/render/image/public/', '/storage/v1/object/public/')
+      .split('?')[0];
   }
   return url;
 };

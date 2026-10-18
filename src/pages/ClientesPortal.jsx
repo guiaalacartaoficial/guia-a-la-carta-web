@@ -337,8 +337,8 @@ const ClientesPortal = () => {
     const r = item.originalRecord;
     const rawN = String(r.nombres || r.nombre || 'Guía').trim();
     return {
-      nombre: typeof r.nombre_visual === 'string' ? r.nombre_visual : rawN.split(' ')[0],
-      apellidos: typeof r.apellido_visual === 'string' ? r.apellido_visual : '',
+      nombre: (typeof r.nombre_visual === 'string' && r.nombre_visual.trim() !== '') ? r.nombre_visual.trim() : rawN.split(' ')[0],
+      apellidos: (typeof r.apellido_visual === 'string' && r.apellido_visual.trim() !== '') ? r.apellido_visual.trim() : '',
       edad: r.edad || 0,
       nivel: item.nivel || 'senior',
       codigo: item.codigo || 'S/N',

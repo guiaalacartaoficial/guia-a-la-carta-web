@@ -46,8 +46,8 @@ const Guias = () => {
         const formatGuide = (item, type) => {
           try {
             const rawN = String(item.nombres || item.nombre || 'Guía').trim();
-            const nombreVisual = (typeof item.nombre_visual === 'string') ? item.nombre_visual : rawN.split(' ')[0];
-            const apellidoVisual = (typeof item.apellido_visual === 'string') ? item.apellido_visual : "";
+            const nombreVisual = (typeof item.nombre_visual === 'string' && item.nombre_visual.trim() !== '') ? item.nombre_visual.trim() : rawN.split(' ')[0];
+            const apellidoVisual = (typeof item.apellido_visual === 'string' && item.apellido_visual.trim() !== '') ? item.apellido_visual.trim() : "";
             
             return {
               id: item.id || Math.random().toString(),
@@ -254,7 +254,7 @@ const Guias = () => {
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="guia-img-container">
-                    <img src={guia.imagen} alt={guia.nombre} className="guia-img" />
+                    <img src={guia.imagen} alt={guia.nombre} className="guia-img" loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/logo.webp'; }} />
                     <div className="guia-badge">{getNivelLabel(guia.nivel)}</div>
                   </div>
                   <div className="guia-info">
@@ -358,7 +358,7 @@ const Guias = () => {
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="guia-img-container">
-                    <img src={guia.imagen} alt={guia.nombre} className="guia-img" />
+                    <img src={guia.imagen} alt={guia.nombre} className="guia-img" loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/logo.webp'; }} />
                     <div className="guia-badge">{getNivelLabel(guia.nivel)}</div>
                   </div>
                   <div className="guia-info">
