@@ -280,7 +280,13 @@ const AdminDashboard = () => {
       
       const colsGuiasOnly = 'id, nombres, apellidos, nombre_visual, apellido_visual, edad, telefono, email, ciudad_residencia, biografia, educacion, rutas_experiencia, url_foto, url_cv, url_sernatur, url_primeros_auxilios, url_otras_certificaciones, nivel, estado, created_at, idiomas';
       const colsEstsOnly = 'id, nombres, apellidos, nombre_visual, apellido_visual, edad, telefono, email, ciudad_residencia, biografia, educacion, experiencia_terreno, url_foto, url_cv, url_certificaciones, estado, created_at, idiomas';
-      const { data: guiasData } = await supabase.from('postulaciones_guias').select(colsGuiasOnly).order('created_at', { ascending: false });
+      const { data: guiasDataFull, error: guiasErr } = await supabase.from('postulaciones_guias').select(colsGuiasOnly + ', tipos_guia, tipos_guia_otros').order('created_at', { ascending: false });
+      let guiasData = guiasDataFull;
+      if (guiasErr) {
+        // Fallback: si aún no se ejecuta setup_tipos_guia.sql, cargar sin las columnas nuevas
+        const { data: guiasLegacy } = await supabase.from('postulaciones_guias').select(colsGuiasOnly).order('created_at', { ascending: false });
+        guiasData = guiasLegacy;
+      }
       const { data: estData } = await supabase.from('postulaciones_estudiantes').select(colsEstsOnly).order('created_at', { ascending: false });
       
       const { data: relatoData } = await supabase.from('relatos').select('*').order('fecha', { ascending: false });
@@ -1584,6 +1590,22 @@ const AdminDashboard = () => {
                                             <div className="field-pro"><span className="field-label">Habilitado SII</span><span className="field-value">{guia.habilitado_sii?.toUpperCase()}</span></div>
                                             <div className="field-pro"><span className="field-label">Localidades Extra</span><span className="field-value">{guia.localidades_extra || 'Ninguna'}</span></div>
                                             <div className="field-pro"><span className="field-label">Estado de Postulación</span><span className="field-value">{guia.estado?.toUpperCase()}</span></div>
+                                          </div>
+
+                                          <div className="field-pro" style={{marginTop:'30px', borderTop:'1px solid var(--border)', paddingTop:'20px'}}>
+                                            <span className="field-label">Tipos de Guía / Especialidades</span>
+                                            {((guia.tipos_guia || []).length + (guia.tipos_guia_otros || []).length) > 0 ? (
+                                              <div style={{display:'flex', flexWrap:'wrap', gap:'8px', marginTop:'10px'}}>
+                                                {(guia.tipos_guia || []).map(t => (
+                                                  <span key={t} style={{background:'#EEF6EC', color:'#0A3B31', border:'1px solid #0E5B4C', borderRadius:'999px', padding:'4px 12px', fontSize:'0.82rem', fontWeight:600}}>{t}</span>
+                                                ))}
+                                                {(guia.tipos_guia_otros || []).map(t => (
+                                                  <span key={'otro-' + t} style={{background:'#FFF7E6', color:'#92400E', border:'1px dashed #D97706', borderRadius:'999px', padding:'4px 12px', fontSize:'0.82rem', fontWeight:600}}>Otro: {t}</span>
+                                                ))}
+                                              </div>
+                                            ) : (
+                                              <p style={{fontSize:'0.9rem', color:'var(--text-main)', marginTop:'10px'}}>Sin tipos registrados</p>
+                                            )}
                                           </div>
                                           
                                           <div className="field-pro" style={{marginTop:'30px', borderTop:'1px solid var(--border)', paddingTop:'20px'}}>

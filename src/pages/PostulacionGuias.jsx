@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, CheckSquare, UploadCloud, GraduationCap, Plus, X, ShieldCheck, Loader2 } from 'lucide-react';
+import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, CheckSquare, UploadCloud, GraduationCap, Plus, X, ShieldCheck, Loader2, Compass } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
+import TipoGuiaSelector from '../components/TipoGuiaSelector';
 import './Postulacion.css';
 import { supabase } from '../services/supabase';
 import { uploadToStorage } from '../services/fileUpload';
@@ -21,6 +22,11 @@ const PostulacionGuias = () => {
   const [idiomasList, setIdiomasList] = useState([
     { idioma: "Español", nivel: "Nativo" }
   ]);
+
+  // === TIPOS DE GUÍA (selección múltiple + "Otro") ===
+  const [tiposGuia, setTiposGuia] = useState([]);
+  const [tiposGuiaOtros, setTiposGuiaOtros] = useState([]);
+  const [tiposError, setTiposError] = useState('');
 
   const [formData, setFormData] = useState({
     nombres: '',
@@ -72,6 +78,15 @@ const PostulacionGuias = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validación: al menos un tipo de guía (de la lista u "Otro")
+    if (tiposGuia.length === 0 && tiposGuiaOtros.length === 0) {
+      setTiposError('Selecciona al menos un tipo de guía o agrega una especialidad en "Otro".');
+      document.getElementById('seccion-tipos-guia')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    setTiposError('');
+
     setLoading(true);
     setFormError('');
     setUploadProgressText('Iniciando carga de documentación...');
@@ -94,6 +109,8 @@ const PostulacionGuias = () => {
           ...formData,
           edad: formData.edad ? parseInt(formData.edad, 10) : null,
           idiomas: idiomasList,
+          tipos_guia: tiposGuia,
+          tipos_guia_otros: tiposGuiaOtros,
           codigo: autoCode,
           url_cv,
           url_foto,
@@ -368,11 +385,26 @@ const PostulacionGuias = () => {
               </div>
             </div>
 
-            {/* CARD 2: EXPERIENCIA Y CREDENCIAL */}
+            {/* CARD 2: TIPO DE GUÍA */}
+            <div className="form-card" id="seccion-tipos-guia" style={{ scrollMarginTop: '100px' }}>
+              <div className="form-section-header">
+                <div className="form-section-icon"><Compass size={24}/></div>
+                <h3>2. Tipo de Guía y Especialidades</h3>
+              </div>
+              <TipoGuiaSelector
+                selected={tiposGuia}
+                onChangeSelected={(v) => { setTiposGuia(v); if (v.length) setTiposError(''); }}
+                otros={tiposGuiaOtros}
+                onChangeOtros={(v) => { setTiposGuiaOtros(v); if (v.length) setTiposError(''); }}
+                error={tiposError}
+              />
+            </div>
+
+            {/* CARD 3: EXPERIENCIA Y CREDENCIAL */}
             <div className="form-card">
               <div className="form-section-header">
                 <div className="form-section-icon"><Award size={24}/></div>
-                <h3>2. Resumen de Credencial y Experiencia</h3>
+                <h3>3. Resumen de Credencial y Experiencia</h3>
               </div>
 
               <div className="form-group">
@@ -429,11 +461,11 @@ const PostulacionGuias = () => {
               </div>
             </div>
 
-            {/* CARD 3: DOCUMENTOS */}
+            {/* CARD 4: DOCUMENTOS */}
             <div className="form-card">
               <div className="form-section-header">
                 <div className="form-section-icon"><UploadCloud size={24}/></div>
-                <h3>3. Carga de Documentación Oficial</h3>
+                <h3>4. Carga de Documentación Oficial</h3>
               </div>
 
               <div className="form-grid">

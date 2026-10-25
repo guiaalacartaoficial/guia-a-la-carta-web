@@ -129,10 +129,6 @@ const Guias = () => {
                     <li><CheckCircle size={16} /> Operaciones menores</li>
                   </ul>
                 </div>
-                <div className="precio-box">
-                  <span>Referencial:</span>
-                  <strong style={{ color: 'var(--c-primary-dark)' }}>$40.000 – $50.000</strong>
-                </div>
               </div>
             </div>
 
@@ -151,10 +147,6 @@ const Guias = () => {
                     <li><CheckCircle size={16} /> Atención a pasajeros</li>
                   </ul>
                 </div>
-                <div className="precio-box">
-                  <span>Referencial:</span>
-                  <strong style={{ color: 'var(--c-primary-dark)' }}>Desde $60.000</strong>
-                </div>
               </div>
             </div>
 
@@ -172,14 +164,10 @@ const Guias = () => {
                     <li><CheckCircle size={16} /> Operaciones delicadas</li>
                   </ul>
                 </div>
-                <div className="precio-box">
-                  <span>Referencial:</span>
-                  <strong style={{ color: 'var(--c-primary-dark)' }}>Desde $70.000</strong>
-                </div>
               </div>
             </div>
           </div>
-          <p className="mt-4" style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>* La categoría del guía se define según el nivel de exigencia del servicio, no solo por precio.</p>
+          <p className="mt-4" style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>* La categoría del guía se define según el nivel de exigencia del servicio.</p>
         </div>
       </section>
 

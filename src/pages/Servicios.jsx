@@ -4,7 +4,7 @@ import {
   Award, ShieldCheck, Phone, Zap, Users,
   Shield, ChevronDown, ChevronUp, Star, AlertCircle,
   HeartHandshake, Globe, Truck, Lightbulb, CalendarClock, TrendingUp,
-  Target, Languages
+  Target, Languages, GraduationCap
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './Servicios.css';
@@ -252,6 +252,29 @@ const Servicios = () => {
               </div>
             </div>
 
+            {/* 6. Coordinación de Giras de Estudio */}
+            <div className="service-b2b-card reverse">
+              <div className="service-b2b-content">
+                <div className="service-number">06</div>
+                <h3>Coordinación Integral de Giras de Estudio</h3>
+                <p className="service-desc">
+                  Servicio especializado en la conducción, animación y seguridad de grupos escolares, colegios y delegaciones juveniles en todo Chile. Proveemos coordinadores de viaje y guías certificados con protocolos rigurosos de bienestar y primeros auxilios.
+                </p>
+                <div className="service-b2b-features">
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Coordinadores de ruta y líderes de grupo dedicados</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Certificación WFR / WFA (Primeros Auxilios en Áreas Remotas)</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Manejo de dinámicas grupales, protocolos de convivencia y cuidado</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Articulación con transportistas, hotelería y actividades pedagógicas</div>
+                </div>
+                <div className="service-cta-wrapper">
+                  <Link to="/contacto?servicio=giras-estudio" className="btn btn-primary">Cotizar gira de estudio</Link>
+                </div>
+              </div>
+              <div className="service-b2b-visual">
+                <img src="/fondo-empresas.webp" alt="Coordinación de Giras de Estudio" loading="lazy" />
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -272,7 +295,6 @@ const Servicios = () => {
             <div className="profile-tier-card tier-junior">
               <div className="tier-header">
                 <h4>Guía Junior / Asistente</h4>
-                <div className="tier-price"><span>desde </span>$40.000<span> CLP</span></div>
               </div>
               <div className="tier-features">
                 <ul>
@@ -294,7 +316,6 @@ const Servicios = () => {
               <div className="profile-tier-badge">Recomendado</div>
               <div className="tier-header">
                 <h4>Guía Full</h4>
-                <div className="tier-price"><span>desde </span>$60.000<span> CLP</span></div>
               </div>
               <div className="tier-features">
                 <ul>
@@ -316,7 +337,6 @@ const Servicios = () => {
               <div className="profile-tier-badge">Premium</div>
               <div className="tier-header">
                 <h4>Guía Senior / Especializado</h4>
-                <div className="tier-price" style={{ color: 'var(--b2b-gold)' }}><span>desde </span>$70.000<span> CLP</span></div>
               </div>
               <div className="tier-features">
                 <ul>
@@ -336,7 +356,7 @@ const Servicios = () => {
 
           <div className="pricing-note">
             <AlertCircle size={20} />
-            La elección del perfil no depende solo del precio, sino del nivel de exigencia, idioma, tipo de pasajero y estándar esperado por la empresa.
+            La elección del perfil depende del nivel de exigencia, idioma, tipo de pasajero y estándar esperado por la empresa.
           </div>
         </div>
       </section>

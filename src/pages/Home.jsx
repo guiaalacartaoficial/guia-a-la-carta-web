@@ -1,6 +1,9 @@
 import React, { useState, lazy, Suspense, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight, GraduationCap } from 'lucide-react';
+import SeasonalMarketing from '../components/SeasonalMarketing';
+import GoogleReviews from '../components/GoogleReviews';
+import SeasonalGallery from '../components/SeasonalGallery';
 // Lazy load de componentes pesados below-the-fold
 const ChileMap = lazy(() => import('../components/ChileMap'));
 const GuideCarousel = lazy(() => import('../components/GuideCarousel'));
@@ -80,6 +83,13 @@ const Home = () => {
       icon: <TrendingUp size={40} />,
       desc: "Analizamos, diseñamos y mejoramos tus servicios turísticos para aumentar calidad, eficiencia operativa y valor percibido.",
       highlight: "Transformas tus tours en productos más competitivos y rentables."
+    },
+    {
+      id: 6,
+      title: "COORDINACIÓN DE GIRAS DE ESTUDIO",
+      icon: <GraduationCap size={40} />,
+      desc: "Gestión y acompañamiento integral de viajes de estudio, giras pedagógicas y grupos escolares en todo Chile.",
+      highlight: "Guías certificados con primeros auxilios (WFR), coordinación logística de itinerarios y control de seguridad."
     }
   ];
   return (
@@ -102,6 +112,11 @@ const Home = () => {
           </p>
         </div>
       </section>
+
+      <div className="footer-accent-bar" />
+
+      {/* SECCIÓN MARKETING ESTACIONAL (CAMPAÑA ACTIVA) */}
+      <SeasonalMarketing />
 
       <div className="footer-accent-bar" />
 
@@ -280,10 +295,6 @@ const Home = () => {
                   <li><CheckCircle size={16} /> Operaciones menores</li>
                 </ul>
               </div>
-              <div className="nivel-precio" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--c-text-light)', textTransform: 'uppercase' }}>Referencial:</span>
-                <strong style={{ color: 'var(--c-primary)', fontSize: '1.2rem' }}>$40.000 – $50.000</strong>
-              </div>
             </div>
 
             <div className="nivel-mini destacado">
@@ -298,10 +309,6 @@ const Home = () => {
                   <li><CheckCircle size={16} /> Atención a pasajeros</li>
                 </ul>
               </div>
-              <div className="nivel-precio" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--c-text-light)', textTransform: 'uppercase' }}>Referencial:</span>
-                <strong style={{ color: 'var(--c-primary)', fontSize: '1.2rem' }}>Desde $60.000</strong>
-              </div>
             </div>
 
             <div className="nivel-mini">
@@ -314,10 +321,6 @@ const Home = () => {
                   <li><CheckCircle size={16} /> Grupos especiales / VIP</li>
                   <li><CheckCircle size={16} /> Operaciones delicadas</li>
                 </ul>
-              </div>
-              <div className="nivel-precio" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--c-text-light)', textTransform: 'uppercase' }}>Referencial:</span>
-                <strong style={{ color: 'var(--c-primary)', fontSize: '1.2rem' }}>Desde $70.000</strong>
               </div>
             </div>
           </div>
@@ -408,79 +411,13 @@ const Home = () => {
 
       <div className="footer-accent-bar" />
 
-      {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (COLLAGE SLIDER) */}
-      <section className="section-gallery b2b-theme-light">
-        <div className="container">
-          <div className="section-header text-center mb-5">
-            <h2 className="gallery-title">Nuestra Comunidad en Acción</h2>
-            <p className="gallery-desc">Resumen visual de las experiencias y el estándar operativo que entregamos en cada rincón de Chile.</p>
-          </div>
+      {/* SECCIÓN RESEÑAS VERIFICADAS DE GOOGLE */}
+      <GoogleReviews />
 
-          <div className="collage-slider-wrapper">
-            <div className="collage-slider">
-              {/* Slide 1: Santiago Icónico */}
-              <div className="collage-slide active">
-                <div className="custom-collage-grid">
-                  <div className="collage-item item-1"><img src="/gallery/Bellavista.webp" alt="Barrio Bellavista" loading="lazy" /></div>
-                  <div className="collage-item item-2"><img src="/gallery/Costanera-Center.webp" alt="Costanera Center" loading="lazy" /></div>
-                  <div className="collage-item item-3"><img src="/gallery/Gastronomia-Santiago.webp" alt="Gastronomía Chilena" loading="lazy" /></div>
-                  <div className="collage-item item-4"><img src="/gallery/Museo-a-cielo-abierto-1.webp" alt="Museo a Cielo Abierto" loading="lazy" /></div>
-                </div>
-              </div>
+      <div className="footer-accent-bar" />
 
-              {/* Slide 2: Patrimonio y Cultura */}
-              <div className="collage-slide">
-                <div className="custom-collage-grid">
-                  <div className="collage-item item-1"><img src="/gallery/Plaza-de-Armas-Filipa.webp" alt="Plaza de Armas" loading="lazy" /></div>
-                  <div className="collage-item item-2"><img src="/gallery/lastarria.webp" alt="Barrio Lastarria" loading="lazy" /></div>
-                  <div className="collage-item item-3"><img src="/gallery/mercado-central.webp" alt="Mercado Central" loading="lazy" /></div>
-                  <div className="collage-item item-4"><img src="/gallery/Bellavista.webp" alt="Barrio Bellavista" loading="lazy" /></div>
-                </div>
-              </div>
-            </div>
-
-            <div className="slider-controls">
-              <button className="slider-btn prev" aria-label="Diapositiva anterior" onClick={() => {
-                const slides = document.querySelectorAll('.collage-slide');
-                const dots = document.querySelectorAll('.dot');
-                let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
-                slides[activeIdx].classList.remove('active');
-                dots[activeIdx].classList.remove('active');
-                let nextIdx = (activeIdx - 1 + slides.length) % slides.length;
-                slides[nextIdx].classList.add('active');
-                dots[nextIdx].classList.add('active');
-              }}>
-                <ChevronLeft size={32} />
-              </button>
-              <button className="slider-btn next" aria-label="Diapositiva siguiente" onClick={() => {
-                const slides = document.querySelectorAll('.collage-slide');
-                const dots = document.querySelectorAll('.dot');
-                let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active'));
-                slides[activeIdx].classList.remove('active');
-                dots[activeIdx].classList.remove('active');
-                let nextIdx = (activeIdx + 1) % slides.length;
-                slides[nextIdx].classList.add('active');
-                dots[nextIdx].classList.add('active');
-              }}>
-                <ChevronRight size={32} />
-              </button>
-            </div>
-
-            <div className="slider-dots">
-              {[0, 1].map((i) => (
-                <button key={i} type="button" aria-label={`Ir a diapositiva ${i + 1}`} className={`dot ${i === 0 ? 'active' : ''}`} onClick={() => {
-                  const slides = document.querySelectorAll('.collage-slide');
-                  const dots = document.querySelectorAll('.dot');
-                  slides.forEach(s => s.classList.remove('active'));
-                  dots.forEach(d => d.classList.remove('active'));
-                  slides[i].classList.add('active');
-                  dots[i].classList.add('active');
-                }}></button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (TEMPORADA ACTUAL) */}
+      <SeasonalGallery />
 
       <div className="footer-accent-bar" />
 

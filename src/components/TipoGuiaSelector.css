@@ -1,0 +1,238 @@
+/* ===== Selector de Tipos de Guía ===== */
+.tipo-guia-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tgs-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.92rem;
+  color: var(--c-text-light);
+  margin-bottom: 0.25rem;
+}
+
+.tgs-counter {
+  background: #F3F4F6;
+  color: #6B7280;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+.tgs-counter.active {
+  background: var(--c-primary);
+  color: white;
+}
+
+.tgs-sector {
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  background: #FAFAF8;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.tgs-sector.open {
+  border-color: rgba(14, 91, 76, 0.35);
+  box-shadow: 0 4px 14px rgba(14, 91, 76, 0.06);
+  background: white;
+}
+
+.tgs-sector-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.95rem 1.1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.tgs-sector-num {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tgs-sector-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tgs-sector-text strong {
+  color: var(--c-primary-dark);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+}
+.tgs-sector-text small {
+  color: #6B7280;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.tgs-sector-badge {
+  background: var(--c-accent);
+  color: var(--c-primary-dark);
+  font-weight: 700;
+  font-size: 0.78rem;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tgs-chevron {
+  color: var(--c-primary);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.tgs-sector.open .tgs-chevron {
+  transform: rotate(180deg);
+}
+
+.tgs-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.65rem;
+  padding: 0 1.1rem 1.1rem;
+  animation: tgsFade 0.25s ease-out;
+}
+
+@keyframes tgsFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tgs-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.8rem 0.9rem;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+}
+.tgs-option:hover {
+  border-color: rgba(14, 91, 76, 0.45);
+  background: #F7FBF6;
+}
+.tgs-option.checked {
+  border-color: var(--c-primary);
+  background: #EEF6EC;
+}
+.tgs-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.tgs-option input:focus-visible + .tgs-check {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}
+
+.tgs-check {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid #CBD5E1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.18s;
+}
+.tgs-option.checked .tgs-check {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+}
+
+.tgs-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tgs-option-text strong {
+  font-size: 0.9rem;
+  color: var(--c-text-main);
+  line-height: 1.3;
+}
+.tgs-option-text small {
+  font-size: 0.78rem;
+  color: #6B7280;
+  line-height: 1.45;
+}
+
+/* Otro */
+.tgs-otro {
+  background: white;
+  border-style: dashed;
+}
+.tgs-otro-toggle {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0.95rem 1.1rem;
+}
+.tgs-otro-toggle:hover,
+.tgs-otro-toggle.checked {
+  background: transparent;
+}
+.tgs-otro-body {
+  padding: 0 1.1rem 1.1rem;
+}
+.tgs-otro-input-row {
+  display: flex;
+  gap: 0.6rem;
+}
+.tgs-otro-input-row .form-control {
+  flex: 1;
+  padding-left: 0.9rem;
+}
+.tgs-hint {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: #9CA3AF;
+}
+
+.has-error .tgs-sector {
+  border-color: #FCA5A5;
+}
+.tgs-error {
+  color: #DC2626;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .tgs-options {
+    grid-template-columns: 1fr;
+  }
+  .tgs-otro-input-row {
+    flex-direction: column;
+  }
+}
