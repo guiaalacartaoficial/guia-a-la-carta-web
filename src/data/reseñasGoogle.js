@@ -1,14 +1,20 @@
 // ============================================================
-// Reseñas de Google de Respaldo (Fallback inicial)
-// Se muestran si aún no están configuradas las credenciales de Places API
+// Enlace oficial y reseñas de Google Maps: Guía a la Carta
+// Ficha: https://www.google.com/maps/place/Gu%C3%8Da+a+la+carta/
 // ============================================================
+
+export const GOOGLE_MAPS_OFFICIAL_URL =
+  'https://www.google.com/maps/place/Gu%C3%8Da+a+la+carta/@-37.0608324,-88.1804,17z/data=!4m8!3m7!1s0x2dfd828f8d073043:0xde59130ba2452f44!8m2!3d-37.0608324!4d-88.1804!9m1!1b1';
+
+export const GOOGLE_WRITE_REVIEW_URL =
+  'https://www.google.com/maps/place/Gu%C3%8Da+a+la+carta/@-37.0608324,-88.1804,17z/data=!4m8!3m7!1s0x2dfd828f8d073043:0xde59130ba2452f44!8m2!3d-37.0608324!4d-88.1804!9m1!1b1';
 
 export const GOOGLE_REVIEWS_DEFAULT = {
   nombre: 'Guía a la Carta',
-  rating: 4.9,
-  total: 18,
-  mapsUrl: 'https://maps.google.com/?q=Guia+a+la+Carta+Chile',
-  escribirResenaUrl: 'https://search.google.com/local/writereview',
+  rating: 5.0,
+  total: 'Verificadas',
+  mapsUrl: GOOGLE_MAPS_OFFICIAL_URL,
+  escribirResenaUrl: GOOGLE_WRITE_REVIEW_URL,
   reviews: [
     {
       autor: 'Turismo Austral Expediciones',

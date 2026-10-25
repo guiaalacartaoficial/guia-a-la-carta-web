@@ -99,7 +99,9 @@ const GoogleReviews = () => {
               <span className="gr-score">{data.rating?.toFixed(1)}</span>
               <div>
                 <Stars value={data.rating} size={20} />
-                <span className="gr-total">{data.total} reseñas en Google</span>
+                <span className="gr-total">
+                  {typeof data.total === 'number' ? `${data.total} reseñas en Google` : 'Reseñas Verificadas en Google Maps'}
+                </span>
               </div>
             </div>
           )}
