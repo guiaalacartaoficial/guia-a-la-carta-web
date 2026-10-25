@@ -94,9 +94,12 @@ const Home = () => {
           <p className="hero-subtitle">Soluciones operativas para empresas de turismo en Chile</p>
           <p className="hero-desc">Conectamos empresas turísticas, hoteles y agencias con guías certificados, entregando una operación más confiable, flexible y profesional.</p>
           <div className="hero-actions mt-4">
-            <Link to="/postular-guia" className="btn btn-hero">Regístrate</Link>
-            <Link to="/contacto" className="btn btn-hero">Cotiza</Link>
+            <Link to="/postular-guia" className="btn btn-hero">Únete como Guía</Link>
+            <Link to="/contacto" className="btn btn-hero">Cotiza Servicios</Link>
           </div>
+          <p className="mt-3" style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+            ¿Eres estudiante de turismo? <Link to="/postular-estudiante" style={{ color: 'var(--c-accent)', fontWeight: '600', textDecoration: 'underline' }}>Postula a pasantías aquí</Link>
+          </p>
         </div>
       </section>
 

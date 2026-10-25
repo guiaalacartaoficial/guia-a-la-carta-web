@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, CheckSquare, UploadCloud, GraduationCap, Plus, X, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, CheckSquare, UploadCloud, GraduationCap, Plus, X, ShieldCheck, Loader2 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
 import './Postulacion.css';
 import { supabase } from '../services/supabase';
+import { uploadToStorage } from '../services/fileUpload';
 import emailjs from '@emailjs/browser';
 
 const PostulacionGuias = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [uploadProgressText, setUploadProgressText] = useState('');
+  const [formError, setFormError] = useState('');
   
   // === ESTADOS PARA EL SELECTOR MÚLTIPLE DE IDIOMAS ===
   const idiomasOptions = ["Español", "Inglés", "Portugués", "Francés", "Alemán", "Italiano", "Mandarín", "Otro"];
@@ -67,55 +70,21 @@ const PostulacionGuias = () => {
     setIdiomasList(idiomasList.filter(i => i.idioma !== idiomaToRemove));
   };
 
-  const uploadFile = async (fileOrFiles, bucket, path) => {
-    if (!fileOrFiles) return null;
-
-    if (Array.isArray(fileOrFiles)) {
-      if (fileOrFiles.length === 0) return null;
-      const urls = [];
-      for (const file of fileOrFiles) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${path}/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from(bucket)
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-        urls.push(data.publicUrl);
-      }
-      return urls.join(', ');
-    } else {
-      const file = fileOrFiles;
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${path}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-      return data.publicUrl;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setFormError('');
+    setUploadProgressText('Iniciando carga de documentación...');
 
     try {
-      // 1. Subir archivos
-      const url_cv = await uploadFile(files.cv, 'documentos', 'cvs');
-      const url_foto = await uploadFile(files.foto, 'documentos', 'fotos');
-      const url_sernatur = await uploadFile(files.sernatur, 'documentos', 'certificados');
-      const url_primeros_auxilios = await uploadFile(files.primeros_auxilios, 'documentos', 'certificados');
-      const url_otras_certificaciones = await uploadFile(files.otras_certificaciones, 'documentos', 'certificados');
+      // 1. Subir archivos con compresión automática y sanitización
+      const url_cv = await uploadToStorage(supabase, files.cv, 'documentos', 'cvs', 'Currículum Vitae', setUploadProgressText);
+      const url_foto = await uploadToStorage(supabase, files.foto, 'documentos', 'fotos', 'Foto de Rostro', setUploadProgressText);
+      const url_sernatur = await uploadToStorage(supabase, files.sernatur, 'documentos', 'certificados', 'Certificado SERNATUR', setUploadProgressText);
+      const url_primeros_auxilios = await uploadToStorage(supabase, files.primeros_auxilios, 'documentos', 'certificados', 'Certificado de Primeros Auxilios', setUploadProgressText);
+      const url_otras_certificaciones = await uploadToStorage(supabase, files.otras_certificaciones, 'documentos', 'certificados', 'Otras Certificaciones', setUploadProgressText);
+
+      setUploadProgressText('Registrando datos en la base de datos...');
 
       // Generar Código Automático
       const autoCode = `PRO-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -141,7 +110,11 @@ const PostulacionGuias = () => {
         .from('postulaciones_guias')
         .insert([insertData]);
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`Error en base de datos: ${error.message || 'No fue posible registrar la postulación'}`);
+      }
+
+      setUploadProgressText('Notificando al equipo...');
 
       // Notificar al admin
       try {
@@ -164,9 +137,11 @@ const PostulacionGuias = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error detallado al postular:', error);
-      alert("Hubo un problema al enviar tu postulación. Por favor, intenta nuevamente.");
+      setFormError(error.message || 'Hubo un problema al procesar tu postulación. Por favor verifica tus archivos e intenta nuevamente.');
+      window.scrollTo({ top: 180, behavior: 'smooth' });
     } finally {
       setLoading(false);
+      setUploadProgressText('');
     }
   };
 
@@ -198,14 +173,22 @@ const PostulacionGuias = () => {
   if (submitted) {
     return (
       <div className="postulacion-page" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="container text-center" style={{ maxWidth: '600px', padding: '4rem', background: 'white', borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+        <div className="container text-center" style={{ maxWidth: '650px', padding: '3.5rem 2rem', background: 'white', borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
           <div style={{ background: '#ECFDF5', color: '#10B981', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem auto' }}>
             <Award size={48} />
           </div>
-          <h2 style={{ color: 'var(--c-primary-dark)' }}>Postulación Recibida</h2>
-          <p style={{ color: 'var(--c-text-light)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-            Gracias por tu interés en unirte a **Guía a la Carta**. Nuestro equipo revisará tu documentación y perfil profesional. Te contactaremos vía email o WhatsApp para los siguientes pasos.
+          <h2 style={{ color: 'var(--c-primary-dark)', marginBottom: '1rem' }}>¡Postulación Recibida con Éxito!</h2>
+          <p style={{ color: 'var(--c-text-light)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            Gracias por tu interés en unirte a <strong>Guía a la Carta</strong>. Tu documentación y perfil profesional han sido recibidos satisfactoriamente.
           </p>
+          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.25rem', textAlign: 'left', marginBottom: '2rem', fontSize: '0.95rem', color: '#475569' }}>
+            <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: 'var(--c-primary-dark)' }}>ℹ️ ¿Qué ocurre a continuación?</p>
+            <ul style={{ margin: 0, paddingLeft: '1.2rem', lineHeight: '1.6' }}>
+              <li>Nuestro equipo validará tus antecedentes y certificaciones oficiales.</li>
+              <li>Una vez aprobada tu postulación, <strong>recibirás un correo electrónico</strong> con tus credenciales de acceso (Código de Guía y Contraseña).</li>
+              <li>Con esas credenciales podrás ingresar a la sección <strong>"Mi Disponibilidad"</strong> en el menú superior para publicar tus días libres y recibir solicitudes de servicio.</li>
+            </ul>
+          </div>
           <a href="/" className="btn btn-primary">Volver al Inicio</a>
         </div>
       </div>
@@ -235,6 +218,26 @@ const PostulacionGuias = () => {
               </p>
             </div>
           </div>
+
+          {formError && (
+            <div style={{
+              backgroundColor: '#FEF2F2',
+              border: '1px solid #F87171',
+              borderRadius: '12px',
+              padding: '1rem 1.5rem',
+              marginBottom: '2rem',
+              color: '#991B1B',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <AlertTriangle size={24} style={{ flexShrink: 0, color: '#DC2626' }} />
+              <div>
+                <strong style={{ display: 'block', fontSize: '1rem', marginBottom: '2px' }}>Atención al enviar la postulación</strong>
+                <span style={{ fontSize: '0.92rem' }}>{formError}</span>
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} style={{ opacity: loading ? 0.6 : 1, pointerEvents: loading ? 'none' : 'auto', transition: 'opacity 0.3s' }}>
             {/* INTRODUCCION A LA CREDENCIAL (BOTON DESPLEGABLE) */}
@@ -437,16 +440,16 @@ const PostulacionGuias = () => {
                 <div className="form-group">
                   <label className="form-label">Currículum Vitae</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept=".pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'cv')} required />
-                    <span className="file-upload-info"><FileText size={14} style={{display:'inline', marginBottom:'-2px'}}/> Formatos válidos: PDF, Word. Límite: 5MB.</span>
+                    <input type="file" className="form-control-file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={(e) => handleFileChange(e, 'cv')} required />
+                    <span className="file-upload-info"><FileText size={14} style={{display:'inline', marginBottom:'-2px'}}/> Formatos válidos: PDF, Word. Límite: 15MB.</span>
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Foto de Rostro Profesional</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept="image/png, image/jpeg, image/webp" onChange={(e) => handleFileChange(e, 'foto')} required />
-                    <span className="file-upload-info"><User size={14} style={{display:'inline', marginBottom:'-2px'}}/> Fondo neutro, con uniforme o tenida outdoor.</span>
+                    <input type="file" className="form-control-file" accept="image/*,.heic,.heif" onChange={(e) => handleFileChange(e, 'foto')} required />
+                    <span className="file-upload-info"><User size={14} style={{display:'inline', marginBottom:'-2px'}}/> Fondo neutro, con uniforme o tenida outdoor (se optimiza automáticamente).</span>
                   </div>
                 </div>
               </div>
@@ -455,16 +458,16 @@ const PostulacionGuias = () => {
                 <div className="form-group">
                   <label className="form-label">Certificado de Registro Nacional de Guías (SERNATUR)</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => { handleFileChange(e, 'sernatur'); }} required />
-                    <span className="file-upload-info"><Award size={14} style={{display:'inline', marginBottom:'-2px'}}/> Adjunta el comprobante o carnet vigente.</span>
+                    <input type="file" className="form-control-file" accept=".pdf,image/*,.heic,.heif" onChange={(e) => { handleFileChange(e, 'sernatur'); }} required />
+                    <span className="file-upload-info"><Award size={14} style={{display:'inline', marginBottom:'-2px'}}/> Adjunta el comprobante o carnet vigente (PDF o Imagen).</span>
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Certificación de Primeros Auxilios (WFA / WAFA / WFR)</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept=".pdf, image/*" onChange={(e) => { handleFileChange(e, 'primeros_auxilios'); }} required />
-                    <span className="file-upload-info"><CheckSquare size={14} style={{display:'inline', marginBottom:'-2px'}}/> Debe estar vigente al momento de la postulación.</span>
+                    <input type="file" className="form-control-file" accept=".pdf,image/*,.heic,.heif" onChange={(e) => { handleFileChange(e, 'primeros_auxilios'); }} required />
+                    <span className="file-upload-info"><CheckSquare size={14} style={{display:'inline', marginBottom:'-2px'}}/> Debe estar vigente al momento de la postulación (PDF o Imagen).</span>
                   </div>
                 </div>
               </div>
@@ -472,7 +475,7 @@ const PostulacionGuias = () => {
               <div className="form-group">
                 <label className="form-label">Otras Certificaciones (Opcional)</label>
                 <div className="file-upload-block">
-                  <input type="file" className="form-control-file" accept=".pdf, image/*" multiple onChange={(e) => handleFileChange(e, 'otras_certificaciones')} />
+                  <input type="file" className="form-control-file" accept=".pdf,image/*,.heic,.heif" multiple onChange={(e) => handleFileChange(e, 'otras_certificaciones')} />
                   <span className="file-upload-info"><GraduationCap size={14} style={{display:'inline', marginBottom:'-2px'}}/> Leave No Trace, Rescate Acuático, Avalanchas, Licencia Clase A. Permite subir múltiples.</span>
                 </div>
               </div>
@@ -487,8 +490,31 @@ const PostulacionGuias = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary btn-submit-premium" disabled={loading}>
-              {loading ? 'Enviando...' : 'Enviar Postulación'}
+            {loading && uploadProgressText && (
+              <div style={{
+                backgroundColor: '#EFF6FF',
+                border: '1px solid #BFDBFE',
+                borderRadius: '10px',
+                padding: '0.85rem 1.25rem',
+                marginBottom: '1.25rem',
+                color: '#1E40AF',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontSize: '0.95rem'
+              }}>
+                <Loader2 size={18} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
+                <span>{uploadProgressText}</span>
+              </div>
+            )}
+
+            <button type="submit" className="btn btn-primary btn-submit-premium" disabled={loading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%' }}>
+              {loading ? (
+                <>
+                  <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+                  {uploadProgressText || 'Enviando postulación...'}
+                </>
+              ) : 'Enviar Postulación'}
             </button>
           </form>
         </div>

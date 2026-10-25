@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, UploadCloud, GraduationCap, Plus, X, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, User, Mail, Phone, MapPin, Globe, Calendar, Award, FileText, UploadCloud, GraduationCap, Plus, X, ShieldCheck, Loader2 } from 'lucide-react';
 import GuideCredential from '../components/GuideCredential';
 import './Postulacion.css';
 import { supabase } from '../services/supabase';
+import { uploadToStorage } from '../services/fileUpload';
 import emailjs from '@emailjs/browser';
 
 const PostulacionEstudiantes = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [uploadProgressText, setUploadProgressText] = useState('');
+  const [formError, setFormError] = useState('');
 
   // === ESTADOS PARA EL SELECTOR MÚLTIPLE DE IDIOMAS ===
   const idiomasOptions = ["Español", "Inglés", "Portugués", "Francés", "Alemán", "Italiano", "Mandarín", "Otro"];
@@ -63,52 +66,18 @@ const PostulacionEstudiantes = () => {
     setIdiomasList(idiomasList.filter(i => i.idioma !== idiomaToRemove));
   };
 
-  const uploadFile = async (fileOrFiles, bucket, path) => {
-    if (!fileOrFiles) return null;
-
-    if (Array.isArray(fileOrFiles)) {
-      if (fileOrFiles.length === 0) return null;
-      const urls = [];
-      for (const file of fileOrFiles) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${path}/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from(bucket)
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-        urls.push(data.publicUrl);
-      }
-      return urls.join(', ');
-    } else {
-      const file = fileOrFiles;
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${path}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
-      return data.publicUrl;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setFormError('');
+    setUploadProgressText('Iniciando carga de documentación...');
 
     try {
-      const url_cv = await uploadFile(files.cv, 'documentos', 'estudiantes/cvs');
-      const url_foto = await uploadFile(files.foto, 'documentos', 'estudiantes/fotos');
-      const url_certificaciones = await uploadFile(files.certificaciones, 'documentos', 'estudiantes/certificados');
+      const url_cv = await uploadToStorage(supabase, files.cv, 'documentos', 'estudiantes/cvs', 'Currículum Vitae', setUploadProgressText);
+      const url_foto = await uploadToStorage(supabase, files.foto, 'documentos', 'estudiantes/fotos', 'Foto de Rostro', setUploadProgressText);
+      const url_certificaciones = await uploadToStorage(supabase, files.certificaciones, 'documentos', 'estudiantes/certificados', 'Certificaciones', setUploadProgressText);
+
+      setUploadProgressText('Registrando datos en el sistema...');
 
       // Generar Código Automático
       const autoCode = `EST-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -126,7 +95,11 @@ const PostulacionEstudiantes = () => {
           estado: 'pendiente'
         }]);
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`Error en base de datos: ${error.message || 'No fue posible registrar la postulación'}`);
+      }
+
+      setUploadProgressText('Notificando al equipo...');
 
       // Notificar al admin vía EmailJS
       try {
@@ -149,9 +122,11 @@ const PostulacionEstudiantes = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error detallado al postular estudiante:', error);
-      alert("Hubo un problema al enviar tu postulación. Por favor, intenta nuevamente.");
+      setFormError(error.message || 'Hubo un problema al procesar tu postulación. Por favor verifica tus archivos e intenta nuevamente.');
+      window.scrollTo({ top: 180, behavior: 'smooth' });
     } finally {
       setLoading(false);
+      setUploadProgressText('');
     }
   };
 
@@ -179,14 +154,22 @@ const PostulacionEstudiantes = () => {
   if (submitted) {
     return (
       <div className="postulacion-page" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="container text-center" style={{ maxWidth: '600px', padding: '4rem', background: 'white', borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+        <div className="container text-center" style={{ maxWidth: '650px', padding: '3.5rem 2rem', background: 'white', borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
           <div style={{ background: '#ECFDF5', color: '#10B981', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem auto' }}>
             <Award size={48} />
           </div>
-          <h2 style={{ color: 'var(--c-primary-dark)' }}>Postulación Recibida</h2>
-          <p style={{ color: 'var(--c-text-light)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-            ¡Gracias por postular! Revisaremos tu perfil de estudiante y nos pondremos en contacto contigo para una entrevista o charla operativa.
+          <h2 style={{ color: 'var(--c-primary-dark)', marginBottom: '1rem' }}>¡Postulación Recibida con Éxito!</h2>
+          <p style={{ color: 'var(--c-text-light)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            ¡Gracias por postular! Hemos recibido tu postulación de pasantía y tus antecedentes correctamente.
           </p>
+          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.25rem', textAlign: 'left', marginBottom: '2rem', fontSize: '0.95rem', color: '#475569' }}>
+            <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: 'var(--c-primary-dark)' }}>ℹ️ ¿Cuáles son los siguientes pasos?</p>
+            <ul style={{ margin: 0, paddingLeft: '1.2rem', lineHeight: '1.6' }}>
+              <li>Revisaremos tu perfil educativo y nos comunicaremos contigo vía correo o WhatsApp para una entrevista o charla operativa.</li>
+              <li>Al ser validada tu cuenta, <strong>recibirás un correo electrónico</strong> con tus credenciales de acceso (Código de Estudiante y Contraseña).</li>
+              <li>Con ellas podrás ingresar a <strong>"Mi Disponibilidad"</strong> en la web para reportar los días en que estás libre para operar.</li>
+            </ul>
+          </div>
           <a href="/" className="btn btn-primary">Volver al Inicio</a>
         </div>
       </div>
@@ -216,6 +199,26 @@ const PostulacionEstudiantes = () => {
               </p>
             </div>
           </div>
+
+          {formError && (
+            <div style={{
+              backgroundColor: '#FEF2F2',
+              border: '1px solid #F87171',
+              borderRadius: '12px',
+              padding: '1rem 1.5rem',
+              marginBottom: '2rem',
+              color: '#991B1B',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <AlertTriangle size={24} style={{ flexShrink: 0, color: '#DC2626' }} />
+              <div>
+                <strong style={{ display: 'block', fontSize: '1rem', marginBottom: '2px' }}>Atención al enviar la postulación</strong>
+                <span style={{ fontSize: '0.92rem' }}>{formError}</span>
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} style={{ opacity: loading ? 0.6 : 1, pointerEvents: loading ? 'none' : 'auto', transition: 'opacity 0.3s' }}>
             {/* INTRODUCCION A LA CREDENCIAL (BOTON DESPLEGABLE) */}
@@ -410,24 +413,24 @@ const PostulacionEstudiantes = () => {
                 <div className="form-group">
                   <label className="form-label">Currículum Vitae (Adaptado a Turismo)</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept=".pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'cv')} required />
-                    <span className="file-upload-info"><FileText size={14} style={{display:'inline', marginBottom:'-2px'}}/> Formatos válidos: PDF, Word. Límite: 5MB.</span>
+                    <input type="file" className="form-control-file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={(e) => handleFileChange(e, 'cv')} required />
+                    <span className="file-upload-info"><FileText size={14} style={{display:'inline', marginBottom:'-2px'}}/> Formatos válidos: PDF, Word. Límite: 15MB.</span>
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Foto de Rostro Profesional</label>
                   <div className="file-upload-block">
-                    <input type="file" className="form-control-file" accept="image/png, image/jpeg, image/webp" onChange={(e) => handleFileChange(e, 'foto')} required />
-                    <span className="file-upload-info"><User size={14} style={{display:'inline', marginBottom:'-2px'}}/> Para crear tu futura credencial de pasante.</span>
+                    <input type="file" className="form-control-file" accept="image/*,.heic,.heif" onChange={(e) => handleFileChange(e, 'foto')} required />
+                    <span className="file-upload-info"><User size={14} style={{display:'inline', marginBottom:'-2px'}}/> Para crear tu futura credencial de pasante (se optimiza automáticamente).</span>
                   </div>
                 </div>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Cetificaciones Adicionales (Opcional)</label>
+                <label className="form-label">Certificaciones Adicionales (Opcional)</label>
                 <div className="file-upload-block">
-                  <input type="file" className="form-control-file" accept=".pdf, image/*" multiple onChange={(e) => handleFileChange(e, 'certificaciones')} />
+                  <input type="file" className="form-control-file" accept=".pdf,image/*,.heic,.heif" multiple onChange={(e) => handleFileChange(e, 'certificaciones')} />
                   <span className="file-upload-info"><GraduationCap size={14} style={{display:'inline', marginBottom:'-2px'}}/> RCP Básica, Leave No Trace u otros diplomas. Permite subir múltiples.</span>
                 </div>
               </div>
@@ -442,8 +445,31 @@ const PostulacionEstudiantes = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary btn-submit-premium" disabled={loading}>
-              {loading ? 'Enviando...' : 'Enviar Postulación'}
+            {loading && uploadProgressText && (
+              <div style={{
+                backgroundColor: '#EFF6FF',
+                border: '1px solid #BFDBFE',
+                borderRadius: '10px',
+                padding: '0.85rem 1.25rem',
+                marginBottom: '1.25rem',
+                color: '#1E40AF',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontSize: '0.95rem'
+              }}>
+                <Loader2 size={18} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
+                <span>{uploadProgressText}</span>
+              </div>
+            )}
+
+            <button type="submit" className="btn btn-primary btn-submit-premium" disabled={loading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%' }}>
+              {loading ? (
+                <>
+                  <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+                  {uploadProgressText || 'Enviando postulación...'}
+                </>
+              ) : 'Enviar Postulación'}
             </button>
           </form>
         </div>
