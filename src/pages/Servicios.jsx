@@ -35,6 +35,14 @@ const faqs = [
   {
     q: "¿Cómo funciona el pago y la facturación?",
     a: "La empresa paga directamente el honorario al guía (quien emite su boleta de honorarios). Guía a la Carta emite una factura exenta por el servicio de coordinación e intermediación. Las condiciones de pago se acuerdan previamente."
+  },
+  {
+    q: "¿Cómo opera la coordinación para giras de estudio y viajes escolares?",
+    a: "Centralizamos la búsqueda, validación de antecedentes, asignación y preparación del coordinador según las edades del grupo, destino e itinerario. El coordinador se alinea previamente con los lineamientos del operador, supervisa los tiempos en terreno y mantiene comunicación fluida con proveedores, profesores y adultos responsables."
+  },
+  {
+    q: "¿Qué perfiles de coordinación disponen para viajes estudiantiles?",
+    a: "Contamos con tres niveles según la complejidad del viaje: Coordinador de Apoyo (para integrarse a equipos grandes, conteos y asistencia), Coordinador de Gira (conducción cotidiana autónoma y enlace con proveedores) y Coordinador Principal o Jefe de Equipo (para delegaciones masivas, salidas simultáneas o alta complejidad logística)."
   }
 ];
 
@@ -272,6 +280,36 @@ const Servicios = () => {
               </div>
               <div className="service-b2b-visual">
                 <img src="/gallery/temporada-2026-07.webp" alt="Coordinación Turística para Giras de Estudio" loading="lazy" />
+              </div>
+            </div>
+
+            {/* Perfiles de Coordinación para Giras de Estudio */}
+            <div className="giras-profiles-box">
+              <div className="giras-profiles-header">
+                <h4>Perfiles de Coordinación según Responsabilidad</h4>
+                <p>Alineamos al profesional adecuado considerando el tamaño de la delegación, edades de los estudiantes y complejidad del itinerario.</p>
+              </div>
+              <div className="giras-profiles-grid">
+                <div className="giras-profile-card">
+                  <div className="giras-profile-tag">Nivel Apoyo</div>
+                  <h5>Coordinador de Apoyo</h5>
+                  <p>Integrado a un equipo bajo la conducción de un coordinador principal. Apoya la organización del grupo, conteos, embarques, traslados, entrega de instrucciones y actividades acordadas.</p>
+                  <span className="giras-profile-target">Ideal para: grupos masivos y refuerzo de salidas con varios buses.</span>
+                </div>
+
+                <div className="giras-profile-card featured">
+                  <div className="giras-profile-tag highlight">Más Solicitado</div>
+                  <h5>Coordinador de Gira</h5>
+                  <p>Profesional con experiencia comprobable y autonomía para la conducción cotidiana del programa, seguimiento del itinerario, enlace permanente con proveedores y comunicación con profesores.</p>
+                  <span className="giras-profile-target">Ideal para: giras completas de varios días que requieren liderazgo autónomo.</span>
+                </div>
+
+                <div className="giras-profile-card">
+                  <div className="giras-profile-tag">Jefatura</div>
+                  <h5>Coordinador Principal / Jefe de Equipo</h5>
+                  <p>Profesional de máxima experiencia para programas de alta complejidad logística o salidas simultáneas. Organiza al equipo asignado, distribuye funciones y actúa como enlace directo con el operador.</p>
+                  <span className="giras-profile-target">Ideal para: programas de alta envergadura o múltiples cursos en simultáneo.</span>
+                </div>
               </div>
             </div>
 

@@ -102,7 +102,7 @@ const Home = () => {
           <img src="/logo.webp" alt="Guía a la Carta Logo" className="hero-center-logo mb-4" width="200" height="200" style={{ width: '200px', height: '200px' }} />
           <h1>Tu red confiable de guías en todo Chile</h1>
           <p className="hero-subtitle">Soluciones operativas para empresas de turismo en Chile</p>
-          <p className="hero-desc">Conectamos empresas turísticas, hoteles y agencias con guías certificados, entregando una operación más confiable, flexible y profesional.</p>
+          <p className="hero-desc">Conectamos empresas turísticas, hoteles y agencias con guías certificados y coordinadores de viaje en terreno, entregando una operación más confiable, flexible y profesional.</p>
           <div className="hero-actions mt-4">
             <Link to="/postular-guia" className="btn btn-hero">Únete como Guía</Link>
             <Link to="/contacto" className="btn btn-hero">Cotiza Servicios</Link>

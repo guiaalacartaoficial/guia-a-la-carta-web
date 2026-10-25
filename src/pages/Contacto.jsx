@@ -125,8 +125,20 @@ const Contacto = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label text-dark-blue">Mensaje o necesidad específica</label>
-              <textarea className="form-textarea" placeholder="Cuéntanos más sobre cómo podemos ayudarte con tu operación..." rows="4"></textarea>
+              <label className="form-label text-dark-blue">
+                {tipoServicio === 'Coordinación de Giras de Estudio'
+                  ? 'Detalles del programa de gira (Destino, fechas, cantidad y edad de estudiantes, requerimientos)'
+                  : 'Mensaje o necesidad específica'}
+              </label>
+              <textarea
+                className="form-textarea"
+                placeholder={
+                  tipoServicio === 'Coordinación de Giras de Estudio'
+                    ? 'Indícanos: destino, duración, cantidad aproximada de estudiantes, edades, cantidad de adultos acompañantes y si requieres coordinadores de apoyo o jefatura...'
+                    : 'Cuéntanos más sobre cómo podemos ayudarte con tu operación...'
+                }
+                rows="4"
+              ></textarea>
             </div>
             
             <button type="button" className="btn btn-primary" style={{width: '100%', fontSize: '1.1rem', marginTop: '1rem'}}>
