@@ -12,7 +12,7 @@ export const TEMPORADAS = [
     activo: true, // Campaña actualmente activa
     banner: {
       titulo: 'Temporada de Giras de Estudio & Alta Demanda Receptiva',
-      subtitulo: 'Coordinación logística integral, guías certificados y líderes de ruta listos para operar grupos escolares, universitarios y corporativos.',
+      subtitulo: 'Selección, preparación y asignación de coordinadores turísticos para agencias y operadores. Acompañamiento en terreno, cumplimiento de itinerario y respaldo ante contingencias.',
       badge: 'Temporada Escolar & Receptiva 2026',
       ctaTexto: 'Cotizar Coordinación de Giras',
       ctaLink: '/contacto?servicio=giras-estudio'
@@ -22,10 +22,10 @@ export const TEMPORADAS = [
         id: 'giras-estudio',
         titulo: 'COORDINACIÓN DE GIRAS DE ESTUDIO',
         destacado: 'Alta Demanda',
-        badge: 'Nuevo Servicio',
+        badge: 'Nuevo Servicio B2B',
         icono: 'GraduationCap',
-        desc: 'Gestión y acompañamiento integral para viajes de estudio, giras pedagógicas y grupos juveniles con guías certificados y protocolos de seguridad.',
-        beneficios: ['Monitoreo continuo de grupo', 'Guías con WFR / Primeros Auxilios', 'Logística de itinerario y traslados']
+        desc: 'Equipos preparados para acompañar grupos estudiantiles, supervisar el itinerario y mantener comunicación fluida con proveedores, profesores y adultos responsables.',
+        beneficios: ['Perfiles evaluados con WFR / Primeros Auxilios', 'Enlace directo con proveedores y profesores', 'Respaldo operativo y gestión de reemplazos']
       },
       {
         id: 'provision-guias',

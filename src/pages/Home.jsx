@@ -86,10 +86,10 @@ const Home = () => {
     },
     {
       id: 6,
-      title: "COORDINACIÓN DE GIRAS DE ESTUDIO",
+      title: "COORDINACIÓN TURÍSTICA PARA GIRAS DE ESTUDIO",
       icon: <GraduationCap size={40} />,
-      desc: "Gestión y acompañamiento integral de viajes de estudio, giras pedagógicas y grupos escolares en todo Chile.",
-      highlight: "Guías certificados con primeros auxilios (WFR), coordinación logística de itinerarios y control de seguridad."
+      desc: "Seleccionamos, preparamos y asignamos coordinadores especializados según las edades del grupo, destino y programa. Apoyamos la ejecución del itinerario y la comunicación fluida con proveedores, profesores y adultos responsables.",
+      highlight: "Perfiles validados en primeros auxilios y manejo de grupos, con respaldo operativo ante contingencias."
     }
   ];
   return (

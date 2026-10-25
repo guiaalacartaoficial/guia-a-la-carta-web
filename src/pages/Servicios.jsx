@@ -256,22 +256,22 @@ const Servicios = () => {
             <div className="service-b2b-card reverse">
               <div className="service-b2b-content">
                 <div className="service-number">06</div>
-                <h3>Coordinación Integral de Giras de Estudio</h3>
+                <h3>Coordinación Turística para Giras de Estudio</h3>
                 <p className="service-desc">
-                  Servicio especializado en la conducción, animación y seguridad de grupos escolares, colegios y delegaciones juveniles en todo Chile. Proveemos coordinadores de viaje y guías certificados con protocolos rigurosos de bienestar y primeros auxilios.
+                  El aliado operativo en terreno para agencias y operadores de turismo estudiantil. Centralizamos la búsqueda, validación de antecedentes, asignación y preparación de coordinadores según las edades del grupo, destino y programa. Reducimos la improvisación y la carga logística para que tu empresa se enfoque en vender y planificar.
                 </p>
                 <div className="service-b2b-features">
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Coordinadores de ruta y líderes de grupo dedicados</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Certificación WFR / WFA (Primeros Auxilios en Áreas Remotas)</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Manejo de dinámicas grupales, protocolos de convivencia y cuidado</div>
-                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Articulación con transportistas, hotelería y actividades pedagógicas</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Perfiles validados con manejo grupal y formación en primeros auxilios</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Seguimiento de itinerario y enlace con proveedores (transporte, hoteles, guías locales)</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Comunicación clara y alineada con profesores y adultos responsables</div>
+                  <div className="feature-item"><CheckCircle size={18} className="text-accent" /> Respaldo operativo ante contingencias y capacidad de gestión de reemplazos</div>
                 </div>
                 <div className="service-cta-wrapper">
-                  <Link to="/contacto?servicio=giras-estudio" className="btn btn-primary">Cotizar gira de estudio</Link>
+                  <Link to="/contacto?servicio=giras-estudio" className="btn btn-primary">Cotizar coordinación de gira</Link>
                 </div>
               </div>
               <div className="service-b2b-visual">
-                <img src="/fondo-empresas.webp" alt="Coordinación de Giras de Estudio" loading="lazy" />
+                <img src="/gallery/temporada-2026-07.webp" alt="Coordinación Turística para Giras de Estudio" loading="lazy" />
               </div>
             </div>
 
