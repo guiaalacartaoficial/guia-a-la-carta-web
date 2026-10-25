@@ -32,10 +32,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(159, 192, 90, 0.2);
-  color: var(--c-accent, #9FC05A);
-  border: 1px solid rgba(159, 192, 90, 0.4);
-  padding: 0.4rem 0.9rem;
+  background: rgba(159, 192, 90, 0.25);
+  color: #D4F48A;
+  border: 1px solid rgba(159, 192, 90, 0.6);
+  padding: 0.45rem 1rem;
   border-radius: 50px;
   font-size: 0.85rem;
   font-weight: 700;
@@ -46,18 +46,21 @@
 
 .seasonal-banner h2 {
   font-family: var(--font-heading, 'Outfit', sans-serif);
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   font-weight: 800;
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
   margin-bottom: 1rem;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .seasonal-banner p {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
+  color: #F3F4F6 !important;
   max-width: 780px;
   margin-bottom: 2rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .btn-seasonal-cta {
