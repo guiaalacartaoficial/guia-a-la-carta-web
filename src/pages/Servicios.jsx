@@ -283,36 +283,6 @@ const Servicios = () => {
               </div>
             </div>
 
-            {/* Perfiles de Coordinación para Giras de Estudio */}
-            <div className="giras-profiles-box">
-              <div className="giras-profiles-header">
-                <h4>Perfiles de Coordinación según Responsabilidad</h4>
-                <p>Alineamos al profesional adecuado considerando el tamaño de la delegación, edades de los estudiantes y complejidad del itinerario.</p>
-              </div>
-              <div className="giras-profiles-grid">
-                <div className="giras-profile-card">
-                  <div className="giras-profile-tag">Nivel Apoyo</div>
-                  <h5>Coordinador de Apoyo</h5>
-                  <p>Integrado a un equipo bajo la conducción de un coordinador principal. Apoya la organización del grupo, conteos, embarques, traslados, entrega de instrucciones y actividades acordadas.</p>
-                  <span className="giras-profile-target">Ideal para: grupos masivos y refuerzo de salidas con varios buses.</span>
-                </div>
-
-                <div className="giras-profile-card featured">
-                  <div className="giras-profile-tag highlight">Más Solicitado</div>
-                  <h5>Coordinador de Gira</h5>
-                  <p>Profesional con experiencia comprobable y autonomía para la conducción cotidiana del programa, seguimiento del itinerario, enlace permanente con proveedores y comunicación con profesores.</p>
-                  <span className="giras-profile-target">Ideal para: giras completas de varios días que requieren liderazgo autónomo.</span>
-                </div>
-
-                <div className="giras-profile-card">
-                  <div className="giras-profile-tag">Jefatura</div>
-                  <h5>Coordinador Principal / Jefe de Equipo</h5>
-                  <p>Profesional de máxima experiencia para programas de alta complejidad logística o salidas simultáneas. Organiza al equipo asignado, distribuye funciones y actúa como enlace directo con el operador.</p>
-                  <span className="giras-profile-target">Ideal para: programas de alta envergadura o múltiples cursos en simultáneo.</span>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>

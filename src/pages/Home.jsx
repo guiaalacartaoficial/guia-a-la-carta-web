@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight, GraduationCap } from 'lucide-react';
+import { BadgeCheck, CalendarCog, DatabaseBackup, TimerReset, MapPin, CheckCircle, Clock, Briefcase, Star, Compass, Zap, Settings, Users, ShieldCheck, HeartPulse, Mountain, Languages, TrendingUp, Truck, UserStar, Van, ChevronLeft, ChevronRight, GraduationCap, X } from 'lucide-react';
 import SeasonalMarketing from '../components/SeasonalMarketing';
 import GoogleReviews from '../components/GoogleReviews';
 import SeasonalGallery from '../components/SeasonalGallery';
@@ -86,10 +86,10 @@ const Home = () => {
     },
     {
       id: 6,
-      title: "COORDINACIÓN TURÍSTICA PARA GIRAS DE ESTUDIO",
+      title: "COORDINACIÓN DE GIRAS DE ESTUDIO",
       icon: <GraduationCap size={40} />,
-      desc: "Seleccionamos, preparamos y asignamos coordinadores especializados según las edades del grupo, destino y programa. Apoyamos la ejecución del itinerario y la comunicación fluida con proveedores, profesores y adultos responsables.",
-      highlight: "Perfiles validados en primeros auxilios y manejo de grupos, con respaldo operativo ante contingencias."
+      desc: "Asignamos y preparamos coordinadores especializados para acompañar delegaciones estudiantiles en todo Chile, asegurando el orden del itinerario, la convivencia del grupo y la comunicación fluida con profesores y proveedores.",
+      highlight: "Profesionales validados con WFR / Primeros Auxilios, liderazgo en terreno y respaldo activo ante contingencias."
     }
   ];
   return (
@@ -263,12 +263,27 @@ const Home = () => {
           {activeService && (
             <div className="service-modal-overlay" onClick={() => setActiveService(null)}>
               <div className="service-modal-content" onClick={e => e.stopPropagation()}>
+                <button
+                  type="button"
+                  className="modal-close-x"
+                  onClick={() => setActiveService(null)}
+                  aria-label="Cerrar modal"
+                >
+                  <X size={20} />
+                </button>
                 <div className="modal-icon">{activeService.icon}</div>
                 <h3>{activeService.title}</h3>
                 <p className="modal-desc">{activeService.desc}</p>
                 <div className="modal-highlight">{activeService.highlight}</div>
                 <div className="modal-actions">
-                  <Link to="/servicios" className="btn btn-primary" onClick={() => setActiveService(null)}>Saber más</Link>
+                  {activeService.id === 6 ? (
+                    <>
+                      <Link to="/contacto?servicio=giras-estudio" className="btn btn-primary" onClick={() => setActiveService(null)}>Cotizar Giras</Link>
+                      <Link to="/servicios" className="btn btn-outline" onClick={() => setActiveService(null)}>Ver Servicios</Link>
+                    </>
+                  ) : (
+                    <Link to="/servicios" className="btn btn-primary" onClick={() => setActiveService(null)}>Saber más</Link>
+                  )}
                 </div>
               </div>
             </div>
