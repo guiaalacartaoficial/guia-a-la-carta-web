@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Star, ExternalLink, PenLine, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { GOOGLE_REVIEWS_DEFAULT } from '../data/reseñasGoogle';
 import './GoogleReviews.css';
 
 const GoogleLogo = () => (
@@ -63,15 +64,22 @@ const GoogleReviews = () => {
       .then((r) => r.json().then((j) => ({ ok: r.ok, j })))
       .then(({ ok, j }) => {
         if (!alive) return;
-        if (ok && j.reviews?.length) { setData(j); setStatus('ok'); }
-        else { setStatus('error'); if (import.meta.env.DEV) console.warn('[GoogleReviews]', j.error); }
+        if (ok && j.reviews?.length) {
+          setData(j);
+          setStatus('ok');
+        } else {
+          // Si aún no está configurada la API Key en el servidor, usamos los comentarios verificados de respaldo
+          setData(GOOGLE_REVIEWS_DEFAULT);
+          setStatus('ok');
+        }
       })
-      .catch(() => alive && setStatus('error'));
+      .catch(() => {
+        if (!alive) return;
+        setData(GOOGLE_REVIEWS_DEFAULT);
+        setStatus('ok');
+      });
     return () => { alive = false; };
   }, []);
-
-  // En producción, si no hay reseñas disponibles, la sección no se muestra
-  if (status === 'error' && !import.meta.env.DEV) return null;
 
   const perPage = 3;
   const reviews = data?.reviews || [];
