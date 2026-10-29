@@ -120,7 +120,10 @@ const Home = () => {
 
       <div className="footer-accent-bar" />
 
-      
+      {/* SECCIÓN RESEÑAS VERIFICADAS DE GOOGLE */}
+      <GoogleReviews />
+
+      <div className="footer-accent-bar" />
 
       {/* SECCIÓN 2: QUÉ PROBLEMA RESOLVEMOS */}
       <section className="section-problema b2b-theme-light">
@@ -428,10 +431,6 @@ const Home = () => {
 
       <div className="footer-accent-bar" />
 
-      {/* SECCIÓN RESEÑAS VERIFICADAS DE GOOGLE */}
-      <GoogleReviews />
-
-      <div className="footer-accent-bar" />
 
       {/* SECCIÓN NUEVA: GALERÍA DE EXPERIENCIAS (TEMPORADA ACTUAL) */}
       <SeasonalGallery />
