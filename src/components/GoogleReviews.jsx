@@ -44,11 +44,18 @@ const ReviewCard = ({ r }) => {
       </header>
       <Stars value={r.rating} />
       <p className={`gr-text ${expanded ? 'expanded' : ''}`}>{r.texto || 'Calificó con estrellas sin dejar comentario.'}</p>
-      {long && (
-        <button type="button" className="gr-more" onClick={() => setExpanded(!expanded)}>
-          {expanded ? 'Ver menos' : 'Leer más'}
-        </button>
-      )}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '0.5rem' }}>
+        {long ? (
+          <button type="button" className="gr-more" onClick={() => setExpanded(!expanded)}>
+            {expanded ? 'Ver menos' : 'Leer más'}
+          </button>
+        ) : <span />}
+        {r.link && (
+          <a href={r.link} target="_blank" rel="noreferrer" className="gr-review-link" title="Ver reseña verificada en Google Maps">
+            <ExternalLink size={13} /> Ver en Google
+          </a>
+        )}
+      </div>
     </article>
   );
 };

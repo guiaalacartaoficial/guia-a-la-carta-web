@@ -120,6 +120,8 @@ const Home = () => {
 
       <div className="footer-accent-bar" />
 
+      
+
       {/* SECCIÓN 2: QUÉ PROBLEMA RESOLVEMOS */}
       <section className="section-problema b2b-theme-light">
         <div className="container">

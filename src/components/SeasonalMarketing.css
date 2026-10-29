@@ -1,7 +1,7 @@
 /* ===== Seasonal Marketing Section ===== */
 .section-seasonal-marketing {
   padding: 5rem 0 4rem 0;
-  background: linear-gradient(180deg, #F8F7F2 0%, #FFFFFF 100%);
+  background-color: #cde0cc;
   position: relative;
 }
 
@@ -90,8 +90,8 @@
 
 .seasonal-eyebrow {
   display: inline-block;
-  color: var(--c-primary, #0E5B4C);
-  font-weight: 700;
+  color: #064e3b;
+  font-weight: 700; font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.85rem;
@@ -106,7 +106,8 @@
 }
 
 .seasonal-services-header p {
-  color: var(--c-text-light, #4B5563);
+  color: #1f2937;
+  font-weight: 500;
   font-size: 1.05rem;
 }
 
